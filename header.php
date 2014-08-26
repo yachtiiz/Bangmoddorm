@@ -1,4 +1,4 @@
-
+<?php session_start(); ?>
 <html lang="en">
 
     <head>
@@ -64,11 +64,11 @@
                 </div>
             </div>
 
-            <div id="showValue" class="row">
+            <div id="showValue" class="row" style="margin-bottom:-10px">
 
-                <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"]) { ?>
-                    <div class="span2">
-                        <p>Welcome <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?></p>
+                <?php if (isset($_SESSION["auth"])) { ?>
+                    <div class="span7">
+                        <h3><span>Welcome <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?> &nbsp;&nbsp; <button id="logout_button" type="button" class="btn btn-default">Logout</button></span></h3>
                     </div>                
                 <?php } else { ?>
                     <form id="signin_form" action="callback.php" method="post">
@@ -81,7 +81,7 @@
                         <div id="showSubmit" style="color: red" class="span5">
                             <button id="submit" type="submit" class="btn btn-default">Login</button>
                         </div>
-                        
+
                     </form>                
                 <?php } ?>
 
@@ -104,7 +104,11 @@
                                 clearTimeout(timer);
                                 $.post("callback.php", {fn: fnn, login: entered_login, password: entered_password},
                                 function(data) {
-                                    if(data !== "ER");
+                                    if (data.length === 2) {
+                                        $("#showSubmit").html('<button id="submit" type="submit" class="btn btn-default">Login</button> &nbsp;&nbsp; Login Failed Please Login Again');
+                                    } else {
+                                        $("#showValue").html("<div class='span7'><h3><span>Welcome " + data + " &nbsp;&nbsp; <button id='logout_button' type='button' class='btn btn-default'>Logout</button></span></h3>");
+                                    }
                                 });
                             }, 1000);
                         }
@@ -112,13 +116,15 @@
                     });
                 });
 
-                function responseHandler(response) {
-                    if (response !== "ER") {
-                        $("#showValue").html("<p class='lead'>Welcome " + response + "</p>");
-                    } else {
-                        $("#showSubmit").html('<button id="submit" type="submit" class="btn btn-default">Login</button> &nbsp;&nbsp; Login Failed Please Login Again');
-                    }
-                }
+                $(document).on("click", "#logout_button", function() {
+                    $("#logout_button").append('<img style="height:20px" src="images/loading.gif" />');
+                    var timer = setTimeout(function() {
+                        clearTimeout(timer);
+                        $("#logout_button").load("callback.php?logout");
+                    }, 500);
+
+
+                });
 
 
             </script>

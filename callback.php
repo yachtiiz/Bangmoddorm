@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 function login($login, $password) {
     /* Query login matching password in DB */
     include 'connection.php';
@@ -8,7 +8,7 @@ function login($login, $password) {
 
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
-    if ($row != NULL && $password == $row["password"]) {
+    if ($row != NULL && $password === $row["password"]) {
         $canLogin = true;
         $firstname = $row["firstName"];
         $lastname = $row["lastName"];
@@ -29,7 +29,7 @@ function login($login, $password) {
 }
 
 #----------------- AJAX FN CASE SWITCHER
-if ($_POST["fn"] === "auth") {
+if (isset($_POST["fn"]) && $_POST["fn"] === "auth") {
     $_SESSION["auth"] = false;
 
     if (!isset($_POST["login"]) || !isset($_POST["password"])) {
@@ -44,8 +44,13 @@ if ($_POST["fn"] === "auth") {
     if ($login_result) {
         echo $_SESSION["firstname"]." ".$_SESSION["lastname"];
     } else {
-        echo "ER";
+        echo "1";
     }
+}
+
+if(isset($_GET["logout"])){
+    session_destroy();
+    echo '<script>window.location = "index.php"</script>';
 }
 ?>
 
