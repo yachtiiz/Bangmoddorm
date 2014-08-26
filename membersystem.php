@@ -1,5 +1,3 @@
-<?php include 'header.php' ?>
-            <jsp:include page="header.jsp"/>
             <div class="row booking_summary">
 
                 <div class="span12">	
@@ -195,4 +193,3 @@
 
             </div></div> <!-- /container -->
         <br><br><br>
-        <?php include 'footer.php' ?>

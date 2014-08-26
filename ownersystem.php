@@ -1,5 +1,4 @@
 
-<?php include 'header.php' ?>
 
                 <form class="form-horizontal" />
                 <fieldset>
@@ -25,4 +24,3 @@
                 </form>
 </div> <!-- /container -->
 <br><br><br><br><br><br><br>
-<?php include 'footer.php' ?>

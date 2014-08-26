@@ -1,5 +1,4 @@
 
-<?php include 'header.php' ?>
 
 <?php
 
@@ -325,4 +324,3 @@ if (isset($_POST["confirm"])) {
         </div>
     </div>
 </div></div> <!-- /container -->
-<?php include 'footer.php' ?>

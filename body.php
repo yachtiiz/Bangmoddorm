@@ -11,22 +11,22 @@ switch ($page) {
         require_once("dormitory.php");
         break;
     case "adminsystem":
-        require_once("adminsystem.php");
+        require_once("adminSystem.php");
         break;
-    case "request_detail":
-        require_once("requestDetail.php");
+    case "ownersystem":
+        require_once("ownersystem.php");
         break;
-    case "checkRegister":
-        require_once("checkregister.php");
+    case "dormdetail":
+        require_once("dormdetail.php");
         break;
-    case "checkingRegister":
-        require_once("checkregisterform.php");
+    case "register":
+        require_once("register.php");
         break;
-    case "contentPage":
-        require_once("content_page.php");
+    case "membersystem":
+        require_once("membersystem.php");
         break;
-    case "activity":
-        require_once("activities.php");
+    case "advancesearch":
+        require_once("advancesearch.php");
         break;
     case "reseller":
         require_once("thr_finder.php");

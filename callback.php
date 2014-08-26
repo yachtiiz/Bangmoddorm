@@ -4,7 +4,7 @@ function login($login, $password) {
     /* Query login matching password in DB */
     include 'connection.php';
 
-    $query = "select password,firstName,lastName from Members where username='$login'";
+    $query = "select password,firstName,lastName,type from Members where username='$login'";
 
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
@@ -12,6 +12,7 @@ function login($login, $password) {
         $canLogin = true;
         $firstname = $row["firstName"];
         $lastname = $row["lastName"];
+        $type = $row["type"];
     } else {
         $canLogin = false;
     }
@@ -22,6 +23,7 @@ function login($login, $password) {
         $_SESSION["username"] = $login;
         $_SESSION["firstname"] = $firstname;
         $_SESSION["lastname"] = $lastname;
+        $_SESSION["type"] = $type;
         return true;
     } else {
         return false;

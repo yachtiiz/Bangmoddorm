@@ -1,5 +1,4 @@
 
-            <?php include 'header.php' ?>
             <div class="row">
 
                 <div class="span12">	
@@ -101,7 +100,7 @@
 
                         <!-- Modal -->
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -109,22 +108,22 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="span7">
-                                                <img src="css/images/rooms/MyPlace2_Room1.jpg"/>
+                                            <div class="span12">
+                                                <img style="margin-left: 50px;width: 80%" src="css/images/rooms/MyPlace2_Room1.jpg"/>
                                             </div>
-                                            <div class="span3">
+                                            <div class="span5">
                                                 <br><br>
-                                                <img src="css/images/rooms/MyPlace2_Room2.jpg"/>
+                                                <img style="margin-left: 50px" src="css/images/rooms/MyPlace2_Room2.jpg"/>
                                             </div>
-                                            <div class="span3">
+                                            <div class="span5">
                                                 <br><br>
-                                                <img src="css/images/rooms/MyPlace2_Room3.jpg"/>
+                                                <img style="margin-left: 50px"src="css/images/rooms/MyPlace2_Room3.jpg"/>
                                             </div>
 
-                                            <div class="span7">
+                                            <div style="margin-left: 70px;margin-top:30px" class="span10">
                                                 <h3><span>Facilities</span> in room</h3>		
                                                 <div class="row">
-                                                    <div class="span2">
+                                                    <div class="span4">
                                                         <div class="custom_container">
                                                             <div class="pull-left strong">Breakfast Buffet</div><div class="pull-right"><input type="checkbox" checked="checked" disabled=""/></div>
                                                         </div>
@@ -141,7 +140,7 @@
                                                             <div class="pull-left strong">Luggage storage</div><div class="pull-right"><input type="checkbox" disabled="" /></div>
                                                         </div>                   
                                                     </div>
-                                                    <div class="span3 offset1">
+                                                    <div class="span4 offset1">
                                                         <div class="custom_container">
                                                             <div class="pull-left strong">Parking</div><div class="pull-right"><input type="checkbox" checked="checked" disabled=""/></div>
                                                         </div>
@@ -178,7 +177,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
-                                        <a href="book.jsp"><button type="button" class="btn btn-success book-now">Booking</button></a>
+                                        <a href="book.php"><button type="button" class="btn btn-success book-now">Booking</button></a>
                                     </div>
                                 </div>
                             </div>
@@ -429,4 +428,3 @@
                 </div>	
             </div>	</div> <!-- /container -->
 
-        <?php include 'footer.php' ?>

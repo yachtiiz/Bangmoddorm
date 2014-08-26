@@ -1,6 +1,4 @@
 
-            <?php include 'header.php' ?>
-
             <div class="row-fluid">
 
                 <div class="span12">	
@@ -20,7 +18,7 @@
 
 
                             <div class="row center">
-                                <a class="btn btn-primary btn-large check-availability" href="dormdetail.jsp">View Details</a>
+                                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
                             </div>
 
                         </div>		
@@ -35,7 +33,7 @@
                             </ul>
                             <p> My Place 2 At Soi Prachauthit45 male & female Dormitory many facilities </p>
                             <div class="row center">
-                                <a class="btn btn-primary btn-large check-availability" href="book-start.html">View Details</a>
+                                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
                             </div>
                         </div>	
 
@@ -49,7 +47,7 @@
                             </ul>
                             <p> 44 Garden Place At Soi Phudhabucha44 male & female Dormitory luxury Dormitory </p>
                             <div class="row center">
-                                <a class="btn btn-primary btn-large check-availability" href="book-start.html">View Details</a>
+                                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
                             </div>
                         </div>				
 
@@ -69,7 +67,7 @@
                                 <br>This place have Spot Club and Swimming Pool</p>
 
                             <div class="row center">
-                                <a class="btn btn-primary btn-large check-availability" href="book-start.html">View Details</a>
+                                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
                             </div>
 
                         </div>		
@@ -87,7 +85,7 @@
                             <p>Kiatsuda Residence At Phudhabucha44 is new Dormitory</p>
                             <br>
                             <div class="row center">
-                                <a class="btn btn-primary btn-large check-availability" href="book-start.html">View Details</a>
+                                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
                             </div>
 
                         </div>	
@@ -105,7 +103,7 @@
                             <p>Sam Peenong At Soi Prachauthit45 This Dormitory is the most Popular in KMUTT</p>
                             <br>
                             <div class="row center">
-                                <a class="btn btn-primary btn-large check-availability" href="book-start.html">View Details</a>
+                                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
                             </div>
 
                         </div>	
@@ -143,5 +141,3 @@
                     </div>
                 </div>	
             </div>	</div> <!-- /container -->
-
-        <?php include 'footer.php' ?>

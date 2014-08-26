@@ -1,5 +1,4 @@
 
-            <?php include 'header.php' ?>
             <div class="row booking_summary">
 
                 <div class="span12">	
@@ -166,5 +165,4 @@
                 </div>
             </div></div> <!-- /container -->
             <br><br><br>
-        <?php include 'footer.php' ?>
         
