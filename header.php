@@ -66,7 +66,7 @@
 
             <div id="showValue" class="row" style="margin-bottom:-10px">
 
-                <?php if (isset($_SESSION["auth"])) { ?>
+                <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) { ?>
                     <div class="span7">
                         <h3><span>Welcome <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?> &nbsp;&nbsp; <button id="logout_button" type="button" class="btn btn-default">Logout</button></span></h3>
                     </div>                
