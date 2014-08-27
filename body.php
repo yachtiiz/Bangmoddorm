@@ -31,14 +31,17 @@ switch ($page) {
     case "adddormitory":
         require_once("addDormitory.php");
         break;
-    case "checkbooking":
-        require_once("checkBooking.php");
+    case "adminsystem":
+        require_once("adminsystem.php");
         break;
-    case "contact":
-        require_once("contact.php");
+    case "checkRequestDetail":
+        require_once("checkRequestDetail.php");
         break;
-    case "editreseller":
-        require_once("editreseller.php");
+    case "checkRequestDorm":
+        require_once("checkRequestDorm.php");
+        break;
+    case "editDormitory":
+        require_once("editDormitory.php");
         break;
     
     default:

@@ -13,7 +13,7 @@
                                     </div>
                                     <div class="span4">
                                         <a href="checkDormInfo.php"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Dormitory Information</button></a><br><br>
-                                        <a href="checkRequestDorm.php"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Request Dormitory</button></a>
+                                        <a href="index.php?chose_page=checkRequestDorm"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Request Dormitory</button></a>
                                     </div>
                                     <div class="span3">
                                         <a href="checkMemberInfo.php"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Member</button></a><br><br>

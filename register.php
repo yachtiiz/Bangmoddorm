@@ -20,14 +20,14 @@ function checkUsername($username) {
     $query = "select username from Members username = '$username'";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
-    if($row != NULL){
+    if ($row != NULL) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
-function insertIntoDatabase() {
+function insertIntoDatabase($checkPic) {
 
     include 'connection.php';
 
@@ -48,7 +48,11 @@ function insertIntoDatabase() {
     $displayname = filter_var($_POST["displayname"], FILTER_SANITIZE_STRING);
     $facebook = filter_var($_POST["fbname"], FILTER_SANITIZE_STRING);
     $about = filter_var($_POST["about"], FILTER_SANITIZE_STRING);
-    $pic_path = "/images/picture_profile/default_picture.jpg";
+    if ($checkPic) {
+        $pic_path = "images/picture_profile/user_" . $username;
+    } else {
+        $pic_path = "/images/picture_profile/default_picture.jpg";
+    }
 //    if (isset($_FILES["pic"])) {
 //        if (upPicture("pic", $username)) {
 //            $pic_path = "/images/picture_profile/user_" . $username;
@@ -56,10 +60,10 @@ function insertIntoDatabase() {
 //            return false;
 //        }
 //    }
-    
+
     $password_md5 = md5($password);
-    
-    
+
+
     $query = "INSERT INTO `Members` (`username`, `password`, `firstName`, `lastName`, `idCard`, `email`, `tel`, `type`, `address`, `city`, `province`, `zipcode`, `country`, `regisDate`, `status`, `pic_path`, `memberUrl`, `displayName`, `facebook`, `about`)
 VALUES
 	('$username', '$password_md5', '$firstname', '$lastname', '$idcard', '$email', '$tel', '$type', '$address', '$city', '$province', '$zipcode', '$country', NOW(), 'Normal', '$pic_path', '$memberURL', '$displayname', '$facebook', '$about'); ";
@@ -74,14 +78,15 @@ VALUES
 if (isset($_POST["confirm"])) {
 
     if (checkUsername($_POST["username"])) {
-        if(insertIntoDatabase()){
+        if (insertIntoDatabase()) {
             echo '<script>alert("Register Complete");window.location = "index.php";</script>';
-        }else{
+        } else {
             echo '<script>alert("Register Failed")</script>';
         }
-    }else{
+    } else {
         echo '<script>alert("Already username")</script>';
     }
+    
 }
 ?>
 
@@ -181,6 +186,63 @@ if (isset($_POST["confirm"])) {
         $("#cpn_tax_number").mask("9999999999999", {placeholder: ""});
     });
 
+//    $(document).on("change","#pic",function(){
+//        var path = document.getElementById("pic");
+//        
+//        alert(path);
+//    })
+    
+//    (function () {
+//	var input = document.getElementById("pic"),
+//		formdata = true;
+//
+//	function showUploadedItem (source) {
+//  		$('#showPic').html('<img src="'+source+'" style="height:200px" class="img-thumnail">');
+//	}
+//
+//	if (window.FormData) {
+//  		formdata = new FormData();
+//  		//document.getElementById("btn").style.display = "none";
+//	}
+//        
+// 	input.addEventListener("change", function (evt) {
+// 		//document.getElementById("response").innerHTML = "Uploading . . ."
+//		$('#response').html('Uploading . . .');
+// 		var i = 0, len = this.files.length, img, reader, file;
+//
+//		for ( ; i < len; i++ ) {
+//			file = this.files[i];
+//
+//			if (!!file.type.match(/image.*/)) {
+//				if ( window.FileReader ) {
+//					reader = new FileReader();
+//					reader.onloadend = function (e) {
+//						showUploadedItem(e.target.result, file.fileName);
+//					};
+//					reader.readAsDataURL(file);
+//				}
+//				if (formdata) {
+//					formdata.append("pic[]", file);
+//				}
+//			}
+//		}
+//		
+//		if (formdata) {
+//			$.ajax({
+//				url: "callback.php",
+//				type: "POST",
+//				data: formdata,
+//				processData: false,
+//				contentType: false,
+//				success: function (res) {
+//					document.getElementById("response").innerHTML = res;
+//				}
+//			});
+//		}
+//		
+//
+//	}, false);
+//}());
 
 
 </script>
@@ -300,11 +362,12 @@ if (isset($_POST["confirm"])) {
                         <div class="span9">
                             <legend><span>Your</span> Picture</legend>
                         </div>
-                        <div class="span3">
+                        <div class="span3" id="showPic">
                             <img src="/images/picture_profile/default_picture.jpg" style="height:200px" class="img-thumnail">
                         </div>
                         <div class="span6">
-                            <input id="pic" name="pic" type="file" class="form-control">
+                            <input id="pic" name="pic" type="file" class="form-control"><br>
+                            <p id="response"></p>
                         </div>
                         <div class="span6" style="margin-top:120px">
                             <button id="confirm" type="submit" name="confirm" class="btn btn-default pull-right">Continue</button>
