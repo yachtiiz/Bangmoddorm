@@ -1,5 +1,4 @@
 
-<?php include 'header.php'; ?>
             <div class="row booking_summary">
 
                 <div class="span12">	
@@ -9,7 +8,7 @@
 
 
 
-                            <form class="form-horizontal" />
+                            <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" class="form-horizontal" />
 
                             <fieldset>
                                 <br /><br />
@@ -23,7 +22,7 @@
 
                                     <div class="span3">
                                         <label>Dormitory Name
-                                            <input type="text" placeholder="Dorm Name..." />
+                                            <input id="dormname" name="dormname" class="form-control" type="text" placeholder="Dorm Name..." />
                                         </label>
                                     </div>	
                                 </div>		
@@ -34,13 +33,13 @@
                                     </div>
                                     <div class="span3">
                                         <label>License ID
-                                            <input type="text" placeholder="123DXXXX" />
+                                            <input class="form-control" type="text" placeholder="123DXXXX" />
                                         </label>
                                     </div>
 
                                     <div class="span3">
                                         <label>Evidence
-                                            <input type="file"/>
+                                            <input class="form-control" type="file"/>
                                         </label>
                                     </div>	
 
@@ -51,7 +50,7 @@
                                 <div class="row">
                                     <div class="span9">
                                         <legend><span>Any</span> special requests?</legend>
-                                        <textarea class="span9" rows="3" placeholder="Send your spacials request or question to Admin"></textarea>
+                                        <textarea class="span9 form-control" rows="4" placeholder="Send your spacials request or question to Admin"></textarea>
                                     </div>			
 
                                 </div>
@@ -70,5 +69,3 @@
                     </div>
                 </div>
             </div></div> <!-- /container -->
-
-<?php include 'footer.php';?>

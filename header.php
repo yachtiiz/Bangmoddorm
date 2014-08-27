@@ -53,16 +53,16 @@
                                     <li class=""><a href="index.php">Home</a></li>
                                     <li class=""><a href="index.php?chose_page=dormitory">Dormitory</a></li>
                                     <li class=""><a href="index.php?chose_page=ownersystem">Owner</a></li>
-                                    <?php if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){ ?>
+                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){ ?>
                                     <li class=""><a href="index.php?chose_page=register">Register</a></li>
-                                    <?php } ?>
+                                    <?php //} ?>
                                     <li class=""><a href="advanceSearch.php">Advance Search</a></li>
-                                    <?php if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){ ?>
+                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){ ?>
                                     <li class=""><a href="membersystem.php">Member System</a></li>
-                                    <?php } ?>
-                                    <?php if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){ ?>
+                                    <?php //} ?>
+                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){ ?>
                                     <li class=""><a href="adminsystem.php">Admin System</a></li>
-                                    <?php } ?>
+                                    <?php //} ?>
                             </div>                
                             <!-- /.nav-collapse -->                
                         </div>            

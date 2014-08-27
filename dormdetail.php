@@ -9,22 +9,22 @@
                     <div class="row">
 
                         <div class="span12">
-                            <img src="css/images/dorm/myplacemain2.jpg" alt=""/><br><br>
+                            <img  class="img-thumbnail" src="css/images/dorm/myplacemain2.jpg" alt=""/><br><br>
                             <h3><span>Screen </span> Shot </h3>
                             <br>
                         </div>		
                         <div class="span3">
-                            <a href="general.jsp"><img src="css/images/dorm/myplacess1.jpg" alt="" /></a>
+                            <a href="general.jsp"><img class="img-thumbnail" src="css/images/dorm/myplacess1.jpg" alt="" /></a>
                         </div>		
                         <div class="span3">
-                            <a href="general.jsp"><img src="css/images/dorm/myplacess2.JPG" alt="" /></a>
+                            <a href="general.jsp"><img class="img-thumbnail" src="css/images/dorm/myplacess2.JPG" alt="" /></a>
                         </div>				
 
                         <div class="span3">
-                            <a href="general.jsp"><img src="css/images/dorm/myplacess3.JPG" alt="" /></a>
+                            <a href="general.jsp"><img class="img-thumbnail" src="css/images/dorm/myplacess3.JPG" alt="" /></a>
                         </div>
                         <div class="span3">
-                            <a href="general.jsp"><img src="css/images/dorm/myplacess4.JPG" alt="" /></a>
+                            <a href="general.jsp"><img class="img-thumbnail" src="css/images/dorm/myplacess4.JPG" alt="" /></a>
                         </div>
                         <div class="span12">
                             <br>
@@ -109,15 +109,15 @@
                                     <div class="modal-body">
                                         <div class="row">
                                             <div class="span12">
-                                                <img style="margin-left: 50px;width: 80%" src="css/images/rooms/MyPlace2_Room1.jpg"/>
+                                                <img class="img-thumbnail" style="margin-left: 50px;width: 80%" src="css/images/rooms/MyPlace2_Room1.jpg"/>
                                             </div>
                                             <div class="span5">
                                                 <br><br>
-                                                <img style="margin-left: 50px" src="css/images/rooms/MyPlace2_Room2.jpg"/>
+                                                <img class="img-thumbnail" style="margin-left: 50px" src="css/images/rooms/MyPlace2_Room2.jpg"/>
                                             </div>
                                             <div class="span5">
                                                 <br><br>
-                                                <img style="margin-left: 50px"src="css/images/rooms/MyPlace2_Room3.jpg"/>
+                                                <img class="img-thumbnail" style="margin-left: 50px"src="css/images/rooms/MyPlace2_Room3.jpg"/>
                                             </div>
 
                                             <div style="margin-left: 70px;margin-top:30px" class="span10">

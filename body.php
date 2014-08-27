@@ -28,11 +28,11 @@ switch ($page) {
     case "advancesearch":
         require_once("advancesearch.php");
         break;
-    case "reseller":
-        require_once("thr_finder.php");
+    case "adddormitory":
+        require_once("addDormitory.php");
         break;
-    case "addresellerlist":
-        require_once("addresellerlist.php");
+    case "checkbooking":
+        require_once("checkBooking.php");
         break;
     case "contact":
         require_once("contact.php");

@@ -4,8 +4,8 @@
                 <fieldset>
                     <legend><span>Owner</span> System</legend>
                     <div class="span4">
-                        <a href="addDormitory.jsp"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Add Dormitory</button></a><br><br>
-                        <a href="checkBooking.jsp"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Booking History</button></a>
+                        <a href="index.php?chose_page=adddormitory"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Add Dormitory</button></a><br><br>
+                        <a href="index.php?chose_page=checkbooking"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Booking History</button></a>
                     </div>
                     <br />
                     <br />
