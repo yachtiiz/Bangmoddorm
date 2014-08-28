@@ -28,7 +28,7 @@
             <a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>"><button type="button" class="btn btn-primary btn-lg btn-block book-now2"><?php echo $row["dormName"] ?></button></a><br><br>
         </div>
         <div class="span4">
-            <a href="editRoom.jsp"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Add Room</button><br><br></a>
+            <a href="index.php?chose_page=editroom&dormID=<?php echo $row["dormID"]; ?>&dormName=<?php echo $row["dormName"]?>"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Add Room</button><br><br></a>
         </div>
         <?php } ?>
     </div>

@@ -43,6 +43,9 @@ switch ($page) {
     case "editDormitory":
         require_once("editDormitory.php");
         break;
+    case "editroom":
+        require_once("editRoom.php");
+        break;
     
     default:
         require_once("main.php");

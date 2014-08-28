@@ -38,7 +38,7 @@
             $query = "INSERT INTO `ConfirmationDorm` (`memberID`, `dormName`, `evidence`, `license`, `approval` , `special_request` , `date` )
 VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , '$special_request' , NOW() );";
 
-            if ($evidence_dorm === "Cant Upload" || $evidence_dorm === "Invalid Picture File ..") {
+            if ($evidence_dorm === "Cant Upload .." || $evidence_dorm === "Invalid Picture File ..") {
                 return false;
             }
 
