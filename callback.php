@@ -84,7 +84,14 @@ function approve_dormitory($confirmID){
         $memberID = $row["memberID"];
         
         $query = "INSERT INTO `Dormitories` (`memberID`, `dormName`) VALUES ($memberID, '$dorm_name');";
+        
         if(mysqli_query($con, $query)){
+            $query = "select max(dormID) from Dormitories";
+            $id_result = mysqli_query($con, $query);
+            $id_row = mysqli_fetch_array($id_result);
+            $dorm_fac_id = $id_row[0];
+            $fac_query = "INSERT INTO `FacilitiesInDorm` (`dormID`) VALUES($dorm_fac_id);";
+            mysqli_query($con, $fac_query);
             return true;
         }else{
             return false;
