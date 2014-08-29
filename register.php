@@ -78,7 +78,12 @@ VALUES
 if (isset($_POST["confirm"])) {
 
     if (checkUsername($_POST["username"])) {
-        if (insertIntoDatabase()) {
+        $checkPic = false;
+        if(isset($_FILES["pic"])){
+            upPicture("pic", $_POST["username"]);
+            $checkPic = true;
+        }
+        if (insertIntoDatabase($checkPic)) {
             echo '<script>alert("Register Complete");window.location = "index.php";</script>';
         } else {
             echo '<script>alert("Register Failed")</script>';
@@ -252,7 +257,7 @@ if (isset($_POST["confirm"])) {
         <div class="row">
             <div class="span9" style="margin-bottom:100px">
                 <br />
-                <form id="form" action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post" enctype="multipart/form-data">
+                <form id="form" action="" method="post" enctype="multipart/form-data">
                     <div class="row">
                         <div class="span9">
                             <legend><span>Your</span> Username And Password</legend>
