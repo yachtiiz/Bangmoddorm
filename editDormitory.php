@@ -8,29 +8,52 @@
                     require 'connection.php';
 
                     if (isset($_POST["edit_dorm_submit"])) {
-                        
-                        function update_fac($dormID){
-                            
+
+                        function update_fac($dormID) {
+
                             require 'connection.php';
-                            
-                            $wifi = $_POST["wifi"] === 'on' ? 1:0;
-                            $lan = $_POST["lan"] === 'on' ? 1:0;
-                            $room_clean = $_POST["room_clean_service"] === 'on' ? 1:0;
-                            $air_clean = $_POST["air_clean_service"] === 'on' ? 1:0;
-                            $washing_service = $_POST["washing_service"] === 'on' ? 1:0;
-                            $laundry = $_POST["laundry"] === 'on' ? 1:0;
-                            $vending = $_POST["vending_machine"] === 'on' ? 1:0;
-                            $bus_service = $_POST["bus_service"] === 'on' ? 1:0;
-                            $restaurant = $_POST["restaurant"] === 'on' ? 1:0;
-                            $fitness = $_POST["fitness"] === 'on' ? 1:0;
-                            $swimming_pool = $_POST["swimming_pool"] === 'on' ? 1:0;
-                            $cctv = $_POST["cctv"] === 'on' ? 1:0;
-                            $car_parking = $_POST["parking"] === 'on' ? 1:0;
-                            $elevator = $_POST["elevator"] === 'on' ? 1:0;
-                            
+
+                            $wifi = isset($_POST["wifi"]) ? ($_POST["wifi"] == 'on' ? 1 : 0) : 0;
+                            $lan = isset($_POST["lan"]) ? ($_POST["lan"] == 'on' ? 1 : 0) : 0;
+                            $room_clean = isset($_POST["room_clean_service"]) ?  ($_POST["room_clean_service"] == 'on' ? 1 : 0) : 0;
+                            $air_clean = isset($_POST["air_clean_service"]) ?  ($_POST["air_clean_service"] == 'on' ? 1 : 0) : 0;
+                            $washing_service = isset($_POST["washing_service"]) ?  ($_POST["washing_service"] == 'on' ? 1 : 0) : 0;
+                            $laundry = isset($_POST["laundry"]) ?  ($_POST["laundry"] == 'on' ? 1 : 0) : 0;
+                            $vending =  isset($_POST["vending_machine"]) ?  ($_POST["vending_machine"] == 'on' ? 1 : 0) : 0;
+                            $bus_service = isset($_POST["bus_service"]) ?  ($_POST["bus_service"] == 'on' ? 1 : 0) : 0;
+                            $restaurant = isset($_POST["restaurant"]) ?  ($_POST["restaurant"] == 'on' ? 1 : 0) : 0;
+                            $fitness = isset($_POST["fitness"]) ?  ($_POST["fitness"] == 'on' ? 1 : 0) : 0;
+                            $swimming_pool = isset($_POST["swimming_pool"]) ?  ($_POST["swimming_pool"] == 'on' ? 1 : 0) : 0;
+                            $cctv = isset($_POST["cctv"]) ? ($_POST["cctv"] == 'on' ? 1 : 0) : 0;
+                            $car_parking = isset($_POST["parking"]) ?  ($_POST["parking"] == 'on' ? 1 : 0) : 0;
+                            $elevator = isset($_POST["elevator"]) ?  ($_POST["elevator"] == 'on' ? 1 : 0) : 0;
+
+                            $wifi_detail = filter_var($_POST["wifi_detail"], FILTER_SANITIZE_STRING);
+                            $lan_detail = filter_var($_POST["lan_detail"], FILTER_SANITIZE_STRING);
+                            $room_detail = filter_var($_POST["room_clean_detail"], FILTER_SANITIZE_STRING);
+                            $air_detail = filter_var($_POST["air_clean_detail"], FILTER_SANITIZE_STRING);
+                            $washing_detail = filter_var($_POST["washing_service_detail"], FILTER_SANITIZE_STRING);
+                            $fitness_detail = filter_var($_POST["fitness_detail"], FILTER_SANITIZE_STRING);
+                            $pool_detail = filter_var($_POST["pool_detail"], FILTER_SANITIZE_STRING);
+                            $bus_detail = filter_var($_POST["bus_detail"], FILTER_SANITIZE_STRING);
+                            $restaurant_detail = filter_var($_POST["restaurant_detail"], FILTER_SANITIZE_STRING);
+                            $vending_detail = filter_var($_POST["vending_detail"], FILTER_SANITIZE_STRING);
+                            $luandry_detail = filter_var($_POST["laundry_detail"], FILTER_SANITIZE_STRING);
+                            $cctv_detail = filter_var($_POST["cctv_detail"], FILTER_SANITIZE_STRING);
+                            $parking_detail = filter_var($_POST["parking_detail"], FILTER_SANITIZE_STRING);
+                            $elevator_detail = filter_var($_POST["elevator_detail"], FILTER_SANITIZE_STRING);
+
+                            $query = "update FacilitiesInDorm set parkingDetails = '$parking_detail' , wifiDetails = '$wifi_detail' , lanDetails = '$lan_detail' , airCleanDetails = '$air_detail' , roomCleanDetails = '$room_detail' , washingDetails = '$washing_detail' , fitnessDetails = '$fitness_detail' , poolDetails = '$pool_detail' , 
+                                busDetails = '$bus_detail' , restaurantDetails = '$restaurant_detail' , vendingDetails = '$vending_detail' , laundryDetails = '$luandry_detail' , elevatorDetails = '$elevator_detail' , cctvDetails = '$cctv_detail' , parking = $car_parking , wifi = $wifi , lan = $lan , airCleanService = $air_clean , 
+                                    roomCleanService = $room_clean , washingService = $washing_service , fitness = $fitness , pool = $swimming_pool , busService = $bus_service , restaurant = $restaurant , vendingMachine = $vending , laundry = $laundry , elevator = $elevator , cctv = $cctv where dormID = $dormID";
+
+                            if (mysqli_query($con, $query)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
                         }
-                        
-                        
+
                         $dormID = filter_var($_POST["dormID"], FILTER_SANITIZE_STRING);
                         $type = filter_var($_POST["type"], FILTER_SANITIZE_STRING);
                         $distance = filter_var($_POST["distance"], FILTER_SANITIZE_NUMBER_FLOAT);
@@ -46,9 +69,11 @@
                         $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
                         $tel = filter_var($_POST["tel"], FILTER_SANITIZE_STRING);
 
+
+
                         $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel' where dormID = $dormID ";
 
-                        if (mysqli_query($con, $query)) {
+                        if (mysqli_query($con, $query) && update_fac($dormID)) {
                             echo '<script>alert("Edit Dormitory Success");</script>';
                             echo '<script>window.location = "index.php?chose_page=ownersystem";</script>';
                         } else {
@@ -60,13 +85,12 @@
                     $query = "select * from dormitories where dormID=" . $_GET["dormID"];
                     $result = mysqli_query($con, $query);
                     $row = mysqli_fetch_array($result);
-                    
+
                     $fac_query = "select * from FacilitiesInDorm where dormID=" . $_GET["dormID"];
                     $fac_result = mysqli_query($con, $fac_query);
                     $fac_row = mysqli_fetch_array($fac_result);
-                    
                     ?>
-                    <form action="" method="get" class="form-horizontal" enctype="multipart/form-data">
+                    <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
                         <fieldset>
                             <br />
                             <h1>Edit Your Dormitory<br /><small>You can edit your dormitory information.
@@ -211,17 +235,17 @@
                                         </span>
                                         <input type="text" name='wifi_detail' placeholder='Detail' class="form-control" value="<?php echo $fac_row["wifiDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='wifi' <?php echo $fac_row["wifi"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name='wifi' <?php echo $fac_row["wifi"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
                                     <div class="input-group ">
                                         <span class="input-group-addon">
-                                           Room Clean Service
+                                            Room Clean Service
                                         </span>
-                                        <input type="text" name='clean_service_detail' placeholder='Detail' class="form-control" value="<?php echo $fac_row["roomCleanDetails"] ?>">
+                                        <input type="text" name='room_clean_detail' placeholder='Detail' class="form-control" value="<?php echo $fac_row["roomCleanDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='clean_service' <?php echo $fac_row["roomCleanService"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name='room_clean_service' <?php echo $fac_row["roomCleanService"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -231,7 +255,7 @@
                                         </span>
                                         <input type="text" name="washing_service_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["washingDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='washing_service' <?php echo $fac_row["washingService"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name='washing_service' <?php echo $fac_row["washingService"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -239,9 +263,9 @@
                                         <span class="input-group-addon">
                                             Vending Machine
                                         </span>
-                                        <input type="text" name="vending_machine_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["vendingDetails"] ?>">
+                                        <input type="text" name="vending_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["vendingDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="vending_machine" <?php echo $fac_row["vendingMachine"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="vending_machine" <?php echo $fac_row["vendingMachine"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -251,7 +275,7 @@
                                         </span>
                                         <input type="text" name="restaurant_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["restaurantDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="restaurant" <?php echo $fac_row["restaurant"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="restaurant" <?php echo $fac_row["restaurant"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -262,7 +286,7 @@
                                         </span>
                                         <input type="text" name="pool_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["poolDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="swimming_pool" <?php echo $fac_row["pool"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="swimming_pool" <?php echo $fac_row["pool"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -272,7 +296,7 @@
                                         </span>
                                         <input type="number" name="parking_detail" placeholder='Number of car parking' class="form-control" value="<?php echo $fac_row["parkingDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="car_parking" <?php echo $fac_row["parking"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="parking" <?php echo $fac_row["parking"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -285,7 +309,7 @@
                                         </span>
                                         <input type="text" name="lan_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["lanDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="lan" <?php echo $fac_row["lan"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="lan" <?php echo $fac_row["lan"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -295,7 +319,7 @@
                                         </span>
                                         <input type="text" name="air_clean_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["airCleanDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="air_clean_service" <?php echo $fac_row["airCleanService"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="air_clean_service" <?php echo $fac_row["airCleanService"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -305,7 +329,7 @@
                                         </span>
                                         <input type="text" name="laundry_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["laundryDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="luandry" <?php echo $fac_row["laundry"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="laundry" <?php echo $fac_row["laundry"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -315,7 +339,7 @@
                                         </span>
                                         <input type="text" name="bus_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["busDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="bus_service" <?php echo $fac_row["busService"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="bus_service" <?php echo $fac_row["busService"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -325,7 +349,7 @@
                                         </span>
                                         <input type="text" name="fitness_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["fitnessDetails"] ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name="fitness" <?php echo $fac_row["fitness"] === 1 ? "checked":"";?>>
+                                            <input type="checkbox" name="fitness" <?php echo $fac_row["fitness"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -334,8 +358,8 @@
                                             CCTV
                                         </span>
                                         <input type="text" name="cctv_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["cctvDetails"] ?>">
-                                        <span class="input-group-addon" name="cctv" <?php echo $fac_row["cctv"] === 1 ? "checked":"";?> >
-                                            <input type="checkbox">
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="cctv" <?php echo $fac_row["cctv"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -344,8 +368,8 @@
                                             Elevator
                                         </span>
                                         <input type="text" name="elevator_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["elevatorDetails"] ?>">
-                                        <span class="input-group-addon" name="elevetor" <?php echo $fac_row["elevetor"] === 1 ? "checked":"";?> >
-                                            <input type="checkbox">
+                                        <span class="input-group-addon" >
+                                            <input type="checkbox" name="elevator" <?php echo $fac_row["elevator"] == 1 ? "checked" : ""; ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -400,10 +424,10 @@
                             </div>
                         </fieldset>
                     </form>
-                <?php } else { ?>
+<?php } else { ?>
                 </div>
                 <h1>Something Error</h1>
-            <?php } ?>
+                <?php } ?>
         </div>
 
     </div></div> <!-- /container -->
