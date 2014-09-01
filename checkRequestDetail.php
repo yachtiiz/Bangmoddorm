@@ -54,11 +54,68 @@ $row = mysqli_fetch_array($result);
                             <legend><span>Any</span> special requests?</legend>
                             <textarea class="span9 form-control" rows="4"><?php echo $row["special_request"] ?></textarea>
                         </div>			
-                    </div>
+                    </div><br><br>
+                    <div class="row">
+                        <div class="span9">
+                            <legend><span>Dormitories</span> Rating</legend>
+                        </div>
+                        <div class="span4">
+                            <select id="dorm_rate" name="dorm_rate" class="form-control" style="width: 80%">
+                                <option value="default">Chose Dormitory Rate</option>
+                                <option value="1">1 Star</option>
+                                <option value="2">2 Star</option>
+                                <option value="3">3 Star</option>
+                                <option value="4">4 Star</option>
+                                <option value="5">5 Star</option>
+                            </select>
+                        </div>
+                        <div class="span3 pull-right">
+                            <h3 id="dorm_star" style="color:gold"> &#9734;&#9734;&#9734;&#9734;&#9734;</h3>
+                        </div>
+                        <script>
+                                                
+                        $(document).on("change","#dorm_rate" , function(){
+                            var dorm_rate = $("#dorm_rate").val();
+                            
+                            if(dorm_rate === "default"){
+                                $("#dorm_star").html("&#9734;&#9734;&#9734;&#9734;&#9734;");
+                                document.getElementById("approve_button").setAttribute("onClick", "alert('Please Chose Dormitory Rating');");
+                                document.getElementById("approve_button").removeAttribute("href");
+                            }
+                            if(dorm_rate === "1"){
+                                $("#dorm_star").html("&#9733;&#9734;&#9734;&#9734;&#9734;");
+                                document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=1");
+                                document.getElementById("approve_button").removeAttribute("onClick");
+                            }
+                            if(dorm_rate === "2"){
+                                $("#dorm_star").html("&#9733;&#9733;&#9734;&#9734;&#9734;");
+                                document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=2");
+                                document.getElementById("approve_button").removeAttribute("onClick");
+                            }
+                            if(dorm_rate === "3"){
+                                $("#dorm_star").html("&#9733;&#9733;&#9733;&#9734;&#9734;");
+                                document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=3");
+                                document.getElementById("approve_button").removeAttribute("onClick");
+                            }
+                            if(dorm_rate === "4"){
+                                $("#dorm_star").html("&#9733;&#9733;&#9733;&#9733;&#9734;");
+                                document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=4");
+                                document.getElementById("approve_button").removeAttribute("onClick");
+                            }
+                            if(dorm_rate === "5"){
+                                $("#dorm_star").html("&#9733;&#9733;&#9733;&#9733;&#9733;");
+                                document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=5");
+                                document.getElementById("approve_button").removeAttribute("onClick");
+                            }
+                            
+                        });
+                        
+                        </script>
+                    </div><br><br>
                     <div class="row">
                         <div class="span9">
                             <br />
-                            <a href="callback.php?approval_submit=<?php echo $row["confirmID"]; ?>" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Approve</a>
+                            <a id="approve_button" onClick="alert('Please Chose Dormitory Rating');" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Approve</a>
                             <a href="checkRequestDorm.jsp" class="btn btn-primary btn-large book-now pull-right">Back</a>
                             <br />
                             <br />

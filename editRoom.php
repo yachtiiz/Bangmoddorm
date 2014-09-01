@@ -1,6 +1,43 @@
 
 <?php
 
+function upPicture($file, $i, $roomID) {
+
+    if ($_FILES["$file"]["type"][$i] == "image/jpg" || $_FILES["$file"]["type"][$i] == "image/png" || $_FILES["$file"]["type"][$i] == "image/jpeg" || $_FILES["$file"]["type"][$i] == "image/gif" || $_FILES["$file"]["type"][$i] == "image/pjpeg" || $_FILES["$file"]["type"][$i] == "image/x-png") {
+
+
+        $rand = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
+        $path = "images/room_pictures/" . $rand . "_" . $roomID . "_" . $_FILES["$file"]["name"][$i];
+        $pic_path = $rand . "_" . $roomID . "_" . $_FILES["$file"]["name"][$i];
+
+        if (move_uploaded_file($_FILES["$file"]["tmp_name"][$i], $path)) {
+            return $msg = $pic_path;
+        } else {
+            return $msg = "Cant Upload";
+        }
+    } else {
+        return $msg = "Invalid Picture";
+    }
+}
+
+function filterPic(&$arr_pic) {
+    $value = 0;
+    for ($i = 0; $i < count($arr_pic["name"]); $i++) {
+        if ($arr_pic["name"][$i] != "") {
+            if ($arr_pic["type"][$i] == "image/jpg" || $arr_pic["type"][$i] == "image/png" || $arr_pic["type"][$i] == "image/x-png" || $arr_pic["type"][$i] == "image/jpeg" || $arr_pic["type"][$i] == "image/gif" || $arr_pic["type"][$i] == "image/pjpeg") {
+                $value += 0;
+            }
+            else
+                $value += 1;
+        }
+    }
+    if ($value == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function add_fac_room($roomID) {
 
     require 'connection.php';
@@ -16,8 +53,22 @@ function add_fac_room($roomID) {
     $mattress = isset($_POST["mattress"]) ? ($_POST["mattress"] == "on" ? 1 : 0) : 0;
     $television = isset($_POST["television"]) ? ($_POST["television"] == "on" ? 1 : 0) : 0;
 
-    $query = "update FacilitiesInRoom set air = $air , wardrobe = $wardrobe , refrigerator = $refrigerator , table_fac = $table , 
-                chair = $chair , fan = $fan , waterHeater = $water_heater , bed = $bed , mattress = $mattress , television = $television where roomID = $roomID;";
+    $air_detail = filter_var($_POST["air_detail"], FILTER_SANITIZE_STRING);
+    $wardrobe_detail = filter_var($_POST["wardrobe_detail"], FILTER_SANITIZE_STRING);
+    $refrigerator_detail = filter_var($_POST["refrigerator_detail"], FILTER_SANITIZE_STRING);
+    $table_detail = filter_var($_POST["table_detail"], FILTER_SANITIZE_STRING);
+    $chair_detail = filter_var($_POST["chair_detail"], FILTER_SANITIZE_STRING);
+    $fan_detail = filter_var($_POST["fan_detail"], FILTER_SANITIZE_STRING);
+    $water_heater_detail = filter_var($_POST["water_heater_detail"], FILTER_SANITIZE_STRING);
+    $bed_detail = filter_var($_POST["bed_detail"], FILTER_SANITIZE_STRING);
+    $mattress_detail = filter_var($_POST["mattress_detail"], FILTER_SANITIZE_STRING);
+    $television_detail = filter_var($_POST["television_detail"], FILTER_SANITIZE_STRING);
+
+
+
+    $query = "update FacilitiesInRoom set air = $air , airDetails = '$air_detail' , wardrobe = $wardrobe , wardrobeDetails = '$wardrobe_detail' , refrigerator = $refrigerator , refrigeratorDetails = '$refrigerator_detail' , table_fac = $table , tableDetails = '$table_detail' , 
+                chair = $chair , chairDetails = '$chair_detail' , fan = $fan , fanDetails = '$fan_detail' , waterHeater = $water_heater , waterHeaterDetails = '$water_heater_detail' , bed = $bed , bedDetails = '$bed_detail' , mattress = $mattress , mattressDetails = '$mattress_detail'
+                    , television = $television ,  televisionDetails = '$television_detail' where roomID = $roomID;";
 
     if (mysqli_query($con, $query)) {
         return true;
@@ -37,15 +88,36 @@ function add_room($dormID) {
     $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
     $room_reserve = filter_var($_POST["room_reserve"], FILTER_SANITIZE_NUMBER_INT);
 
-    $query = "INSERT INTO `Rooms` (`dormID`, `roomType`, `areas`, `price`, `numOfRoom`, `roomAvailable`, `roomReserve`)
-VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $room_available , $room_reserve);";
+    $main_pic_path = "default_picture.jpg";
+
+    if ($_FILES["room_main_pic"]["name"] !== "") {
+        if (move_uploaded_file($_FILES["room_main_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $dormID . "_" . $_FILES["room_main_pic"]["name"])) {
+            $main_pic_path = "main_pic_" . $dormID . "_" . $_FILES["room_main_pic"]["name"];
+        }
+    }
+
+
+
+    $query = "INSERT INTO `Rooms` (`dormID`, `roomType`, `areas`, `price`, `numOfRoom`, `roomAvailable`, `roomReserve` , `status` , `main_pic`)
+VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $room_available , $room_reserve , 'Active' , '$main_pic_path');";
 
     if (mysqli_query($con, $query)) {
+
         $query = "select max(roomID) from Rooms";
         $id_result = mysqli_query($con, $query);
         $id_row = mysqli_fetch_array($id_result);
 
         $fac_query = "INSERT INTO `FacilitiesInRoom` (`roomID`)VALUES ($id_row[0]);";
+
+        for ($i = 0; $i <= count($_FILES["room_pic"]); $i++) {
+            if ($_FILES["room_pic"]["name"][$i] !== "") {
+                $pic_path = upPicture("room_pic", $i, $id_row[0]);
+                $pic_query = "INSERT INTO `RoomPic` (`roomID`, `roomPicPath`) VALUES ($id_row[0], '$pic_path');";
+                if (!mysqli_query($con, $pic_query)) {
+                    return "Add Pic Fail";
+                }
+            }
+        }
         if (mysqli_query($con, $fac_query)) {
             if (add_fac_room($id_row[0])) {
                 return "Add Complete";
@@ -56,7 +128,7 @@ VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $room_availa
             return "Add FacInRoom Failed";
         }
     } else {
-        return "Add Room Failed";
+        return "Add Room Failed." . $main_pic_path;
     }
 }
 
@@ -71,7 +143,7 @@ function edit_room($roomID) {
     $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
     $room_reserve = filter_var($_POST["room_reserve"], FILTER_SANITIZE_NUMBER_INT);
 
-    $query = "update rooms set roomType = '$room_type' , area = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , roomReserve = $room_reserve where roomID = $roomID;";
+    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , roomReserve = $room_reserve where roomID = $roomID;";
 
     if (mysqli_query($con, $query)) {
         if (add_fac_room($roomID)) {
@@ -109,14 +181,15 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                 echo '<script>alert("Edit Room Failed");</script>';
                 echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
             }
-        }
-        $msg = add_room($_POST["dormID"]);
-        if ($msg == "Add Complete" ) {
-            echo '<script>alert("Add Room Complete");</script>';
-            echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
         } else {
-            echo '<script>alert("'.$msg.'");</script>';
-            echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+            $msg = add_room($_POST["dormID"]);
+            if ($msg == "Add Complete") {
+                echo '<script>alert("Add Room Complete");</script>';
+                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+            } else {
+                echo '<script>alert("' . $msg . '");</script>';
+                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+            }
         }
     }
     ?>
@@ -125,7 +198,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
         <div class="span12">	
             <div class="row">
                 <div class="span10">
-                    <form action="" method="post" class="form-horizontal">
+                    <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
                         <fieldset>
 
                             <h1>Add Your Room Type<br /><small>You can add your room type and fill the information.
@@ -192,9 +265,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Air Condition
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="air_detail" value="<?php echo isset($fac_room_row["airDetails"]) ? $fac_room_row["airDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='air' <?php echo isset($fac_room_row["air"]) ? ($fac_room_row["air"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='air' <?php echo isset($fac_room_row["air"]) ? ($fac_room_row["air"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -202,9 +275,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Refrigrator
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="refrigerator_detail" value="<?php echo isset($fac_room_row["refrigeratorDetails"]) ? $fac_room_row["refrigeratorDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='refrigerator' <?php echo isset($fac_room_row["refrigerator"]) ? ($fac_room_row["refrigerator"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='refrigerator' <?php echo isset($fac_room_row["refrigerator"]) ? ($fac_room_row["refrigerator"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -212,9 +285,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Chair
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="chair_detail" value="<?php echo isset($fac_room_row["chairDetails"]) ? $fac_room_row["chairDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='chair' <?php echo isset($fac_room_row["chair"]) ? ($fac_room_row["chair"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='chair' <?php echo isset($fac_room_row["chair"]) ? ($fac_room_row["chair"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -222,9 +295,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Water Heater
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="water_heater_detail" value="<?php echo isset($fac_room_row["waterHeaterDetails"]) ? $fac_room_row["waterHeaterDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='water_heater' <?php echo isset($fac_room_row["waterHeater"]) ? ($fac_room_row["waterHeater"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='water_heater' <?php echo isset($fac_room_row["waterHeater"]) ? ($fac_room_row["waterHeater"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -232,9 +305,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Fan
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="fan_detail" value="<?php echo isset($fac_room_row["fanDetails"]) ? $fac_room_row["fanDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='fan' <?php echo isset($fac_room_row["fan"]) ? ($fac_room_row["fan"] == 1 ? "checked":""):""?>>
+                                            <input type="checkbox" name='fan' <?php echo isset($fac_room_row["fan"]) ? ($fac_room_row["fan"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -247,9 +320,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Wardrobe
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="wardrobe_detail" value="<?php echo isset($fac_room_row["wardrobeDetails"]) ? $fac_room_row["wardrobeDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='wardrobe' <?php echo isset($fac_room_row["wardrobe"]) ? ($fac_room_row["wardrobe"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='wardrobe' <?php echo isset($fac_room_row["wardrobe"]) ? ($fac_room_row["wardrobe"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -257,9 +330,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Table
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="table_detail" value="<?php echo isset($fac_room_row["tableDetails"]) ? $fac_room_row["tableDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='table' <?php echo isset($fac_room_row["table_fac"]) ? ($fac_room_row["table_fac"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='table' <?php echo isset($fac_room_row["table_fac"]) ? ($fac_room_row["table_fac"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -267,9 +340,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Bed
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="bed_detail" value="<?php echo isset($fac_room_row["bedDetails"]) ? $fac_room_row["bedDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='bed' <?php echo isset($fac_room_row["bed"]) ? ($fac_room_row["bed"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='bed' <?php echo isset($fac_room_row["bed"]) ? ($fac_room_row["bed"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -277,9 +350,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Mattress
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="mattress_detail" value="<?php echo isset($fac_room_row["mattressDetails"]) ? $fac_room_row["mattressDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='mattress' <?php echo isset($fac_room_row["mattress"]) ? ($fac_room_row["mattress"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='mattress' <?php echo isset($fac_room_row["mattress"]) ? ($fac_room_row["mattress"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -287,9 +360,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <span class="input-group-addon">
                                             Television
                                         </span>
-                                        <input type="text" placeholder='Detail' class="form-control">
+                                        <input type="text" placeholder='Detail' class="form-control" name="television_detail" value="<?php echo isset($fac_room_row["televisionDetails"]) ? $fac_room_row["televisionDetails"] : "" ?>">
                                         <span class="input-group-addon" >
-                                            <input type="checkbox" name='television' <?php echo isset($fac_room_row["television"]) ? ($fac_room_row["television"] == 1 ? "checked":""):"" ?>>
+                                            <input type="checkbox" name='television' <?php echo isset($fac_room_row["television"]) ? ($fac_room_row["television"] == 1 ? "checked" : "") : "" ?>>
                                         </span>
                                     </div>
                                     <br>
@@ -298,6 +371,16 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                             <div class="row">
                                 <div class="span10">
                                     <legend><span>Room</span> Picture</legend>
+                                </div>
+                                <div class="span8">
+                                    <label>Main Picture : &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input class="form-control" style="width: 50%" name="room_main_pic" type="file" placeholder="" />
+                                    </label>
+                                </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="span10">
+                                    <legend><span>Screen</span> Shot</legend>
                                 </div>
                                 <div class="span4">
                                     <label>Picture1 
@@ -337,6 +420,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                 <div class="span10">
                                     <br />
                                     <button type='submit' name='edit_submit' class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
+                                    <a href="callback.php?disabled_room=<?php echo $_GET["roomID"]; ?>" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Delete Room</a>
                                     <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
 
                                     <br />

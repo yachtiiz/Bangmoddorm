@@ -8,7 +8,7 @@
             
             $rand = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0,3);
 
-            return $rand . $gen_id;
+            return $rand;
         }
 
         function up_evidance_picture($file, $username) {

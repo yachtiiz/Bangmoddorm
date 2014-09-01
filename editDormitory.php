@@ -4,80 +4,140 @@
         <div class="row">
             <div class="span10">
                 <?php
-                if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
+
+                function upPicture($file, $i, $dormID) {
+
+                    if ($_FILES["$file"]["type"][$i] == "image/jpg" || $_FILES["$file"]["type"][$i] == "image/png" || $_FILES["$file"]["type"][$i] == "image/jpeg" || $_FILES["$file"]["type"][$i] == "image/gif" || $_FILES["$file"]["type"][$i] == "image/pjpeg" || $_FILES["$file"]["type"][$i] == "image/x-png") {
+
+
+                        $rand = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
+                        $path = "images/dormitory_picture/" . $rand . "_" . $dormID . "_" . $_FILES["$file"]["name"][$i];
+                        $pic_path = $rand . "_" . $dormID . "_" . $_FILES["$file"]["name"][$i];
+
+                        if (move_uploaded_file($_FILES["$file"]["tmp_name"][$i], $path)) {
+                            return $msg = $pic_path;
+                        } else {
+                            return $msg = "Cant Upload";
+                        }
+                    } else {
+                        return $msg = "Invalid Picture";
+                    }
+                }
+
+                function update_fac($dormID) {
+
                     require 'connection.php';
 
-                    if (isset($_POST["edit_dorm_submit"])) {
+                    $wifi = isset($_POST["wifi"]) ? ($_POST["wifi"] == 'on' ? 1 : 0) : 0;
+                    $lan = isset($_POST["lan"]) ? ($_POST["lan"] == 'on' ? 1 : 0) : 0;
+                    $room_clean = isset($_POST["room_clean_service"]) ? ($_POST["room_clean_service"] == 'on' ? 1 : 0) : 0;
+                    $air_clean = isset($_POST["air_clean_service"]) ? ($_POST["air_clean_service"] == 'on' ? 1 : 0) : 0;
+                    $washing_service = isset($_POST["washing_service"]) ? ($_POST["washing_service"] == 'on' ? 1 : 0) : 0;
+                    $laundry = isset($_POST["laundry"]) ? ($_POST["laundry"] == 'on' ? 1 : 0) : 0;
+                    $vending = isset($_POST["vending_machine"]) ? ($_POST["vending_machine"] == 'on' ? 1 : 0) : 0;
+                    $bus_service = isset($_POST["bus_service"]) ? ($_POST["bus_service"] == 'on' ? 1 : 0) : 0;
+                    $restaurant = isset($_POST["restaurant"]) ? ($_POST["restaurant"] == 'on' ? 1 : 0) : 0;
+                    $fitness = isset($_POST["fitness"]) ? ($_POST["fitness"] == 'on' ? 1 : 0) : 0;
+                    $swimming_pool = isset($_POST["swimming_pool"]) ? ($_POST["swimming_pool"] == 'on' ? 1 : 0) : 0;
+                    $cctv = isset($_POST["cctv"]) ? ($_POST["cctv"] == 'on' ? 1 : 0) : 0;
+                    $car_parking = isset($_POST["parking"]) ? ($_POST["parking"] == 'on' ? 1 : 0) : 0;
+                    $elevator = isset($_POST["elevator"]) ? ($_POST["elevator"] == 'on' ? 1 : 0) : 0;
 
-                        function update_fac($dormID) {
+                    $wifi_detail = filter_var($_POST["wifi_detail"], FILTER_SANITIZE_STRING);
+                    $lan_detail = filter_var($_POST["lan_detail"], FILTER_SANITIZE_STRING);
+                    $room_detail = filter_var($_POST["room_clean_detail"], FILTER_SANITIZE_STRING);
+                    $air_detail = filter_var($_POST["air_clean_detail"], FILTER_SANITIZE_STRING);
+                    $washing_detail = filter_var($_POST["washing_service_detail"], FILTER_SANITIZE_STRING);
+                    $fitness_detail = filter_var($_POST["fitness_detail"], FILTER_SANITIZE_STRING);
+                    $pool_detail = filter_var($_POST["pool_detail"], FILTER_SANITIZE_STRING);
+                    $bus_detail = filter_var($_POST["bus_detail"], FILTER_SANITIZE_STRING);
+                    $restaurant_detail = filter_var($_POST["restaurant_detail"], FILTER_SANITIZE_STRING);
+                    $vending_detail = filter_var($_POST["vending_detail"], FILTER_SANITIZE_STRING);
+                    $luandry_detail = filter_var($_POST["laundry_detail"], FILTER_SANITIZE_STRING);
+                    $cctv_detail = filter_var($_POST["cctv_detail"], FILTER_SANITIZE_STRING);
+                    $parking_detail = filter_var($_POST["parking_detail"], FILTER_SANITIZE_STRING);
+                    $elevator_detail = filter_var($_POST["elevator_detail"], FILTER_SANITIZE_STRING);
 
-                            require 'connection.php';
-
-                            $wifi = isset($_POST["wifi"]) ? ($_POST["wifi"] == 'on' ? 1 : 0) : 0;
-                            $lan = isset($_POST["lan"]) ? ($_POST["lan"] == 'on' ? 1 : 0) : 0;
-                            $room_clean = isset($_POST["room_clean_service"]) ?  ($_POST["room_clean_service"] == 'on' ? 1 : 0) : 0;
-                            $air_clean = isset($_POST["air_clean_service"]) ?  ($_POST["air_clean_service"] == 'on' ? 1 : 0) : 0;
-                            $washing_service = isset($_POST["washing_service"]) ?  ($_POST["washing_service"] == 'on' ? 1 : 0) : 0;
-                            $laundry = isset($_POST["laundry"]) ?  ($_POST["laundry"] == 'on' ? 1 : 0) : 0;
-                            $vending =  isset($_POST["vending_machine"]) ?  ($_POST["vending_machine"] == 'on' ? 1 : 0) : 0;
-                            $bus_service = isset($_POST["bus_service"]) ?  ($_POST["bus_service"] == 'on' ? 1 : 0) : 0;
-                            $restaurant = isset($_POST["restaurant"]) ?  ($_POST["restaurant"] == 'on' ? 1 : 0) : 0;
-                            $fitness = isset($_POST["fitness"]) ?  ($_POST["fitness"] == 'on' ? 1 : 0) : 0;
-                            $swimming_pool = isset($_POST["swimming_pool"]) ?  ($_POST["swimming_pool"] == 'on' ? 1 : 0) : 0;
-                            $cctv = isset($_POST["cctv"]) ? ($_POST["cctv"] == 'on' ? 1 : 0) : 0;
-                            $car_parking = isset($_POST["parking"]) ?  ($_POST["parking"] == 'on' ? 1 : 0) : 0;
-                            $elevator = isset($_POST["elevator"]) ?  ($_POST["elevator"] == 'on' ? 1 : 0) : 0;
-
-                            $wifi_detail = filter_var($_POST["wifi_detail"], FILTER_SANITIZE_STRING);
-                            $lan_detail = filter_var($_POST["lan_detail"], FILTER_SANITIZE_STRING);
-                            $room_detail = filter_var($_POST["room_clean_detail"], FILTER_SANITIZE_STRING);
-                            $air_detail = filter_var($_POST["air_clean_detail"], FILTER_SANITIZE_STRING);
-                            $washing_detail = filter_var($_POST["washing_service_detail"], FILTER_SANITIZE_STRING);
-                            $fitness_detail = filter_var($_POST["fitness_detail"], FILTER_SANITIZE_STRING);
-                            $pool_detail = filter_var($_POST["pool_detail"], FILTER_SANITIZE_STRING);
-                            $bus_detail = filter_var($_POST["bus_detail"], FILTER_SANITIZE_STRING);
-                            $restaurant_detail = filter_var($_POST["restaurant_detail"], FILTER_SANITIZE_STRING);
-                            $vending_detail = filter_var($_POST["vending_detail"], FILTER_SANITIZE_STRING);
-                            $luandry_detail = filter_var($_POST["laundry_detail"], FILTER_SANITIZE_STRING);
-                            $cctv_detail = filter_var($_POST["cctv_detail"], FILTER_SANITIZE_STRING);
-                            $parking_detail = filter_var($_POST["parking_detail"], FILTER_SANITIZE_STRING);
-                            $elevator_detail = filter_var($_POST["elevator_detail"], FILTER_SANITIZE_STRING);
-
-                            $query = "update FacilitiesInDorm set parkingDetails = '$parking_detail' , wifiDetails = '$wifi_detail' , lanDetails = '$lan_detail' , airCleanDetails = '$air_detail' , roomCleanDetails = '$room_detail' , washingDetails = '$washing_detail' , fitnessDetails = '$fitness_detail' , poolDetails = '$pool_detail' , 
+                    $query = "update FacilitiesInDorm set parkingDetails = '$parking_detail' , wifiDetails = '$wifi_detail' , lanDetails = '$lan_detail' , airCleanDetails = '$air_detail' , roomCleanDetails = '$room_detail' , washingDetails = '$washing_detail' , fitnessDetails = '$fitness_detail' , poolDetails = '$pool_detail' , 
                                 busDetails = '$bus_detail' , restaurantDetails = '$restaurant_detail' , vendingDetails = '$vending_detail' , laundryDetails = '$luandry_detail' , elevatorDetails = '$elevator_detail' , cctvDetails = '$cctv_detail' , parking = $car_parking , wifi = $wifi , lan = $lan , airCleanService = $air_clean , 
                                     roomCleanService = $room_clean , washingService = $washing_service , fitness = $fitness , pool = $swimming_pool , busService = $bus_service , restaurant = $restaurant , vendingMachine = $vending , laundry = $laundry , elevator = $elevator , cctv = $cctv where dormID = $dormID";
 
-                            if (mysqli_query($con, $query)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
+                    if (mysqli_query($con, $query)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                function edit_dorm() {
+
+                    require 'connection.php';
+
+                    $dormID = filter_var($_POST["dormID"], FILTER_SANITIZE_STRING);
+                    $type = filter_var($_POST["type"], FILTER_SANITIZE_STRING);
+                    $distance = filter_var($_POST["distance"], FILTER_SANITIZE_NUMBER_FLOAT);
+                    $addressNO = filter_var($_POST["addressNo"], FILTER_SANITIZE_STRING);
+                    $soi = filter_var($_POST["soi"], FILTER_SANITIZE_STRING);
+                    $road = filter_var($_POST["road"], FILTER_SANITIZE_STRING);
+                    $subdistinct = filter_var($_POST["sub_distinct"], FILTER_SANITIZE_STRING);
+                    $distinct = filter_var($_POST["distinct"], FILTER_SANITIZE_STRING);
+                    $province = filter_var($_POST["province"], FILTER_SANITIZE_STRING);
+                    $zip_code = filter_var($_POST["zip_code"], FILTER_SANITIZE_STRING);
+                    $latitude = filter_var($_POST["latitude"], FILTER_SANITIZE_STRING);
+                    $longtitude = filter_var($_POST["longtitude"], FILTER_SANITIZE_STRING);
+                    $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
+                    $tel = filter_var($_POST["tel"], FILTER_SANITIZE_STRING);
+
+                    $main_dorm_path = "default.jpg";
+
+                    if ($_FILES["main_dorm_pic"]["name"] !== "") {
+                        if (move_uploaded_file($_FILES["main_dorm_pic"]["tmp_name"], "images/dormitory_picture/main_pic_" . $dormID . "_" . $_FILES["main_dorm_pic"]["name"])) {
+                            $main_dorm_path = "main_pic_" . $dormID . "_" . $_FILES["main_dorm_pic"]["name"];
                         }
+                    }
 
-                        $dormID = filter_var($_POST["dormID"], FILTER_SANITIZE_STRING);
-                        $type = filter_var($_POST["type"], FILTER_SANITIZE_STRING);
-                        $distance = filter_var($_POST["distance"], FILTER_SANITIZE_NUMBER_FLOAT);
-                        $addressNO = filter_var($_POST["addressNo"], FILTER_SANITIZE_STRING);
-                        $soi = filter_var($_POST["soi"], FILTER_SANITIZE_STRING);
-                        $road = filter_var($_POST["road"], FILTER_SANITIZE_STRING);
-                        $subdistinct = filter_var($_POST["sub_distinct"], FILTER_SANITIZE_STRING);
-                        $distinct = filter_var($_POST["distinct"], FILTER_SANITIZE_STRING);
-                        $province = filter_var($_POST["province"], FILTER_SANITIZE_STRING);
-                        $zip_code = filter_var($_POST["zip_code"], FILTER_SANITIZE_STRING);
-                        $latitude = filter_var($_POST["latitude"], FILTER_SANITIZE_STRING);
-                        $longtitude = filter_var($_POST["longtitude"], FILTER_SANITIZE_STRING);
-                        $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
-                        $tel = filter_var($_POST["tel"], FILTER_SANITIZE_STRING);
+                    for ($i = 0; $i <= count($_FILES["dorm_pic"]); $i++) {
+                        if ($_FILES["dorm_pic"]["name"][$i] !== "") {
+                            $msg = upPicture("dorm_pic", $i, $dormID);
+                            $pic_query = "INSERT INTO `DormPic` (`dormID`, `dormPicPath`) VALUES ($dormID, '$msg');";
+                            mysqli_query($con, $pic_query);
+                        }
+                    }
 
 
+                    $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel' , dorm_pictures = '$main_dorm_path' where dormID = $dormID ";
 
-                        $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel' where dormID = $dormID ";
+                    if (mysqli_query($con, $query) && update_fac($dormID)) {
+                        echo '<script>alert("Edit Dormitory Success ");</script>';
+                        echo '<script>window.location = "index.php?chose_page=ownersystem";</script>';
+                    } else {
+                        echo '<script>alert("Edit Dormitory Failed (Some Information Wrong)");</script>';
+                    }
+                }
 
-                        if (mysqli_query($con, $query) && update_fac($dormID)) {
-                            echo '<script>alert("Edit Dormitory Success");</script>';
-                            echo '<script>window.location = "index.php?chose_page=ownersystem";</script>';
-                        } else {
-                            echo '<script>alert("Edit Dormitory Failed (Some Information Wrong)");</script>';
+                function filterPic(&$arr_pic) {
+                    $value = 0;
+                    for ($i = 0; $i < count($arr_pic["name"]); $i++) {
+                        if ($arr_pic["name"][$i] != "") {
+                            if ($arr_pic["type"][$i] == "image/jpg" || $arr_pic["type"][$i] == "image/png" || $arr_pic["type"][$i] == "image/x-png" || $arr_pic["type"][$i] == "image/jpeg" || $arr_pic["type"][$i] == "image/gif" || $arr_pic["type"][$i] == "image/pjpeg") {
+                                $value += 0;
+                            }
+                            else
+                                $value += 1;
+                        }
+                    }
+                    if ($value == 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
+                    require 'connection.php';
+                    if (isset($_POST["edit_dorm_submit"])) {
+                        if (filterPic($_FILES["dorm_pic"])) {
+                            edit_dorm();
                         }
                     }
 
@@ -89,6 +149,9 @@
                     $fac_query = "select * from FacilitiesInDorm where dormID=" . $_GET["dormID"];
                     $fac_result = mysqli_query($con, $fac_query);
                     $fac_row = mysqli_fetch_array($fac_result);
+
+                    $pic_query = "select * from DormPic where dormID=" . $_GET["dormID"];
+                    $pic_result = mysqli_query($con, $pic_query);
                     ?>
                     <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
                         <fieldset>
@@ -380,54 +443,93 @@
 
                             <br/>
                             <div class="row">
-                                <div class="span10">
+                                <div class="span12">
                                     <legend><span>Dormitory</span> Picture</legend>
                                 </div>
-                                <div class="span4">
-                                    <label>Picture1 
-                                        <input class="form-control" name="dorm_pic[]" type="file" placeholder="" />
-                                    </label>
+                                <div class="span12">
+                                    <?php if (isset($row["dorm_pictures"]) && $row["dorm_pictures"] !== "") { ?>
+                                        <div class="span3">
+                                            <h4>Main Picture</h4>
+                                        </div>
+                                        <div class="span8 center">
+                                            <img style="width:405px;height: 250px" src="images/dormitory_picture/<?php echo $row["dorm_pictures"]; ?>">
+                                        </div>
+                                    <?php } else { ?>
+                                        <label>Main Picture : &nbsp;&nbsp;&nbsp;
+                                            <input style='width:50%' class="form-control" name="main_dorm_pic" type="file" placeholder="" multipart/>
+                                        </label>
+                                    <?php } ?>
                                 </div>
-                                <div class="span4">
-                                    <label>Picture2
-                                        <input class="form-control" name="dorm_pic[]" type="file" placeholder=""/>
-                                    </label>
+                            </div><br><br>
+                            <div class='row'>
+                                <div class="col-md-12">
+                                    <div class="col-md-12">
+                                        <legend><span> Screen</span> Shot</legend>
+                                    </div>
+                                    
+                                    <?php for($i=0;$i< mysqli_num_rows($pic_result);$i++){
+                                        $pic_row = mysqli_fetch_array($pic_result);
+                                        ?>
+                                    <div class="col-md-4" style="width:250px;height: 250px">
+                                        <label>Picture <?php echo mysqli_num_rows($pic_result); ?>
+                                                <?php if ($pic_row["dormPicPath"] !== "") { ?>
+                                                    <img class="img-thumbnail" style="width:250px;height: 224px" style="" src="images/dormitory_picture/<?php echo $pic_row["dormPicPath"]; ?>">
+                                                <?php } else { ?>
+                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder="" multipart />
+                                                <?php } ?>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                    <?php for($i=mysqli_num_rows($pic_result);$i<6;$i++){
+                                        ?>
+                                    <div class="col-md-4" style="width:250px;height: 250px">
+                                            <label>Picture <?php echo $i ?>
+                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder="" multipart />
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                        
+                                        <div class="col-md-4" style="width:250px;height: 250px">
+                                            <label>Picture
+                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder="" multipart />
+                                            </label>
+                                        </div>
+                                         
+                                        
                                 </div>
-                                <div class="span4">
-                                    <label>Picture3 
-                                        <input class="form-control" name="dorm_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture4 
-                                        <input class="form-control" name="dorm_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture5 
-                                        <input class="form-control" name="dorm_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture6 
-                                        <input class="form-control" name="dorm_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
+                                
                             </div>
                             <div class="row">
                                 <div class="span10">
                                     <br>
                                     <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
+                                    <button tpye="button" id="<?php echo $row["status"] === "Active" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Active" ? "Hidden On Page" : "Showing On Page"; ?></button>
                                     <a href="ownersystem.jsp" class="btn btn-primary btn-large book-now pull-right">Back</a>
                                     <br><br>
                                 </div>
+                                <script>
+
+                                    $(document).on("click", "#disabled_button", function() {
+                                        $("#disabled_button").load("callback.php?disabled_dorm=" + "<?php echo $row["dormID"]; ?>");
+                                        document.getElementById("disabled_button").setAttribute("id", "active_button");
+                                        alert("Your Dormitory Information be Hidden on Dormitory Page");
+                                    });
+                                    $(document).on("click", "#active_button", function() {
+                                        $("#active_button").load("callback.php?showing_dorm=" + "<?php echo $row["dormID"]; ?>");
+                                        document.getElementById("active_button").setAttribute("id", "disabled_button");
+                                        alert("Your Dormitory Information be Shown on Dormitory Page");
+
+                                    });
+
+
+                                </script>
                             </div>
                         </fieldset>
                     </form>
-<?php } else { ?>
+                <?php } else { ?>
                 </div>
                 <h1>Something Error</h1>
-                <?php } ?>
+            <?php } ?>
         </div>
 
     </div></div> <!-- /container -->

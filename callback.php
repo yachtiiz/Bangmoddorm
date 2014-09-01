@@ -69,7 +69,7 @@ function upPicture($file, $username) {
     }
 }
 
-function approve_dormitory($confirmID){
+function approve_dormitory($confirmID,$dorm_rate){
     
     require 'connection.php';
     $query = "update ConfirmationDorm set approval = 'Approve' where confirmID = $confirmID ";
@@ -83,7 +83,7 @@ function approve_dormitory($confirmID){
         $dorm_name = $row["dormName"];
         $memberID = $row["memberID"];
         
-        $query = "INSERT INTO `Dormitories` (`memberID`, `dormName`) VALUES ($memberID, '$dorm_name');";
+        $query = "INSERT INTO `Dormitories` (`memberID`, `dormName` , `dormitory_rate` , `status`) VALUES ($memberID, '$dorm_name' , $dorm_rate , 'Disable');";
         
         if(mysqli_query($con, $query)){
             $query = "select max(dormID) from Dormitories";
@@ -101,14 +101,64 @@ function approve_dormitory($confirmID){
     }
 }
 
-if(isset($_GET["approval_submit"]) && is_numeric($_GET["approval_submit"])){
-    if(approve_dormitory($_GET["approval_submit"])){
+if(isset($_GET["approval_submit"]) && is_numeric($_GET["approval_submit"]) && isset($_GET["dorm_rate"]) && is_numeric($_GET["dorm_rate"])){
+    if(approve_dormitory($_GET["approval_submit"],$_GET["dorm_rate"])){
         echo "<script>alert('Approval Success')</script>";
         echo "<script>window.location = 'index.php?chose_page=checkRequestDorm';</script>";
     }else{
         echo "<script>alert('Approval Failed')</script>";
     }
 }
+
+// Deleted Room Function
+
+function disabled_room($roomID){
+    require 'connection.php';
+    
+    $query = "update Rooms set status = 'Disabled' where roomID = $roomID";
+    
+    if(mysqli_query($con, $query)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+if(isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])){
+    if(disabled_room($_GET["disabled_room"])){
+        echo "<script>alert('Delete Success')</script>";
+        echo "<script>window.location = 'index.php?chose_page=ownersystem';</script>";
+    }else{
+        echo "<script>alert('Delete Failed')</script>";
+        echo "<script>window.location = 'index.php?chose_page=ownersystem';</script>";
+    }
+}
+
+// Showing and Not Showing Dormitory
+
+function showing_dorm($dormID,$status){
+    
+    require 'connection.php';
+    
+    $query = "update Dormitories set status = '$status' where dormID = $dormID ";
+    if(mysqli_query($con, $query)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+if(isset($_GET["showing_dorm"]) && is_numeric($_GET["showing_dorm"])){
+    if(showing_dorm($_GET["showing_dorm"], 'Active')){
+        echo 'Hidden On Page';
+    }
+}
+if(isset($_GET["disabled_dorm"]) && is_numeric($_GET["disabled_dorm"])){
+    if(showing_dorm($_GET["disabled_dorm"], 'Disable')){
+        echo 'Showing On Page';
+    }
+}
+
 
 ?>
 
