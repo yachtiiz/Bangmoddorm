@@ -88,24 +88,41 @@
                     $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
                     $tel = filter_var($_POST["tel"], FILTER_SANITIZE_STRING);
 
-                    $main_dorm_path = "default.jpg";
+                    $main_dorm_path = NULL;
 
-                    if ($_FILES["main_dorm_pic"]["name"] !== "") {
-                        if (move_uploaded_file($_FILES["main_dorm_pic"]["tmp_name"], "images/dormitory_picture/main_pic_" . $dormID . "_" . $_FILES["main_dorm_pic"]["name"])) {
-                            $main_dorm_path = "main_pic_" . $dormID . "_" . $_FILES["main_dorm_pic"]["name"];
+
+                    if (isset($_FILES["main_dorm_pic"])) {
+                        if ($_FILES["main_dorm_pic"]["name"] !== "") {
+                            if (move_uploaded_file($_FILES["main_dorm_pic"]["tmp_name"], "images/dormitory_picture/main_pic_" . $dormID . "_" . $_FILES["main_dorm_pic"]["name"])) {
+                                $main_dorm_path = "main_pic_" . $dormID . "_" . $_FILES["main_dorm_pic"]["name"];
+                            }
                         }
                     }
 
-                    for ($i = 0; $i <= count($_FILES["dorm_pic"]); $i++) {
-                        if ($_FILES["dorm_pic"]["name"][$i] !== "") {
-                            $msg = upPicture("dorm_pic", $i, $dormID);
-                            $pic_query = "INSERT INTO `DormPic` (`dormID`, `dormPicPath`) VALUES ($dormID, '$msg');";
-                            mysqli_query($con, $pic_query);
+                    if (isset($_FILES["change_main_dorm_pic"])) {
+                        if ($_FILES["change_main_dorm_pic"]["name"] !== "") {
+                            if (move_uploaded_file($_FILES["change_main_dorm_pic"]["tmp_name"], "images/dormitory_picture/main_pic_" . $dormID . "_" . $_FILES["change_main_dorm_pic"]["name"])) {
+                                $main_dorm_path = "main_pic_" . $dormID . "_" . $_FILES["change_main_dorm_pic"]["name"];
+                            }
                         }
                     }
 
 
-                    $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel' , dorm_pictures = '$main_dorm_path' where dormID = $dormID ";
+
+                    if (isset($_FILES["dorm_pic"])) {
+                        for ($i = 0; $i <= count($_FILES["dorm_pic"]); $i++) {
+                                if (isset($_FILES["dorm_pic"]["tmp_name"][$i]) && $_FILES["dorm_pic"]["name"][$i] !== "") {
+                                    $msg = upPicture("dorm_pic", $i, $dormID);
+                                    $pic_query = "INSERT INTO `DormPic` (`dormID`, `dormPicPath`) VALUES ($dormID, '$msg');";
+                                    mysqli_query($con, $pic_query);
+                                }
+                        }
+                    }
+
+
+                    $pic_main_path_query = $main_dorm_path === NULL ? "" : ", dorm_pictures = '$main_dorm_path'";
+
+                    $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel'" . $pic_main_path_query . " where dormID = $dormID ";
 
                     if (mysqli_query($con, $query) && update_fac($dormID)) {
                         echo '<script>alert("Edit Dormitory Success ");</script>';
@@ -449,8 +466,11 @@
                                 <div class="span12">
                                     <?php if (isset($row["dorm_pictures"]) && $row["dorm_pictures"] !== "") { ?>
                                         <div class="span3">
-                                            <h4>Main Picture</h4>
+                                            <h4>Main Picture :</h4><br>
+                                            <p>Change Main Picture</p>
+                                            <input style='width:100%' class="form-control" name="change_main_dorm_pic" type="file" placeholder="" multipart/>
                                         </div>
+
                                         <div class="span8 center">
                                             <img style="width:405px;height: 250px" src="images/dormitory_picture/<?php echo $row["dorm_pictures"]; ?>">
                                         </div>
@@ -466,38 +486,29 @@
                                     <div class="col-md-12">
                                         <legend><span> Screen</span> Shot</legend>
                                     </div>
-                                    
-                                    <?php for($i=0;$i< mysqli_num_rows($pic_result);$i++){
+                                    <?php
+                                    for ($i = 0; $i < mysqli_num_rows($pic_result); $i++) {
                                         $pic_row = mysqli_fetch_array($pic_result);
                                         ?>
-                                    <div class="col-md-4" style="width:250px;height: 250px">
-                                        <label>Picture <?php echo mysqli_num_rows($pic_result); ?>
+                                        <div class="col-md-4" style="width:250px;height: 250px">
+                                            <label>Picture <?php echo $i + 1; ?>
                                                 <?php if ($pic_row["dormPicPath"] !== "") { ?>
                                                     <img class="img-thumbnail" style="width:250px;height: 224px" style="" src="images/dormitory_picture/<?php echo $pic_row["dormPicPath"]; ?>">
                                                 <?php } else { ?>
-                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder="" multipart />
+                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder=""/>
                                                 <?php } ?>
                                             </label>
                                         </div>
                                     <?php } ?>
-                                    <?php for($i=mysqli_num_rows($pic_result);$i<6;$i++){
+                                    <?php for ($i = mysqli_num_rows($pic_result); $i < 6; $i++) {
                                         ?>
-                                    <div class="col-md-4" style="width:250px;height: 250px">
-                                            <label>Picture <?php echo $i ?>
-                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder="" multipart />
+                                        <div class="col-md-4" style="width:250px;height: 250px">
+                                            <label>Picture <?php echo $i + 1 ?>
+                                                <input class="form-control" name="dorm_pic[]" type="file" />
                                             </label>
                                         </div>
                                     <?php } ?>
-                                        
-                                        <div class="col-md-4" style="width:250px;height: 250px">
-                                            <label>Picture
-                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder="" multipart />
-                                            </label>
-                                        </div>
-                                         
-                                        
                                 </div>
-                                
                             </div>
                             <div class="row">
                                 <div class="span10">

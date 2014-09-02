@@ -142,8 +142,40 @@ function edit_room($roomID) {
     $number_of_room = filter_var($_POST["number_of_room"], FILTER_SANITIZE_STRING);
     $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
     $room_reserve = filter_var($_POST["room_reserve"], FILTER_SANITIZE_NUMBER_INT);
+    $main_room_path = NULL;
 
-    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , roomReserve = $room_reserve where roomID = $roomID;";
+
+    if (isset($_FILES["change_main_room_pic"])) {
+        if ($_FILES["change_main_room_pic"]["name"] !== "") {
+            if (move_uploaded_file($_FILES["change_main_room_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $roomID . "_" . $_FILES["change_main_room_pic"]["name"])) {
+                $main_room_path = "main_pic_" . $roomID . "_" . $_FILES["change_main_room_pic"]["name"];
+            }
+        }
+    }
+
+    if (isset($_FILES["main_room_pic"])) {
+        if ($_FILES["main_room_pic"]["name"] !== "") {
+            if (move_uploaded_file($_FILES["main_room_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"])) {
+                $main_room_path = "main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"];
+            }
+        }
+    }
+
+    if (isset($_FILES["room_pic"])) {
+        for ($i = 0; $i <= count($_FILES["room_pic"]); $i++) {
+            if (isset($_FILES["room_pic"]["tmp_name"][$i]) && $_FILES["room_pic"]["name"][$i] !== "") {
+                $msg = upPicture("room_pic", $i, $roomID);
+                $pic_query = "INSERT INTO `RoomPic` (`roomID`, `roomPicPath`) VALUES ($roomID, '$msg');";
+                mysqli_query($con, $pic_query);
+            }
+        }
+    }
+
+
+    $pic_main_path_query = $main_room_path === NULL ? "" : ", main_pic = '$main_room_path'";
+    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , roomReserve = $room_reserve " . $pic_main_path_query . " where roomID = $roomID;";
+
+
 
     if (mysqli_query($con, $query)) {
         if (add_fac_room($roomID)) {
@@ -372,65 +404,81 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                 <div class="span10">
                                     <legend><span>Room</span> Picture</legend>
                                 </div>
-                                <div class="span8">
-                                    <label>Main Picture : &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <input class="form-control" style="width: 50%" name="room_main_pic" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                            </div><br>
-                            <div class="row">
+
                                 <div class="span10">
-                                    <legend><span>Screen</span> Shot</legend>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture1 
-                                        <input class="form-control" name="room_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture2
-                                        <input class="form-control" name="room_pic[]" type="file" placeholder=""/>
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture3 
-                                        <input class="form-control" name="room_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture4 
-                                        <input class="form-control" name="room_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture5 
-                                        <input class="form-control" name="room_pic[]" type="file" placeholder="" />
-                                    </label>
-                                </div>
-                                <div class="span4">
-                                    <label>Picture6 
-                                        <input class="form-control" name="room_pic[]" type="file" placeholder="" />
-                                    </label>
+                                    <?php if (isset($room_row["main_pic"]) && $room_row["main_pic"] !== "") { ?>
+                                        <div class="span3">
+                                            <h4>Main Picture :</h4><br>
+                                            <p>Change Main Picture</p>
+                                            <input style='width:100%' class="form-control" name="change_main_room_pic" type="file" placeholder="" multipart/>
+                                        </div>
+                                        <div class="span5 pull-right" >
+                                            <img src="images/room_pictures/<?php echo $room_row["main_pic"]; ?>"
+                                        </div>
+                                    <?php } else { ?>
+                                        <label>Main Picture : &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input class="form-control" style="width: 50%" name="room_main_pic" type="file" placeholder="" />
+                                        </label>
+                                    <?php } ?>
                                 </div>
                             </div>
+                            </div><br>
+                            <div class="row">
+                                <div class="col-md-10" style="margin-left:10px">
+                                    <legend><span>Screen</span> Shot</legend>
+                                </div>
+                                <?php
+                                if (isset($_GET["roomID"]) && is_numeric($_GET["roomID"])) {
+                                    $roomID = $_GET["roomID"];
+                                    $pic_query = "select * from RoomPic where roomID = $roomID";
+                                    $pic_result = mysqli_query($con, $pic_query);
+                                    for ($i = 0; $i < mysqli_num_rows($pic_result); $i++) {
+                                        $pic_row = mysqli_fetch_array($pic_result);
+                                        ?>
+                                        <div class="col-md-4" style="width:250px;height: 250px;margin-left:10px">
+                                            <label>Picture <?php echo $i + 1; ?>
+                                                <?php if ($pic_row["roomPicPath"] !== "") { ?>
+                                                    <img class="img-thumbnail" style="width:250px;height: 224px" style="" src="images/room_pictures/<?php echo $pic_row["roomPicPath"]; ?>">
+                                                <?php } else { ?>
+                                                    <input class="form-control" name="room_pic[]" type="file" placeholder=""/>
+                                                <?php } ?>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                    <?php for ($i = mysqli_num_rows($pic_result); $i < 6; $i++) {
+                                        ?>
+                                        <div class="col-md-4" style="width:250px;height: 250px;margin-left:10px">
+                                            <label>Picture <?php echo $i + 1 ?>
+                                                <input class="form-control" name="room_pic[]" type="file" />
+                                            </label>
+                                        </div>
+                                    <?php }
+                                }else{
+                                ?>
+                                <?php for ($i = 1; $i <= 6; $i++) {
+                                        ?>
+                                        <div class="col-md-4" style="width:250px;height: 250px;margin-left:20px">
+                                            <label>Picture <?php echo $i ?>
+                                                <input class="form-control" name="room_pic[]" type="file" />
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
                             <br />
-
-
                             <div class="row">
                                 <div class="span10">
                                     <br />
                                     <button type='submit' name='edit_submit' class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
                                     <a href="callback.php?disabled_room=<?php echo $_GET["roomID"]; ?>" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Delete Room</a>
                                     <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
-
+                                    <br><br>
                                     <br />
                                     <br />
                                 </div>
                             </div>
-
                         </fieldset>
                     </form>
-
                 </div>
 
             </div>

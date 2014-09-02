@@ -30,7 +30,7 @@ $dorm_result = mysqli_query($con, $query);
                     PRICE RATE : 2000 - 5000 BATH/MONTH<br>
                 </p>
                 <br>
-                <button style="margin-left:70px;width: 50%" class="btn book-now2" href="index.php?chose_page=dormdetail">View Details</button>
+                <a style="margin-left:70px;width: 50%" class="btn book-now2" href="index.php?chose_page=dormdetail&dormID=<?php echo $dorm_row["dormID"]; ?>">View Details</a>
 
             </div>		
         <?php } ?>
