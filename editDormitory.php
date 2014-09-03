@@ -69,6 +69,50 @@
                     }
                 }
 
+                function edit_bank($dormID) {
+
+                    require 'connection.php';
+                    $number = 0;
+                    $new_number = 0;
+                    if (isset($_POST["bank_acc_id"])) {
+                        for ($j = 0; $j < count($_POST["bank_acc_id"]); $j++) {
+                            $bank_id = $_POST["bank_id"][$j];
+                            $bank_name = filter_var($_POST["bank_name"][$j], FILTER_SANITIZE_STRING);
+                            $bank_acc_id = filter_var($_POST["bank_acc_id"][$j], FILTER_SANITIZE_STRING);
+                            $bank_acc_name = filter_var($_POST["bank_acc_name"][$j], FILTER_SANITIZE_STRING);
+                            $bank_branch = filter_var($_POST["bank_branch"][$j], FILTER_SANITIZE_STRING);
+
+                            $query = "update BankAccount set bankName = '$bank_name' , bankAccountID = '$bank_acc_id' , bankAccountName = '$bank_acc_name' , branch = '$bank_branch' where bankID = $bank_id";
+                            if (mysqli_query($con, $query)) {
+                                $number += 1;
+                            } else {
+                                $number = 0;
+                            }
+                        }
+                    }
+                    if (isset($_POST["new_bank_acc_id"])) {
+                        for ($i = 0; $i < count($_POST["new_bank_acc_id"]); $i++) {
+
+                            $new_bank_name = filter_var($_POST["new_bank_name"][$i], FILTER_SANITIZE_STRING);
+                            $new_acc_id = filter_var($_POST["new_bank_acc_id"][$i], FILTER_SANITIZE_STRING);
+                            $new_acc_name = filter_var($_POST["new_bank_acc_name"][$i], FILTER_SANITIZE_STRING);
+                            $new_bank_branch = filter_var($_POST["new_bank_branch"][$i], FILTER_SANITIZE_STRING);
+
+                            $query = "INSERT INTO `BankAccount` (`dormID`, `bankAccountID`, `bankAccountName`, `bankName`, `branch`)VALUES($dormID, '$new_acc_id', '$new_acc_name', '$new_bank_name', '$new_bank_branch');";
+                            if (mysqli_query($con, $query)) {
+                                $new_number += 1;
+                            } else {
+                                $new_number = 0;
+                            }
+                        }
+                    }
+                    if (isset($_POST["bank_acc_id"]) ? $number === count($_POST["bank_acc_id"]) : true && isset($_POST["new_bank_acc_id"]) ? $new_number === count($_POST["new_bank_acc_id"]) : true) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
                 function edit_dorm() {
 
                     require 'connection.php';
@@ -111,11 +155,11 @@
 
                     if (isset($_FILES["dorm_pic"])) {
                         for ($i = 0; $i <= count($_FILES["dorm_pic"]); $i++) {
-                                if (isset($_FILES["dorm_pic"]["tmp_name"][$i]) && $_FILES["dorm_pic"]["name"][$i] !== "") {
-                                    $msg = upPicture("dorm_pic", $i, $dormID);
-                                    $pic_query = "INSERT INTO `DormPic` (`dormID`, `dormPicPath`) VALUES ($dormID, '$msg');";
-                                    mysqli_query($con, $pic_query);
-                                }
+                            if (isset($_FILES["dorm_pic"]["tmp_name"][$i]) && $_FILES["dorm_pic"]["name"][$i] !== "") {
+                                $msg = upPicture("dorm_pic", $i, $dormID);
+                                $pic_query = "INSERT INTO `DormPic` (`dormID`, `dormPicPath`) VALUES ($dormID, '$msg');";
+                                mysqli_query($con, $pic_query);
+                            }
                         }
                     }
 
@@ -124,7 +168,7 @@
 
                     $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel'" . $pic_main_path_query . " where dormID = $dormID ";
 
-                    if (mysqli_query($con, $query) && update_fac($dormID)) {
+                    if (mysqli_query($con, $query) && update_fac($dormID) && edit_bank($dormID)) {
                         echo '<script>alert("Edit Dormitory Success ");</script>';
                         echo '<script>window.location = "index.php?chose_page=ownersystem";</script>';
                     } else {
@@ -298,8 +342,136 @@
                                         <input class="form-control" type="text" name="tel" value='<?php echo $row["tel"] ?>' />
                                     </div>
                                 </div>
+                            </div><br>
+
+
+                            <div class="row">
+                                <div class="span10">
+                                    <legend><span>Dormitory</span> Bank Account </legend>
+                                </div>
                             </div>
+
+                            <?php
+                            $dorm_id = $_GET["dormID"];
+                            $bank_query = "select * from BankAccount where dormID = $dorm_id";
+                            $bank_result = mysqli_query($con, $bank_query);
+
+                            if (mysqli_num_rows($bank_result) === 0) {
+                                ?>
+                                <div class='row'> 
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Bank Name</span>
+                                            <select class="form-control" name="new_bank_name[]">
+                                                <option value="Bangkok Bank">Bangkok Bank</option>
+                                                <option value="Krung Sri Bank">Krung Sri Bank</option>
+                                                <option value="Krung Thai Bank (KTB)">Krung Thai Bank (KTB)</option>
+                                                <option value="Kasikorn Thai Bank (KBANK)">Kasikorn Thai Bank (KBANK)</option>
+                                                <option value="Kaitnakin Bank">Kaitnakin Bank</option>
+                                                <option value="CIMB Thai Bank">CIMB Thai Bank</option>
+                                                <option value="Thai Military Bank (TMB)">Thai Military Bank (TMB)</option>
+                                                <option value="Tisco Bank">Tisco Bank</option>
+                                                <option value="Thai Credit Bank (TCR)">Thai Credit Bank (TCR)</option>
+                                                <option value="Thanachart Bank">Thanachart Bank</option>
+                                                <option value="Unitied Overseas Bank (UOB)">Unitied Overseas Bank (UOB)</option>
+                                                <option value="Land and House Retail Bank (LHBANK)">Land and House Retail Bank (LHBANK)</option>
+                                                <option value="Standard Chartered">Standard Chartered</option>
+                                                <option value="SME Bank (SME)">SME Bank</option>
+                                                <option value="EXIM Thailand (EXIM)">EXIM Thailand Bank</option>
+                                                <option value="Goverment Saving Bank (GSB)">Government Saving Bank (GSB)</option>
+                                                <option value="Islamic Bank of Thailand">Islamic Bank of Thailand</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Branch</span>
+                                            <input class="form-control" type="text" name="new_bank_branch[]" value='' />
+                                        </div>
+                                    </div>
+                                </div><br>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Bank Account Name</span>
+                                            <input class="form-control" type="text" name="new_bank_acc_name[]" value=''/>
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Bank Account ID</span>
+                                            <input class="form-control" type="text" name="new_bank_acc_id[]" value='' />
+                                        </div>
+                                    </div>
+                                </div><br>
+                            <?php } else { ?>
+                                <?php while ($bank_row = mysqli_fetch_array($bank_result)) { ?>
+                                    <div class='row'> 
+                                        <div class='col-lg-6'>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Bank Name</span>
+                                                <input type="hidden" name="bank_id[]" value="<?php echo $bank_row["bankID"] ?>" >
+                                                <select class="form-control" name="bank_name[]">
+                                                    <option value="Bangkok Bank">Bangkok Bank</option>
+                                                    <option value="Krung Sri Bank">Krung Sri Bank</option>
+                                                    <option value="Krung Thai Bank (KTB)">Krung Thai Bank (KTB)</option>
+                                                    <option value="Kasikorn Thai Bank (KBANK)">Kasikorn Thai Bank (KBANK)</option>
+                                                    <option value="Kaitnakin Bank">Kaitnakin Bank</option>
+                                                    <option value="CIMB Thai Bank">CIMB Thai Bank</option>
+                                                    <option value="Thai Military Bank (TMB)">Thai Military Bank (TMB)</option>
+                                                    <option value="Tisco Bank">Tisco Bank</option>
+                                                    <option value="Thai Credit Bank (TCR)">Thai Credit Bank (TCR)</option>
+                                                    <option value="Thanachart Bank">Thanachart Bank</option>
+                                                    <option value="Unitied Overseas Bank (UOB)">Unitied Overseas Bank (UOB)</option>
+                                                    <option value="Land and House Retail Bank (LHBANK)">Land and House Retail Bank (LHBANK)</option>
+                                                    <option value="Standard Chartered">Standard Chartered</option>
+                                                    <option value="SME Bank (SME)">SME Bank</option>
+                                                    <option value="EXIM Thailand (EXIM)">EXIM Thailand Bank</option>
+                                                    <option value="Goverment Saving Bank (GSB)">Government Saving Bank (GSB)</option>
+                                                    <option value="Islamic Bank of Thailand">Islamic Bank of Thailand</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-6'>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Branch</span>
+                                                <input class="form-control" type="text" name="bank_branch[]" value='<?php echo $bank_row["branch"] ?>' />
+                                            </div>
+                                        </div>
+                                    </div><br>
+                                    <div class='row'>
+                                        <div class='col-lg-6'>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Bank Account Name</span>
+                                                <input class="form-control" type="text" name="bank_acc_name[]" value='<?php echo $bank_row["bankAccountName"] ?>'/>
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-6'>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Bank Account ID</span>
+                                                <input class="form-control" type="text" name="bank_acc_id[]" value='<?php echo $bank_row["bankAccountID"] ?>' />
+                                            </div>
+                                        </div>
+                                    </div><br>
+                                    <?php
+                                }
+                            }
+                            ?>
+                            <span id="inputMore">
+
+                            </span>
+                            <button type="button" id="moreBank" class="btn btn-default pull-right">More Bank Account</button>
                             <br />
+
+                            <script>
+
+                                $(document).on("click", "#moreBank", function() {
+                                    $("#inputMore").append("<div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Name</span><select class='form-control' name='new_bank_name[]'><option value='Bangkok Bank'>Bangkok Bank</option><option value='Krung Sri Bank'>Krung Sri Bank</option><option value='Krung Thai Bank (KTB)'>Krung Thai Bank (KTB)</option><option value='Kasikorn Thai Bank (KBANK)'>Kasikorn Thai Bank (KBANK)</option><option value='Kaitnakin Bank'>Kaitnakin Bank</option><option value='CIMB Thai Bank'>CIMB Thai Bank</option><option value='Thai Military Bank (TMB)'>Thai Military Bank (TMB)</option><option value='Tisco Bank'>Tisco Bank</option><option value='Thai Credit Bank (TCR)'>Thai Credit Bank (TCR)</option><option value='Thanachart Bank'>Thanachart Bank</option><option value='Unitied Overseas Bank (UOB)'>Unitied Overseas Bank (UOB)</option><option value='Land and House Retail Bank (LHBANK)'>Land and House Retail Bank (LHBANK)</option><option value='Standard Chartered'>Standard Chartered</option><option value='SME Bank (SME)'>SME Bank</option><option value='EXIM Thailand (EXIM)'>EXIM Thailand Bank</option><option value='Goverment Saving Bank (GSB)'>Government Saving Bank (GSB)</option><option value='Islamic Bank of Thailand'>Islamic Bank of Thailand</option></select></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Branch</span><input class='form-control' type='text' name='new_bank_branch[]' value='' /></div></div></div><br><div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account Name</span><input class='form-control' type='text' name='new_bank_acc_name[]' value=''/></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account ID</span><input class='form-control' type='text' name='new_bank_acc_id[]' value='' /></div></div></div><br>");
+                                });
+
+
+
+                            </script>
 
                             <div class="row">
 
