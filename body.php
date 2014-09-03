@@ -46,6 +46,12 @@ switch ($page) {
     case "editroom":
         require_once("editRoom.php");
         break;
+    case "book":
+        require_once("book.php");
+        break;
+    case "membersystem":
+        require_once("membersystem.php");
+        break;
     
     default:
         require_once("main.php");

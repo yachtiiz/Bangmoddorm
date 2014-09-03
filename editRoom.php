@@ -144,7 +144,6 @@ function edit_room($roomID) {
     $room_reserve = filter_var($_POST["room_reserve"], FILTER_SANITIZE_NUMBER_INT);
     $main_room_path = NULL;
 
-
     if (isset($_FILES["change_main_room_pic"])) {
         if ($_FILES["change_main_room_pic"]["name"] !== "") {
             if (move_uploaded_file($_FILES["change_main_room_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $roomID . "_" . $_FILES["change_main_room_pic"]["name"])) {
@@ -153,7 +152,7 @@ function edit_room($roomID) {
         }
     }
 
-    if (isset($_FILES["main_room_pic"])) {
+    if (isset($_FILES["main_room_pic"])){
         if ($_FILES["main_room_pic"]["name"] !== "") {
             if (move_uploaded_file($_FILES["main_room_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"])) {
                 $main_room_path = "main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"];
@@ -188,12 +187,11 @@ function edit_room($roomID) {
     }
 }
 
-if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
 
+if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
     if (isset($_GET["roomID"]) && is_numeric($_GET["roomID"])) {
 
         require 'connection.php';
-
         $roomID = $_GET["roomID"];
         $query = "select * from Rooms where roomID = $roomID";
         $result = mysqli_query($con, $query);
@@ -343,8 +341,6 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         </span>
                                     </div>
                                     <br>
-
-
                                 </div>
 
                                 <div class="span5">

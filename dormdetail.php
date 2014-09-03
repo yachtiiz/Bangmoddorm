@@ -200,7 +200,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
-                                    <a href="book.php"><button type="button" class="btn btn-success book-now">Booking</button></a>
+                                    <a href="index.php?chose_page=book&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>"><button type="button" class="btn btn-success book-now">Booking</button></a>
                                 </div>
                             </div>
                         </div>

@@ -36,7 +36,9 @@
         
     ?>
     <div style="margin-top: 70px">
-        <legend><span>Edit Your</span> Domitory</legend>
+        <?php if(mysqli_num_rows($result)!==0){ ?>
+        <legend><span>Edit Your</span> Dormitory</legend>
+        <?php } ?>
         <?php while($row = mysqli_fetch_array($result)){ ?>
         <div class="span4">
             <a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>"><button type="button" class="btn btn-primary btn-block book-now2"><?php echo $row["dormName"] ?></button></a><br><br>

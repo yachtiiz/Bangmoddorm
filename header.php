@@ -58,7 +58,7 @@
                                     <?php //} ?>
                                     <li class=""><a href="advanceSearch.php">Advance Search</a></li>
                                     <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){ ?>
-                                    <li class=""><a href="membersystem.php">Member System</a></li>
+                                    <li class=""><a href="index.php?chose_page=membersystem">Member System</a></li>
                                     <?php //} ?>
                                     <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){ ?>
                                     <li class=""><a href="index.php?chose_page=adminsystem">Admin System</a></li>

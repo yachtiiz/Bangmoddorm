@@ -43,9 +43,9 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
             }
 
             if (mysqli_query($con, $query)) {
-                return true;
+                return $evidence_dorm ;
             } else {
-                return false;
+                return "ERR";
             }
         }
 
@@ -108,8 +108,8 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
             </div>
             <?php
         } else {
-
-            if (!send_request()) {
+            $msg = send_request();
+            if ($msg === "ERR") {
                 echo '<script>alert("Send Request Failed");</script>';
                 echo '<script>window.location = "index.php?chose_page=adddormitory</script>';
             }
@@ -144,7 +144,7 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
 
                         <div class="span3">
                             <label>Evidence
-                                <img src="<?php echo $_POST["evidence_dorm"]; ?>"
+                                <img class="img-thumbnail" src="<?php echo $msg; ?>"
                             </label>
                         </div>	
                     </div>

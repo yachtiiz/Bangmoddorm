@@ -81,18 +81,10 @@ if (!isset($_GET["request_page"])) {
 
                                     </tbody>
                                 </table>
-                                <ul class="pagination">
-                                    <li><a href="#">&laquo;</a>
-                                        <a href="#">1</a>
-                                        <a href="#">2</a>
-                                        <a href="#">3</a>
-                                        <a href="#">4</a>
-                                        <a href="#">5</a>
-                                        <a href="#">&raquo;</a></li>
-                                </ul>
+                                <a href="adminsystem.jsp" style="margin-top:50px;margin-left:350px" class="btn btn-primary btn-large book-now">Back</a>
                             </div>
                         </div>
-                        <a href="adminsystem.jsp" class="btn btn-primary btn-large book-now pull-left">Back</a>
+                        
                     </fieldset>
                 </form>
 
