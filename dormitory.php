@@ -34,96 +34,8 @@ $dorm_result = mysqli_query($con, $query);
 
             </div>		
         <?php } ?>
-        <div class="col-md-4">
-            <h3><span>MyPlace 2</span></h3>
-            <a href="book-start.html"><img style="width: 287px;height: 218px" src="css/images/Myplace2.jpg" alt="" /></a>
-            <ul class="thumbnails hotel-options no_margin_left">
-                <li class="no_margin_left"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Wireless.png" alt="" width="24" height="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
-            </ul>
-            <fieldset>
-
-
-
-            </fieldset>
-            <div class="row center">
-                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
-            </div>
-        </div>	
-
-        <div class="col-md-4">
-            <h3><span>44 Garden Place</span></h3>
-            <a href="book-start.html"><img style="width: 287px;height: 218px" src="css/images/44 garden place.jpg" alt="" /></a>
-            <ul class="thumbnails hotel-options no_margin_left">
-                <li class="no_margin_left"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Wireless.png" alt="" width="24" height="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
-            </ul>
-            <p> 44 Garden Place At Soi Phudhabucha44 male & female Dormitory luxury Dormitory </p>
-            <div class="row center">
-                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
-            </div>
-        </div>				
-        <div class="col-md-4">
-            <h3><span>Thonburi Sport Club</span></h3>
-            <a href="book-start.html"><img style="width: 287px;height: 218px" src="css/images/ThonburiSportclub.jpg" alt="" /></a>
-            <ul class="thumbnails hotel-options no_margin_left">
-                <li class="no_margin_left"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Wireless.png" alt="" width="24" height="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Restaurant-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
-            </ul>
-            <p> Thonburi Sport Club Only Building3 is in the KMUTT Dormitories Related.
-                <br>This place have Spot Club and Swimming Pool</p>
-            <div class="row center">
-                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
-            </div>
-        </div>		
-        <div class="col-md-4">
-            <h3><span>Kiatsuda Residence</span></h3>
-            <a href="book-start.html" class="picbox"><img style="width: 287px;height: 218px" src="css/images/Kiatsuda residence2.jpg" alt="" /></a>
-            <ul class="thumbnails hotel-options no_margin_left">
-                <li class="no_margin_left"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Wireless.png" alt="" width="24" height="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Restaurant-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Indoor-Swimming.png" alt="" width="24" /></a></li>
-            </ul>
-            <p>Kiatsuda Residence At Phudhabucha44 is new Dormitory</p>
-            <br>
-            <div class="row center">
-                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
-            </div>
-        </div>	
-
-        <div class="col-md-4">
-            <h3><span>Sam Peenong </span></h3>
-            <a href="book-start.html"><img style="width: 287px;height: 218px" src="css/images/3brother2.jpg" alt="" /></a>
-            <ul class="thumbnails hotel-options no_margin_left">
-                <li class="no_margin_left"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Wireless.png" alt="" width="24" height="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Restaurant-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
-                <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Indoor-Swimming.png" alt="" width="24" /></a></li>
-            </ul>
-            <p>Sam Peenong At Soi Prachauthit45 This Dormitory is the most Popular in KMUTT</p>
-            <br>
-            <div class="row center">
-                <a class="btn btn-primary btn-large check-availability" href="index.php?chose_page=dormdetail">View Details</a>
-            </div>
-
-        </div>	
-
     </div>
-
-
-
-
 </div>
-
-</div>
-
 <div class="row">
     <div class="span12 what_people_say">
         <div id="quotes">
@@ -147,4 +59,4 @@ $dorm_result = mysqli_query($con, $query);
             </blockquote>
         </div>
     </div>	
-</div>	</div> <!-- /container -->
+</div>
