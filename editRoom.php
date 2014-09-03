@@ -86,7 +86,7 @@ function add_room($dormID) {
     $price = filter_var($_POST["price"], FILTER_SANITIZE_STRING);
     $number_of_room = filter_var($_POST["number_of_room"], FILTER_SANITIZE_STRING);
     $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
-    $room_reserve = filter_var($_POST["room_reserve"], FILTER_SANITIZE_NUMBER_INT);
+    $room_deposit = filter_var($_POST["room_deposit"], FILTER_SANITIZE_NUMBER_INT);
 
     $main_pic_path = "default_picture.jpg";
 
@@ -98,8 +98,8 @@ function add_room($dormID) {
 
 
 
-    $query = "INSERT INTO `Rooms` (`dormID`, `roomType`, `areas`, `price`, `numOfRoom`, `roomAvailable`, `roomReserve` , `status` , `main_pic`)
-VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $room_available , $room_reserve , 'Active' , '$main_pic_path');";
+    $query = "INSERT INTO `Rooms` (`dormID`, `roomType`, `areas`, `price`, `numOfRoom`, `roomAvailable`, `roomDeposit` , `status` , `main_pic`)
+VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $room_available , $room_deposit , 'Active' , '$main_pic_path');";
 
     if (mysqli_query($con, $query)) {
 
@@ -141,7 +141,7 @@ function edit_room($roomID) {
     $price = filter_var($_POST["price"], FILTER_SANITIZE_STRING);
     $number_of_room = filter_var($_POST["number_of_room"], FILTER_SANITIZE_STRING);
     $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
-    $room_reserve = filter_var($_POST["room_reserve"], FILTER_SANITIZE_NUMBER_INT);
+    $room_deposit = filter_var($_POST["room_deposit"], FILTER_SANITIZE_NUMBER_INT);
     $main_room_path = NULL;
 
     if (isset($_FILES["change_main_room_pic"])) {
@@ -172,7 +172,7 @@ function edit_room($roomID) {
 
 
     $pic_main_path_query = $main_room_path === NULL ? "" : ", main_pic = '$main_room_path'";
-    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , roomReserve = $room_reserve " . $pic_main_path_query . " where roomID = $roomID;";
+    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , roomDeposit = $room_deposit " . $pic_main_path_query . " where roomID = $roomID;";
 
 
 
@@ -275,8 +275,16 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     <label>Price
                                         <input type="text" class="form-control" name="price" value='<?php echo isset($room_row["price"]) ? $room_row["price"] : "" ?>' />
                                     </label>
-                                    <label>Room Reserve
-                                        <input type="text" class="form-control" name="room_reserve" value='<?php echo isset($room_row["roomReserve"]) ? $room_row["roomReserve"] : "" ?>' />
+                                    <label>Room Deposit
+                                        <select class="form-control" name="room_deposit">
+                                            <option value="default">Chose Your Room Deposit</option>
+                                            <option value="1" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 1 ? "selected":"" : "" ?>>1 Month</option>
+                                            <option value="2" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 2 ? "selected":"" : "" ?>>2 Month</option>
+                                            <option value="3" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 3 ? "selected":"" : "" ?>>3 Month</option>
+                                            <option value="4" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 4 ? "selected":"" : "" ?>>4 Month</option>
+                                            <option value="5" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 5 ? "selected":"" : "" ?>>5 Month</option>
+                                            <option value="6" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 6 ? "selected":"" : "" ?>>6 Month</option>
+                                        </select>
                                     </label>
                                 </div>
 

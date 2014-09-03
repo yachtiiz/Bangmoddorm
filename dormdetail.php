@@ -178,7 +178,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     
                 </table>
                 <br>
-                <a href="book.jsp"><button type="button" class="btn btn-success book-now"style="margin-left: 50px; ">Booking</button></a><br><br>
+                <a href="callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>"><button type="button" class="btn btn-success book-now"style="margin-left: 50px; ">Booking</button></a><br><br>
                 <!-- Button trigger modal -->
                 <button class="btn btn-primary btn-lg book-now" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: 50px; ">
                     Detail
@@ -280,7 +280,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
-                                    <a href="index.php?chose_page=book&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>"><button type="button" class="btn btn-success book-now">Booking</button></a>
+                                    <a href="callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>"><button type="button" class="btn btn-success book-now">Booking</button></a>
                                 </div>
                             </div>
                         </div>

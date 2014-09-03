@@ -159,6 +159,34 @@ if(isset($_GET["disabled_dorm"]) && is_numeric($_GET["disabled_dorm"])){
     }
 }
 
+//check Booking Session
+function checkBooking($memberID){
+    
+    require 'connection.php';
+    
+    $query = "select * from booking where memberID = $memberID and status = 'Waiting'";
+    $result = mysqli_query($con, $query);
+    
+    $row = mysqli_fetch_array($result);
+    if($row !== NULL){
+        return 'Already Booking (Booking ID = '.$row["bookingID"].')';
+    }else{
+        return 'PASS';
+    }
+}
 
+if(isset($_GET["memberID"]) && isset($_GET["dormID"]) && isset($_GET["roomID"])){
+    if(is_numeric($_GET["memberID"]) && is_numeric($_GET["dormID"]) && is_numeric($_GET["roomID"])){
+        $dormID = $_GET["dormID"];
+        $roomID = $_GET["roomID"];
+        $msg = checkBooking($_GET["memberID"]);
+        if($msg !== 'PASS'){
+            echo '<script>alert("'. $msg .'")</script>';
+            echo '<script>window.location = "index.php"</script>';
+        }else{
+            echo '<script>window.location = "index.php?chose_page=book&dormID='.$dormID.'&roomID='.$roomID.'"</script>';
+        }
+    }
+}
 ?>
 

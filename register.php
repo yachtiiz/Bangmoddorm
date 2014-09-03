@@ -17,7 +17,7 @@ function upPicture($file, $username) {
 function checkUsername($username) {
 
     include 'connection.php';
-    $query = "select username from Members username = '$username'";
+    $query = "select username from Members where username = '$username'";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     if ($row != NULL) {

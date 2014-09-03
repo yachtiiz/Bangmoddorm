@@ -1,104 +1,98 @@
 
-            <?php include 'header.php' ?>
-            <div class="row booking_summary">
+<div class="row booking_summary">
 
-                <div class="span12">	
+    <div class="span12">	
 
-                    <div class="row">
-                        <div class="span9">
-
+        <div class="row">
+            <div class="span9">
 
 
-                            <form class="form-horizontal" />
 
-                            <fieldset>
-                                <br /><br />
-                                <br />
-                                <div class="row">
-                                    <div class="span12">
-                                        <legend>
-                                            <span>Booking</span> System
-                                        </legend>
-                                        Search Booking : 
-                                        <input type="text" placeholder="" class="form-control">
-                                        <select>
-                                            <option>Sort By Date</option>
-                                            <option>Sort By Status</option>
-                                            <option>Sort By Member</option>
-                                            <option>Sort By Status Waiting Only</option>
-                                            <option>Sort By Status Approve Only</option>
-                                            <option>Sort By Status Over Time Only</option>
-                                        </select>
-                                        <button type="button" class="btn btn-success">Search</button>
-                                    </div>
-                                    <br><br><br><br><br><br>
-                                    <div class="span12">
-                                        <table class="table table-striped">
-                                            <th>#</th>
-                                            <th>Booking ID</th>
-                                            <th>Member ID</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                            <th></th>
+                <form class="form-horizontal">
+
+                    <fieldset>
+                        <br /><br />
+                        <br />
+                        <div class="row">
+                            <div class="span12">
+                                <legend>
+                                    <span>Booking</span> System
+                                </legend>
+                                Search Booking : 
+                                <input type="text" style="width: 40%" placeholder="" class="form-control">
+                                <select class="form-control pull-right" style="width:25%">
+                                    <option>Sort By Date</option>
+                                    <option>Sort By Status</option>
+                                    <option>Sort By Member</option>
+                                    <option>Sort By Status Waiting Only</option>
+                                    <option>Sort By Status Approve Only</option>
+                                    <option>Sort By Status Over Time Only</option>
+                                </select>
+                            </div>
+                            <br><br><br><br><br><br>
+                            <div class="span12">
+                                <table class="table table-striped">
+                                    <th>#</th>
+                                    <th>Booking ID</th>
+                                    <th>Member ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Expire Date</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                    <?php
+                                    function getMember() {
+                                        require 'connection.php';
+                                        $memberID = $_SESSION["memberID"];
+                                        $query = "select * from members where memberID = $memberID";
+                                        $result = mysqli_query($con, $query);
+                                        $row = mysqli_fetch_array($result);
+                                        if (mysqli_num_rows($result) !== 0) {
+                                            return $row;
+                                        } else {
+                                            return NULL;
+                                        }
+                                    }
+
+                                    $row = getMember();
+                                    if ($row !== NULL) {
+                                        require 'connection.php';
+
+                                        $memberID = $_SESSION["memberID"];
+
+                                        $query = "select * from Booking where memberID = $memberID";
+                                        $result = mysqli_query($con, $query);
+                                        while ($book_row = mysqli_fetch_array($result)) {
+                                            ?>
                                             <tr>
                                                 <td>1</td>
-                                                <td>1234</td>
-                                                <td>1222</td>
-                                                <td>Ajchariya</td>
-                                                <td>Arunaramwong</td>
-                                                <td>18/05/57</td>
+                                                <td><p style="margin-left:20px">0000<?php echo $book_row["bookingID"] ?></p></td>
+                                                <td><p style="margin-left:20px">0000<?php echo $book_row["memberID"] ?></p></td>
+                                                <td><?php echo $row["firstName"] ?></td>
+                                                <td><?php echo $row["lastName"] ?></td>
+                                                <td><?php echo $book_row["expire_date"] ?></td>
                                                 <td>
-                                                    Waiting
+                                                    <?php echo $book_row["status"] ?>
                                                 </td>
-                                                <td><button type="button" class="btn btn-success book-now">Cancel</button></td>
+                                                <td><a href="index.php?chose_page=membookdetail&bookingID=<?php echo $book_row["bookingID"] ?>" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>
                                             </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>1234</td>
-                                                <td>1222</td>
-                                                <td>Ajchariya</td>
-                                                <td>Arunaramwong</td>
-                                                <td>14/05/57</td>
-                                                <td>
-                                                    Canceled
-                                                </td>
-                                                <td><button type="button" class="btn btn-success book-now" disabled="">Canceled</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>1234</td>
-                                                <td>1222</td>
-                                                <td>Ajchariya</td>
-                                                <td>Arunaramwong</td>
-                                                <td>10/05/57</td>
-                                                <td>
-                                                    Absent
-                                                </td>
-                                                <td><button type="button" class="btn btn-success book-now disabled">Absent</button></td>
-                                            </tr>
-                                        </table>
-                                        <ul class="pagination">
-                                            <li><a href="#">&laquo;</a>
-                                                <a href="#">1</a>
-                                                <a href="#">2</a>
-                                                <a href="#">3</a>
-                                                <a href="#">4</a>
-                                                <a href="#">5</a>
-                                                <a href="#">&raquo;</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                    <a href="membersystem.jsp" class="btn btn-primary btn-large book-now pull-left">Back</a>
-                            </fieldset>
-                            </form>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <tr>
+                                            <td colspan="8">Something Error</td>
+                                        </tr>
+                                    <?php } ?>
+                                    
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                        <a href="membersystem.jsp" class="btn btn-primary btn-large book-now pull-left">Back</a>
+                    </fieldset>
+                </form>
             </div>
-        </div> <!-- /container -->
-        <br><br><br><br><br>
-        <?php include 'footer.php' ?>
+        </div>
+    </div>
+</div>
+</div> <!-- /container -->
+<br><br><br><br><br>
 
-        

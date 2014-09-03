@@ -52,6 +52,12 @@ switch ($page) {
     case "membersystem":
         require_once("membersystem.php");
         break;
+    case "checkBookingHis":
+        require_once("checkMemberBooking.php");
+        break;
+    case "membookdetail":
+        require_once("memberBookingDetail.php");
+        break;
     
     default:
         require_once("main.php");
