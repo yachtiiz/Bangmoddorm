@@ -7,11 +7,20 @@
     <legend><span>Owner</span> System</legend>
     <div class="span4">
         <a href="index.php?chose_page=adddormitory"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Add Dormitory</button></a><br><br>
-        <a href="index.php?chose_page=checkbooking"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Booking History</button></a>
+        <button id="check_dorm" type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Booking History</button>
     </div>
     <br />
     <br />
+    <script>
     
+    $(document).on("click","#check_dorm",function(){
+        event.preventDefault;
+        $("#check_dorm").load("callback.php?checkdorm_memberID=<?php echo $_SESSION["memberID"]; ?>");        
+    });
+
+    
+    
+    </script>
     
     <?php  
     

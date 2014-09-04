@@ -1,5 +1,7 @@
 <?php
+
 session_start();
+
 function login($login, $password) {
     /* Query login matching password in DB */
     include 'connection.php';
@@ -46,13 +48,13 @@ if (isset($_POST["fn"]) && $_POST["fn"] === "auth") {
     $login_result = login($entered_login, $entered_password);
 
     if ($login_result) {
-        echo $_SESSION["firstname"]." ".$_SESSION["lastname"];
+        echo $_SESSION["firstname"] . " " . $_SESSION["lastname"];
     } else {
         echo "1";
     }
 }
 
-if(isset($_GET["logout"])){
+if (isset($_GET["logout"])) {
     session_destroy();
     echo '<script>window.location = "index.php"</script>';
 }
@@ -69,23 +71,23 @@ function upPicture($file, $username) {
     }
 }
 
-function approve_dormitory($confirmID,$dorm_rate){
-    
+function approve_dormitory($confirmID, $dorm_rate) {
+
     require 'connection.php';
     $query = "update ConfirmationDorm set approval = 'Approve' where confirmID = $confirmID ";
-    
-    if(mysqli_query($con, $query)){
-        
+
+    if (mysqli_query($con, $query)) {
+
         $query = "select * from ConfirmationDorm where confirmID = $confirmID";
         $result = mysqli_query($con, $query);
         $row = mysqli_fetch_array($result);
-        
+
         $dorm_name = $row["dormName"];
         $memberID = $row["memberID"];
-        
+
         $query = "INSERT INTO `Dormitories` (`memberID`, `dormName` , `dormitory_rate` , `status`) VALUES ($memberID, '$dorm_name' , $dorm_rate , 'Disable');";
-        
-        if(mysqli_query($con, $query)){
+
+        if (mysqli_query($con, $query)) {
             $query = "select max(dormID) from Dormitories";
             $id_result = mysqli_query($con, $query);
             $id_row = mysqli_fetch_array($id_result);
@@ -93,42 +95,42 @@ function approve_dormitory($confirmID,$dorm_rate){
             $fac_query = "INSERT INTO `FacilitiesInDorm` (`dormID`) VALUES($dorm_fac_id);";
             mysqli_query($con, $fac_query);
             return true;
-        }else{
+        } else {
             return false;
         }
-    }else{
+    } else {
         return false;
     }
 }
 
-if(isset($_GET["approval_submit"]) && is_numeric($_GET["approval_submit"]) && isset($_GET["dorm_rate"]) && is_numeric($_GET["dorm_rate"])){
-    if(approve_dormitory($_GET["approval_submit"],$_GET["dorm_rate"])){
+if (isset($_GET["approval_submit"]) && is_numeric($_GET["approval_submit"]) && isset($_GET["dorm_rate"]) && is_numeric($_GET["dorm_rate"])) {
+    if (approve_dormitory($_GET["approval_submit"], $_GET["dorm_rate"])) {
         echo "<script>alert('Approval Success')</script>";
         echo "<script>window.location = 'index.php?chose_page=checkRequestDorm';</script>";
-    }else{
+    } else {
         echo "<script>alert('Approval Failed')</script>";
     }
 }
 
 // Deleted Room Function
 
-function disabled_room($roomID){
+function disabled_room($roomID) {
     require 'connection.php';
-    
+
     $query = "update Rooms set status = 'Disabled' where roomID = $roomID";
-    
-    if(mysqli_query($con, $query)){
+
+    if (mysqli_query($con, $query)) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
 
-if(isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])){
-    if(disabled_room($_GET["disabled_room"])){
+if (isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])) {
+    if (disabled_room($_GET["disabled_room"])) {
         echo "<script>alert('Delete Success')</script>";
         echo "<script>window.location = 'index.php?chose_page=ownersystem';</script>";
-    }else{
+    } else {
         echo "<script>alert('Delete Failed')</script>";
         echo "<script>window.location = 'index.php?chose_page=ownersystem';</script>";
     }
@@ -136,57 +138,123 @@ if(isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])){
 
 // Showing and Not Showing Dormitory
 
-function showing_dorm($dormID,$status){
-    
+function showing_dorm($dormID, $status) {
+
     require 'connection.php';
-    
+
     $query = "update Dormitories set status = '$status' where dormID = $dormID ";
-    if(mysqli_query($con, $query)){
+    if (mysqli_query($con, $query)) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
 
-if(isset($_GET["showing_dorm"]) && is_numeric($_GET["showing_dorm"])){
-    if(showing_dorm($_GET["showing_dorm"], 'Active')){
+if (isset($_GET["showing_dorm"]) && is_numeric($_GET["showing_dorm"])) {
+    if (showing_dorm($_GET["showing_dorm"], 'Active')) {
         echo 'Hidden On Page';
     }
 }
-if(isset($_GET["disabled_dorm"]) && is_numeric($_GET["disabled_dorm"])){
-    if(showing_dorm($_GET["disabled_dorm"], 'Disable')){
+if (isset($_GET["disabled_dorm"]) && is_numeric($_GET["disabled_dorm"])) {
+    if (showing_dorm($_GET["disabled_dorm"], 'Disable')) {
         echo 'Showing On Page';
     }
 }
 
 //check Booking Session
-function checkBooking($memberID){
-    
+function checkBooking($memberID) {
+
     require 'connection.php';
-    
+
     $query = "select * from booking where memberID = $memberID and status = 'Waiting'";
     $result = mysqli_query($con, $query);
-    
+
     $row = mysqli_fetch_array($result);
-    if($row !== NULL){
-        return 'Already Booking (Booking ID = '.$row["bookingID"].')';
-    }else{
+    if ($row !== NULL) {
+        return 'Already Booking (Booking ID = ' . $row["bookingID"] . ')';
+    } else {
         return 'PASS';
     }
 }
 
-if(isset($_GET["memberID"]) && isset($_GET["dormID"]) && isset($_GET["roomID"])){
-    if(is_numeric($_GET["memberID"]) && is_numeric($_GET["dormID"]) && is_numeric($_GET["roomID"])){
+if (isset($_GET["memberID"]) && isset($_GET["dormID"]) && isset($_GET["roomID"])) {
+    if (is_numeric($_GET["memberID"]) && is_numeric($_GET["dormID"]) && is_numeric($_GET["roomID"])) {
         $dormID = $_GET["dormID"];
         $roomID = $_GET["roomID"];
         $msg = checkBooking($_GET["memberID"]);
-        if($msg !== 'PASS'){
-            echo '<script>alert("'. $msg .'")</script>';
-            echo '<script>window.location = "index.php"</script>';
-        }else{
-            echo '<script>window.location = "index.php?chose_page=book&dormID='.$dormID.'&roomID='.$roomID.'"</script>';
+        if ($msg !== 'PASS') {
+            echo 'Booking<script>alert("' . $msg . '")</script>';
+        } else {
+            echo 'Booking<script>window.location = "index.php?chose_page=book&dormID=' . $dormID . '&roomID=' . $roomID . '"</script>';
         }
     }
+}
+
+//Checking Dormitory
+
+function checkDormitory($memberID) {
+
+    require 'connection.php';
+
+    $query = "select * from dormitories where memberID = $memberID";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_array($result);
+    if ($row !== NULL) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+if (isset($_GET["checkdorm_memberID"]) && is_numeric($_GET["checkdorm_memberID"])) {
+
+    $memberID = $_GET["checkdorm_memberID"];
+    if (checkDormitory($memberID)) {
+        echo 'Check Booking History<script>window.location = "index.php?chose_page=checkDormBooking&memberID=' . $memberID . '" </script>';
+    } else {
+        echo 'Check Booking History<script>alert("You dont have any dormitoris for booking")</script>';
+    }
+}
+
+// Show Dormitories Booking
+
+function showDormBook($dormID) {
+
+    require 'connection.php';
+    $query = "select * from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dormID";
+    $result = mysqli_query($con, $query);
+
+    while ($row = mysqli_fetch_array($result)) {
+
+        echo '<tr>';
+        echo '<td>1</td>';
+        echo '<td>' . $row["bookingID"] . '</td>';
+        echo '<td>' . $row["roomType"] . '</td>';
+        echo '<td>' . $_SESSION["firstname"] . '</td>';
+        echo '<td>' . $_SESSION["lastname"] . '</td>';
+        echo '<td>' . $row["expire_date"] . '</td>';
+        echo '<td>';
+        echo '<select class="form-control input-medium">';
+        echo '<option ' . $row["booking_status"] == "waiting" ? "'selected'" : "''" . ' >Waiting</option>';
+        echo '<option ' . $row["booking_status"] === 'Confirmed' ? "selected" : " " . '>Confirmed</option>';
+        echo '<option ' . $row["booking_status"] === 'Cancled' ? "selected" : " " . '>Canceled</option>';
+        echo '<option ' .  $row["booking_status"] === 'waiting' ? "selected" : "". '>Absent</option>';
+        echo '</select>';
+        echo '</td>';
+        echo '<td><button type="button" class="btn ">Change Status</button></td>';
+        echo '</tr> ';
+    }
+
+    if (mysqli_num_rows($result) == 0) {
+
+        echo '<tr>';
+        echo '<td colspan="8" style="text-align: center"> No Result</td>';
+        echo '</tr>';
+    }
+}
+
+if(isset($_GET["showbook_dormID"]) && is_numeric($_GET["showbook_dormID"])){
+    showDormBook($_GET["showbook_dormID"]);
 }
 ?>
 

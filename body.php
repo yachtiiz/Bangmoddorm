@@ -58,6 +58,9 @@ switch ($page) {
     case "membookdetail":
         require_once("memberBookingDetail.php");
         break;
+    case "checkDormBooking":
+        require_once("checkBooking.php");
+        break;
     
     default:
         require_once("main.php");

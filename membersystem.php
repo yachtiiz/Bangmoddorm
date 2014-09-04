@@ -37,6 +37,11 @@
                             <legend><span>Your</span> Profile</legend>
                         </div>
                         <div class="span3">
+                            <label>Display Picture
+                                <img class="img-thumbnail" style="width:220px;height: 200px" src="<?php echo $row["pic_path"] ?>">
+                            </label>
+                        </div>
+                        <div class="span3">
                             <label>Username
                                 <input type="text" class="form-control" value="<?php echo $row["username"] ?>"/>
                             </label>
@@ -150,14 +155,11 @@
                             <label>Member URL
                                 <input type="text" class="form-control" value="<?php echo $row["memberUrl"] ?>" />
                             </label>
-                            <label>Display Picture
-                                <img class="img-thumbnail" style="width:220px;height: 200px" src="<?php echo $row["pic_path"] ?>">
-                            </label>
                         </div>	
                     </div><br><br>
                     <div class="row">
                         <div class="span5">
-                            <button type="submit" class="btn btn-primary book-now" style="margin-left: 300px">Change Your Profile</button>
+                            <button type="submit" class="btn btn-primary book-now" style="margin-left: 260px">Change Your Profile</button>
                         </div>
                     </div>
                     <br />
