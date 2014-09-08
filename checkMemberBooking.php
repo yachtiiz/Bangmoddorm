@@ -11,7 +11,6 @@
                 <form class="form-horizontal">
 
                     <fieldset>
-                        <br /><br />
                         <br />
                         <div class="row">
                             <div class="span12">
@@ -32,9 +31,8 @@
                             <br><br><br><br><br><br>
                             <div class="span12">
                                 <table class="table table-striped">
-                                    <th>#</th>
                                     <th>Booking ID</th>
-                                    <th>Member ID</th>
+                                    <th></th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Expire Date</th>
@@ -65,14 +63,13 @@
                                         while ($book_row = mysqli_fetch_array($result)) {
                                             ?>
                                             <tr>
-                                                <td>1</td>
                                                 <td><p style="margin-left:20px">0000<?php echo $book_row["bookingID"] ?></p></td>
                                                 <td><p style="margin-left:20px">0000<?php echo $book_row["memberID"] ?></p></td>
                                                 <td><?php echo $row["firstName"] ?></td>
                                                 <td><?php echo $row["lastName"] ?></td>
                                                 <td><?php echo $book_row["expire_date"] ?></td>
                                                 <td>
-                                                    <?php echo $book_row["status"] ?>
+                                                    <?php echo $book_row["booking_status"] ?>
                                                 </td>
                                                 <td><a href="index.php?chose_page=membookdetail&bookingID=<?php echo $book_row["bookingID"] ?>" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>
                                             </tr>

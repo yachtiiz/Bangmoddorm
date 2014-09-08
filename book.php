@@ -47,7 +47,7 @@ if (isset($_GET["dormID"]) && isset($_GET["roomID"]) && is_numeric($_GET["dormID
         $start_date = filter_var($_POST["start_date"], FILTER_SANITIZE_STRING);
         $expire_date = filter_var($_POST["expire_date"], FILTER_SANITIZE_STRING);
 
-        $query = "INSERT INTO `Booking` (`memberID`, `roomID`, `date`, `expire_date`, `status`, `notiStatus`, `totalPrice`) VALUES($memberID,$roomID, '$start_date', '$expire_date','Waiting', 0 , $total_price);";
+        $query = "INSERT INTO `Booking` (`memberID`, `roomID`, `date`, `expire_date`, `booking_status`, `notiStatus`, `totalPrice`) VALUES($memberID,$roomID, '$start_date', '$expire_date','Waiting', 0 , $total_price);";
 
         if (mysqli_query($con, $query)) {
             if (reduce_room($roomID)) {

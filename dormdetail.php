@@ -178,10 +178,10 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     
                 </table>
                 <br>
-                <button id="booking" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
+                <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
                 <script>
                 
-                $(document).on("click","#booking",function(){
+                $(document).on("click","#booking<?php echo $dorm_room_row["roomType"] ?>",function(){
                     event.preventDefault;
                     $("#booking").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
                 });
