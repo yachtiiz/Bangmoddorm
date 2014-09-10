@@ -304,17 +304,17 @@ function getBookingDorm($page, $order_by, $dormID) {
     mysqli_query($con, "SET NAMES UTF8");
 
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dormID order by $order_by limit $limit_start , 8";
+    $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID order by $order_by limit $limit_start , 8";
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
         echo '<tr>';
         echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
-        echo '<td>' . $row["roomType"] . '</td>';
-        echo '<td>' . $_SESSION["firstname"] . '</td>';
-        echo '<td>' . $_SESSION["lastname"] . '</td>';
+        echo '<td>' . $row["firstName"] . '</td>';
+        echo '<td>' . $row["lastName"] . '</td>';
+        echo '<td>' . $row["date"] . '</td>';
         echo '<td>' . $row["expire_date"] . '</td>';
         echo '<td>';
-        echo '<select class="form-control input-medium">';
+        echo '<select class="form-control input-medium" style="width:100px">';
         $msg = $row["booking_status"] === "Waiting" ? "selected" : "";
         echo '<option ' . $msg . '>Waiting</option>';
         $msg2 = $row["booking_status"] === 'Approve' ? "selected" : "";
@@ -322,10 +322,10 @@ function getBookingDorm($page, $order_by, $dormID) {
         $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
         echo '<option ' . $msg3 . '>Canceled</option>';
         $msg4 = $row["booking_status"] === 'Reject' ? "selected" : "";
-        echo '<option ' . $msg4 . '>Absent</option>';
+        echo '<option ' . $msg4 . '>Reject</option>';
         echo '</select>';
         echo '</td>';
-        echo '<td><button type="button" class="btn ">Change Status</button></td>';
+        echo '<td><button type="button" class="btn" data-bookID="'. $row["bookingID"] .'" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
         echo '</tr> ';
     }
     if (mysqli_num_rows($result) != 8 && mysqli_num_rows($result) != 0) {
@@ -521,10 +521,10 @@ function searchingBook($query) {
         while ($row = mysqli_fetch_array($result)) {
 
             echo '<tr>';
-            echo '<td>' . $row["bookingID"] . '</td>';
-            echo '<td>' . $row["roomType"] . '</td>';
-            echo '<td>' . $_SESSION["firstname"] . '</td>';
-            echo '<td>' . $_SESSION["lastname"] . '</td>';
+            echo '<td style="text-align:center">' . $row["bookingID"] . '</td>';
+            echo '<td>' . $row["firstName"] . '</td>';
+            echo '<td>' . $row["lastName"] . '</td>';
+            echo '<td>' . $row["date"] . '</td>';
             echo '<td>' . $row["expire_date"] . '</td>';
             echo '<td>';
             echo '<select class="form-control input-medium">';
@@ -569,19 +569,18 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
             if($_GET["search_only"] === "bookingID"){
                 $type = "=";
             }
-            if($_GET["search_only"] == "date"){
-                $booksearch_only = "date";
-                $search_value = "%"+$search_value+"%";
+            if($_GET["search_only"] == "expire_date" || $_GET["search_only"] == "booking_status" || $_GET["search_only"] == "date"){
+                $search_value = "%".$search_value."%";
             }
             $booksearch_only = $_GET["search_only"];
-            $query = "select * from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dorm_id and $booksearch_only $type '$search_value'";
+            $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dorm_id and $booksearch_only $type '$search_value' order by date desc limit 0 , 8";
             searchingBook($query);
         } else {
-            $query = "select * from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dorm_id and (bookingID like '$search_value' or memberID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%') ";
+            $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dorm_id and (bookingID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%' or firstName like '%$search_value%' or lastName like '%$search_value%') order by date desc limit 0 , 8 ";
             searchingBook($query);
         }
     } else {
-        showDormBook($dorm_id);
+        getBookingDorm(1,"date desc",$dorm_id);
     }
 }
 ?>

@@ -27,19 +27,6 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
         $bank_query = "select * from bankAccount where dormID = $dormID";
         $bank_result = mysqli_query($con, $bank_query);
         ?>
-<script>
-
-
-jQuery(function($) {
-        $("#datetime").mask("9999-99-99 99:99:99", {placeholder: "0"});
-        $("#cpn_tel").mask("(+99)99-999-9999 ext.? 99");
-        $("#cpn_fax").mask("(+99)99-999-9999");
-        $("#idcard").mask("9-9999-99999-99-9", {placeholder: "_"});
-        $("#cpn_elec_regis").mask("9999999999999", {placeholder: ""});
-        $("#cpn_tax_number").mask("9999999999999", {placeholder: ""});
-    });
-
-</script>
         <div class="row book-pay">
             <div class="span12">	
                 <h1>Your Booking Summary</h1><br>
@@ -51,21 +38,23 @@ jQuery(function($) {
                                     <div style='border:solid 2px black;padding: 30px;margin-bottom:50px'>
                                     <h3 style='margin-left:150px'><span>Money</span> Transfer Evidence</h3>
                                     <div class="input-group" style="width: 50%;margin-left:150px">
-                                        <span class="input-group-addon">Slip Image</span>
-                                        <input class="form-control" type="file" name="distinct" value='' >
+                                        <span class="input-group-addon">Slip ID</span>
+                                        <input class="form-control" type="text" name="distinct" value='' >
                                     </div>
                                     <div class="input-group" style="width: 50%;margin-top:10px;margin-left:150px">
                                         <span class="input-group-addon">Transfer Name</span>
                                         <input class="form-control" type="text" name="distinct" value='' >
                                     </div>
-                                    
+                                    <div class="input-group" style="width: 50%;margin-top:10px;margin-left:150px">
+                                        <span class="input-group-addon">Bank Name</span>
+                                        <input class="form-control" type="text" name="distinct" value='' >
+                                    </div>
                                     <div class="input-group" style="width: 50%;margin-top:10px;margin-left:150px">
                                         <span class="input-group-addon">Time</span>
-                                        <input id="timedate" class="form-control" type="datetime-local" name="distinct" placeholder="YYYY-MM-DD" >
+                                        <input class="form-control" type="text" name="distinct" value='' >
                                     </div>
-                                    
                                     <button class='btn btn-primary' style='color:green;margin-left:200px;margin-top:20px'>Confirm</button>
-                                    <button class='btn btn-primary' style='color:red;margin-left:20px;margin-top:20px' onClick="alert($('#timedate').val());">Cancel Booking</button>
+                                    <button class='btn btn-primary' style='color:red;margin-left:20px;margin-top:20px'>Cancel Booking</button>
                                     </div>
                                     <h3><span>Detail</span></h3>				
                                     <div class="pull-left strong">Your Name</div><div class="pull-right "><?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?></div><br />
