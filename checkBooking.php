@@ -81,6 +81,49 @@
         });
     });
 
+
+    $(function() {
+        $("#searching").live("keyup", function() {
+            event.preventDefault();
+            $("#show_book_page").html("");
+            url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $(this).val().replace(/ /g, "+");
+            if ($("#only_bookid").attr("checked")) {
+                special_url = url + "&search_only=bookingID";
+                $("#show_result").load(special_url);
+            } else
+            if ($("#only_date").attr("checked")) {
+                special_url = url + "&search_only=date";
+                alert(special_url);
+                $("#show_result").load(special_url);
+            } else
+            if ($("#only_status").attr("checked")) {
+                special_url = url + "&search_only=status";
+                $("#show_result").load(special_url);
+            } else {
+                $("#show_result").load(url);
+            }
+            if ($("#searching").val() === "") {
+                $("#show_book_page").load("callback.php?dormbook_page=1&showpage_dormID="+ $("#select_dorm").val());
+            }
+        });
+        $("#only_bookid").click(function() {
+            url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=bookingID";
+            $("#show_result").load(url);
+        });
+        $("#only_date").click(function() {
+            url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=date";
+            $("#show_result").load(url);
+        });
+        $("#only_status").click(function() {
+            url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=booking_status";
+            $("#show_result").load(url);
+        });
+        $("#all_type").click(function() {
+            url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+");
+            $("#show_result").load(url);
+        });
+    });
+
 </script>
 
 
@@ -92,7 +135,6 @@
                     <fieldset>
                         <br />
                         <div class="row">
-
                             <div class="span12">
                                 <legend>
                                     <span>Booking</span> System
@@ -113,19 +155,40 @@
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="span6">
-                                <div class="input-group" style="width:100%">
-                                    <span class="input-group-addon">Search Booking</span>
-                                    <input class="form-control" type="text">
+                            <div class="span12">
+                                <div class="col-md-7" style="padding: 0px">
+                                    <div class="input-group" style="width:100%">
+                                        <span class="input-group-addon">Search Booking</span>
+                                        <input id="searching" class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 pull-right" style="margin-left:20px">
+                                    <select id="book_order" class="form-control pull-right" style="width:100%">
+                                        <option value="date%20desc">Sort By Date</option>
+                                        <option value="booking_status">Sort By Status</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 radio" style="padding-left: 5px">
+                                    <label>
+                                        <input id="only_bookid" name="search_only" type="radio"> Only Booking ID
+                                    </label>
+                                </div>
+                                <div class="col-md-3 radio">
+                                    <label>
+                                        <input id="only_date" name="search_only" type="radio"> Only Date
+                                    </label>
+                                </div>
+                                <div class="col-md-2 radio">
+                                    <label>
+                                        <input id="only_status" name="search_only" type="radio"> Only Status
+                                    </label>
+                                </div>
+                                <div class="col-md-2 radio">
+                                    <label>
+                                        <input id="all_type" name="search_only" type="radio" checked> All Type
+                                    </label>
                                 </div>
                             </div>
-                            <div class="span3 pull-right">
-                                <select id="book_order" class="form-control pull-right" style="width:100%">
-                                    <option value="date">Sort By Date</option>
-                                    <option value="booking_status">Sort By Status</option>
-                                </select>
-                            </div>
-
                             <div class="span12">
                                 <br>
                                 <table class="table table-striped" style="border: solid 1px #cccccc">

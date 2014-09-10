@@ -321,7 +321,7 @@ function getBookingDorm($page, $order_by, $dormID) {
         echo '<option ' . $msg2 . '>Approve</option>';
         $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
         echo '<option ' . $msg3 . '>Canceled</option>';
-        $msg4 = $row["booking_status"] === 'Absent' ? "selected" : "";
+        $msg4 = $row["booking_status"] === 'Reject' ? "selected" : "";
         echo '<option ' . $msg4 . '>Absent</option>';
         echo '</select>';
         echo '</td>';
@@ -367,6 +367,221 @@ if (isset($_GET["dormbook_page"]) && isset($_GET["showpage_dormID"])) {
         displayBookingPage($_GET["dormbook_page"], $_GET["showpage_dormID"]);
     } else {
         echo '<script>alert("something error");</script>';
+    }
+}
+
+//SPLIT PAGE METHOD ..
+
+function displayPage($cur_page, $query, $href) {
+
+    require 'connection.php';
+
+    $result = mysqli_query($con, $query);
+
+    if (mysqli_num_rows($result) !== 0) {
+        $total_page = ceil(mysqli_num_rows($result) / 8);
+    } else {
+        $total_page = 1;
+    }
+    if ($cur_page == 1) {
+        $prev_page = 1;
+    } else {
+        $prev_page = $cur_page - 1;
+    }
+    if ($cur_page == $total_page) {
+        $next_page = $cur_page;
+    } else {
+        $next_page = $cur_page + 1;
+    }
+
+    echo '<li><a value=' . $prev_page . ' href="' . $href . $prev_page . '">&laquo;</a></li>';
+    for ($i = 1; $i <= $total_page; $i++) {
+        $class = ($cur_page == $i ? "class = 'active'" : "");
+        echo '<li ' . $class . '><a value=' . $i . ' href="' . $href . $i . '">' . $i . '</a></li>';
+    }
+    echo '<li><a value=' . $next_page . ' href="' . $href . $next_page . '">&raquo;</a></li>';
+}
+
+// GET REQUEST DORMITORY 
+
+function getRequestDorm($page, $order_by) {
+
+    require 'connection.php';
+
+    $limit_start = ((8 * $page) - 8);
+    $query = "select * from ConfirmationDorm order by $order_by limit $limit_start , 8";
+
+    $result = mysqli_query($con, $query);
+    while ($row = mysqli_fetch_array($result)) {
+        echo '<tr>';
+        echo '<td style="text-align:center">' . $row["confirmID"] . '</td>';
+        echo '<td style="text-align:center">' . $row["memberID"] . '</td>';
+        echo '<td>' . $row["dormName"] . '</td>';
+        echo '<td>' . $row["license"] . '</td>';
+        echo '<td>' . $row["date"] . '</td>';
+        if ($row["approval"] == "Rejected") {
+            echo '<td style="color: red" >' . $row["approval"] . '</td>';
+        } else if ($row["approval"] == "Waiting") {
+            echo '<td style="color: black">' . $row["approval"] . '</td>';
+        } else {
+            echo '<td style="color: green">' . $row["approval"] . '</td>';
+        }
+        echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '">View</a></td>';
+        echo '</tr>';
+    }
+    if (mysqli_num_rows($result) !== 8) {
+        for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+            echo '<tr style="height: 39px"><td colspan="7"></td></tr>';
+        }
+    }
+    if (mysqli_num_rows($result) === 0) {
+        echo '<tr><td colspan="7"> No Result </td></tr>';
+        for ($i = 1; $i < 8; $i++) {
+            echo '<tr style="height: 39px"><td colspan="7"></td></tr>';
+        }
+    }
+}
+
+if (isset($_GET["request_dormpage"]) && isset($_GET["request_orderby"])) {
+    if (is_numeric($_GET["request_dormpage"])) {
+        getRequestDorm($_GET["request_dormpage"], $_GET["request_orderby"]);
+    } else {
+        echo '<tr><td colspan="8">Error</td></tr>';
+    }
+}
+
+if (isset($_GET["request_curpage"]) && is_numeric($_GET["request_curpage"])) {
+    $query = "select confirmID from ConfirmationDorm";
+    $href = "callback.php?request_dormpage=";
+    displayPage($_GET["request_curpage"], $query, $href);
+}
+
+// REQUEST SEARCHING
+
+function searchingRequest($query) {
+
+    require 'connection.php';
+
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        while ($row = mysqli_fetch_array($result)) {
+            echo '<tr>';
+            echo '<td style="text-align:center">' . $row["confirmID"] . '</td>';
+            echo '<td style="text-align:center">' . $row["memberID"] . '</td>';
+            echo '<td>' . $row["dormName"] . '</td>';
+            echo '<td>' . $row["license"] . '</td>';
+            echo '<td>' . $row["date"] . '</td>';
+            if ($row["approval"] == "Rejected") {
+                echo '<td style="color: red" >' . $row["approval"] . '</td>';
+            } else if ($row["approval"] == "Waiting") {
+                echo '<td style="color: black">' . $row["approval"] . '</td>';
+            } else {
+                echo '<td style="color: green">' . $row["approval"] . '</td>';
+            }
+            echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '">View</a></td>';
+            echo '</tr>';
+        }
+    } else {
+        echo '<tr><td colspan="7" style="text-align:center"> No Result </td></tr>';
+        for ($i = 1; $i < 8; $i++) {
+            echo '<tr style="height: 39px"><td colspan="7"></td></tr>';
+        }
+    }
+    if (mysqli_num_rows($result) !== 8 && mysqli_num_rows($result) !== 0) {
+        for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+            echo '<tr style="height: 39px"><td colspan="7"></td></tr>';
+        }
+    }
+}
+
+if (isset($_GET["request_searching"])) {
+    if ($_GET["request_searching"] !== "") {
+        if (isset($_GET["search_only"])) {
+            $search_value = filter_var($_GET["request_searching"], FILTER_SANITIZE_STRING);
+            $search_only = filter_var($_GET["search_only"], FILTER_SANITIZE_STRING);
+            $query = "select * from ConfirmationDorm where $search_only like '%$search_value%' limit 0 , 8";
+            searchingRequest($query);
+        } else {
+            $search_value = filter_var($_GET["request_searching"], FILTER_SANITIZE_STRING);
+            $query = "select * from ConfirmationDorm where confirmID = '$search_value' or memberID = '$search_value' or dormName like '%$search_value%' or license like '%$search_value%' or date like '%$search_value%' limit 0 , 8";
+            searchingRequest($query);
+        }
+    } else {
+        getRequestDorm(1, "date desc");
+    }
+}
+
+//Booking Searching for Owner
+
+function searchingBook($query) {
+
+    require 'connection.php';
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        while ($row = mysqli_fetch_array($result)) {
+
+            echo '<tr>';
+            echo '<td>' . $row["bookingID"] . '</td>';
+            echo '<td>' . $row["roomType"] . '</td>';
+            echo '<td>' . $_SESSION["firstname"] . '</td>';
+            echo '<td>' . $_SESSION["lastname"] . '</td>';
+            echo '<td>' . $row["expire_date"] . '</td>';
+            echo '<td>';
+            echo '<select class="form-control input-medium">';
+            $msg = $row["booking_status"] === "Waiting" ? "selected" : "";
+            echo '<option ' . $msg . '>Waiting</option>';
+            $msg2 = $row["booking_status"] === 'Approve' ? "selected" : "";
+            echo '<option ' . $msg2 . '>Approve</option>';
+            $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
+            echo '<option ' . $msg3 . '>Canceled</option>';
+            $msg4 = $row["booking_status"] === 'Reject' ? "selected" : "";
+            echo '<option ' . $msg4 . '>Reject</option>';
+            echo '</select>';
+            echo '</td>';
+            echo '<td><button type="button" class="btn ">Change Status</button></td>';
+            echo '</tr> ';
+        }
+    }else {
+        echo '<tr style="height: 51px">';
+        echo '<td colspan="8" style="text-align: center"> No Result</td>';
+        echo '</tr>';
+        for ($i = 1; $i < 8; $i++) {
+            echo '<tr style="height: 51px">';
+            echo '<td colspan="8"></td>';
+            echo '</tr>';
+        }
+    }
+    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) <= 8) {
+        for ($i = 1; $i <= 8 - mysqli_num_rows($result); $i++) {
+            echo '<tr style="height: 51px">';
+            echo '<td colspan="8"></td>';
+            echo '</tr>';
+        }
+    }
+}
+
+if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numeric($_GET["dormbook_id"])) {
+    $search_value = filter_var($_GET["booking_searching"], FILTER_SANITIZE_STRING);
+    $dorm_id = $_GET["dormbook_id"];
+    if ($_GET["booking_searching"] !== "") {
+        if (isset($_GET["search_only"])) {
+            $type = "like";
+            if($_GET["search_only"] === "bookingID"){
+                $type = "=";
+            }
+            if($_GET["search_only"] == "date"){
+                $booksearch_only = "date";
+                $search_value = "%"+$search_value+"%";
+            }
+            $booksearch_only = $_GET["search_only"];
+            $query = "select * from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dorm_id and $booksearch_only $type '$search_value'";
+            searchingBook($query);
+        } else {
+            $query = "select * from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dorm_id and (bookingID like '$search_value' or memberID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%') ";
+            searchingBook($query);
+        }
+    } else {
+        showDormBook($dorm_id);
     }
 }
 ?>
