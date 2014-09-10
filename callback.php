@@ -325,7 +325,7 @@ function getBookingDorm($page, $order_by, $dormID) {
         echo '<option ' . $msg4 . '>Reject</option>';
         echo '</select>';
         echo '</td>';
-        echo '<td><button type="button" class="btn" data-bookID="'. $row["bookingID"] .'" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+        echo '<td><button type="button" class="btn" data-bookID="' . $row["bookingID"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
         echo '</tr> ';
     }
     if (mysqli_num_rows($result) != 8 && mysqli_num_rows($result) != 0) {
@@ -541,7 +541,7 @@ function searchingBook($query) {
             echo '<td><button type="button" class="btn ">Change Status</button></td>';
             echo '</tr> ';
         }
-    }else {
+    } else {
         echo '<tr style="height: 51px">';
         echo '<td colspan="8" style="text-align: center"> No Result</td>';
         echo '</tr>';
@@ -566,11 +566,11 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
     if ($_GET["booking_searching"] !== "") {
         if (isset($_GET["search_only"])) {
             $type = "like";
-            if($_GET["search_only"] === "bookingID"){
+            if ($_GET["search_only"] === "bookingID") {
                 $type = "=";
             }
-            if($_GET["search_only"] == "expire_date" || $_GET["search_only"] == "booking_status" || $_GET["search_only"] == "date"){
-                $search_value = "%".$search_value."%";
+            if ($_GET["search_only"] == "expire_date" || $_GET["search_only"] == "booking_status" || $_GET["search_only"] == "date") {
+                $search_value = "%" . $search_value . "%";
             }
             $booksearch_only = $_GET["search_only"];
             $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dorm_id and $booksearch_only $type '$search_value' order by date desc limit 0 , 8";
@@ -580,8 +580,58 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
             searchingBook($query);
         }
     } else {
-        getBookingDorm(1,"date desc",$dorm_id);
+        getBookingDorm(1, "date desc", $dorm_id);
     }
+}
+
+//Incoming Display Member Booking Page
+
+function getMembook($member_id, $page) {
+
+    require 'connection.php';
+    $limit_start = ((8 * $page) - 8);
+    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and r.dormID = d.dormID and b.memberID = $member_id order by date desc limit $limit_start , 8";
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        while ($book_row = mysqli_fetch_array($result)) {
+            echo '<tr>';
+            echo '<td><p style = "margin-left:20px">' . $book_row["bookingID"] . '</p></td>';
+            echo '<td><p style="margin-left:20px">' . $book_row["dormName"] . '</p></td>';
+            echo '<td>' . $book_row["roomType"] . '</td>';
+            echo '<td>' . $book_row["expire_date"] . '</td>';
+            echo '<td>' . $book_row["booking_status"] . '</td>';
+            echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $book_row["bookingID"] . '" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>';
+            echo '</tr>';
+        }
+    } else {
+        echo '<tr>';
+        echo '<td style="text-align:center" colspan="6">No Result</td>';
+        echo '</tr>';
+        for ($i = 1; $i < 8; $i++) {
+            echo '<tr>';
+            echo '<td style="text-align:center" colspan="6"></td>';
+            echo '</tr>';
+        }
+    }
+    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 8) {
+        for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+            echo '<tr style="height:49px">';
+            echo '<td style="text-align:center" colspan="6"></td>';
+            echo '</tr>';
+        }
+    }
+}
+
+if (isset($_GET["membook_showpage"]) && is_numeric($_GET["membook_showpage"])) {
+    getMembook($_SESSION["memberID"], $_GET["membook_showpage"]);
+}
+
+if(isset($_GET["membook_curpage"]) && is_numeric($_GET["membook_curpage"])){
+    $cur_page = $_GET["membook_curpage"];
+    $memberID = $_SESSION["memberID"];
+    $href = "callback.php?membook_showpage=";
+    $query = "select bookingID from Booking where memberID = $memberID ";
+    displayPage($cur_page, $query, $href);
 }
 ?>
 
