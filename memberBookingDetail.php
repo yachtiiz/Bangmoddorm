@@ -29,15 +29,16 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
         ?>
         <script>
 
+            $(function() {
 
-            jQuery(function($) {
-                $("#datetime").mask("9999-99-99 99:99:99", {placeholder: "0"});
-                $("#cpn_tel").mask("(+99)99-999-9999 ext.? 99");
-                $("#cpn_fax").mask("(+99)99-999-9999");
-                $("#idcard").mask("9-9999-99999-99-9", {placeholder: "_"});
-                $("#cpn_elec_regis").mask("9999999999999", {placeholder: ""});
-                $("#cpn_tax_number").mask("9999999999999", {placeholder: ""});
+                $("#cancel_booking").on("click", function() {
+                    if (confirm("Are you sure to cancel this booking ?")) {
+                        $("#cancel_booking").load("callback.php?cancel_booking=<?php echo $bookingID ?>");
+                    }
+                });
             });
+
+
 
         </script>
         <div class="row book-pay">
@@ -48,7 +49,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                         <div class="row">
                             <div class="span8">
                                 <?php
-                                if ($book_row["booking_status"] !== "Checking") {
+                                if ($book_row["booking_status"] === "Waiting") {
                                     if (isset($_POST["confirm_evidence"])) {
 
                                         function upSlip($file, $bookingID) {
@@ -71,7 +72,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                             $query = "update Booking set booking_status='Checking' , slip = '$slipImage' , transfer_name = '$transfer_name' , transfer_time = '$transfer_time' where bookingID =$bookingID";
                                             if (mysqli_query($con, $query)) {
                                                 echo '<script>alert("Confirm Evidence Complete")</script>';
-                                                echo '<script>window.location = "index.php?chose_page=membookdetail&bookingID='. $bookingID . '"</script>';
+                                                echo '<script>window.location = "index.php?chose_page=membookdetail&bookingID=' . $bookingID . '"</script>';
                                             } else {
                                                 echo '<script>alert("Confirm Evidence Failed")</script>';
                                                 echo '<script>window.location = "index.php?chose_page=checkBookHis"</script>';
@@ -81,26 +82,26 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                         }
                                     } else {
                                         ?>
-                                        <form action='' method='post' enctype="multipart/form-data">
+                                        <form id="confirm_form" action='' method='get' enctype="multipart/form-data">
                                             <div style='border:solid 2px black;padding: 30px;margin-bottom:50px'>
                                                 <h3 style='margin-left:120px'><span>Money</span> Transfer Evidence</h3>
                                                 <div class="input-group" style="width: 60%;margin-left:100px">
                                                     <span class="input-group-addon">Slip Image</span>
-                                                    <input class="form-control" type="file" name="slipImage" value='' required >
+                                                    <input id="slip_image" class="form-control" type="file" name="slipImage" value='' required >
                                                 </div>
                                                 <div class="input-group" style="width: 60%;margin-top:10px;margin-left:100px">
                                                     <span class="input-group-addon">Transfer Name</span>
-                                                    <input class="form-control" type="text" name="transfer_name" value='' required>
+                                                    <input id="transfer_name" class="form-control" type="text" name="transfer_name" value='' required>
                                                 </div>
                                                 <div class="input-group" style="width: 60%;margin-top:10px;margin-left:100px">
                                                     <span class="input-group-addon">Time</span>
-                                                    <input id="timedate" class="form-control" type="datetime-local" name="transfer_time" placeholder="YYYY-MM-DD" required>
+                                                    <input id="transfer_time" class="form-control" type="datetime-local" name="transfer_time" placeholder="YYYY-MM-DD" required>
                                                 </div>
                                                 <button type='submit' name='confirm_evidence' class='btn btn-primary' style='color:green;margin-left:290px;margin-top:20px'>Confirm Evidence</button>
                                             </div>
                                         </form>
                                     <?php } ?>
-                                <?php } else { ?>
+                                <?php } else if ($book_row["booking_status"] !== "Canceled") { ?>
                                     <div class="col-md-12" style='padding: 30px;margin-bottom:50px'>
                                         <legend><h3 style='margin-left:120px'><span>Money</span> Transfer Evidence</h3></legend>
                                         <img style="margin-left: 130px ;width: 250px;height: 300px" class='img-thumbnail' src='/images/picture_slip/<?php echo $book_row["slip"]; ?>'><br>
@@ -109,17 +110,40 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                             <h4 style="margin-left:40px">Transfer Time :</h4>
                                         </div>
                                         <div class="col-md-6" style="margin-top: 30px">
-                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_name"] ?></h4>
-                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_time"] ?></h4>
+                                            <h4 style="margin-left: 20px"><?php echo $book_row["transfer_name"] ?></h4>
+                                            <h4 style="margin-left: 20px"><?php echo $book_row["transfer_time"] ?></h4>
+                                        </div>
+                                        <div class="col-md-12" style="margin-left: 20px">
+                                            <?php if ($book_row["booking_status"] === "Checking") { ?><h4 style="font-style: italic;color: #0480be">Waiting for Owner to check your evidence</h4> <?php } ?>
+                                            <?php if ($book_row["booking_status"] === "Approve") { ?><h4 style="font-style: italic;color: #33cc00">Your Evidence is Correct.</h4> <?php } ?>
+
                                         </div>
                                     </div>
                                 <?php } ?>
-                                <h3><span>Detail</span></h3>				
+                                <h3><span>Detail</span></h3>			
+                                <?php
+                                $color = "black";
+
+                                switch ($book_row["booking_status"]) {
+                                    case "Canceled":
+                                        $color = "red";
+                                        break;
+                                    case "Reject":
+                                        $color = "red";
+                                        break;
+                                    case "Checking":
+                                        $color = "#0480be";
+                                        break;
+                                    case "Approve":
+                                        $color = "#00cc33";
+                                        break;
+                                }
+                                ?>
                                 <div class="pull-left strong">Your Name</div><div class="pull-right "><?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?></div><br />
                                 <div class="pull-left strong">Dormitory</div><div class="pull-right "><?php echo $dorm_row["dormName"]; ?></div><br />
                                 <div class="pull-left strong">Room type</div><div class="pull-right"><?php echo $room_row["roomType"]; ?></div><br />
                                 <div class="pull-left strong">Booking ID</div><div class="pull-right"><?php echo $book_row["bookingID"] ?></div><br>
-                                <div class="pull-left strong">Booking Status</div><div class="pull-right"><?php echo $book_row["booking_status"] ?></div><br>
+                                <div class="pull-left strong">Booking Status</div><div class="pull-right" style="color:<?php echo $color; ?>"><?php echo $book_row["booking_status"] ?></div><br>
                                 <div class="pull-left strong">Booking Date</div><div class="pull-right"><?php echo $book_row["date"] ?></div><br />
                                 <div class="pull-left strong">Booking Expire Date</div><div class="pull-right "><?php echo $book_row["expire_date"] ?> </div><br /><br>
 
@@ -144,7 +168,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                             <div class="pull-left strong"><input name="idcard" class="form-control" type="text" required></div>
                                                             <div class="pull-right strong" style="width: 40%"><input name="telephone" class="form-control" type="text" required></div><br>-->
 
-                                <button type="submit" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancle This Booking</button>
+                                <?php if ($book_row["booking_status"] !== "Canceled") { ?><button id="cancel_booking" type="button" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancle This Booking</button> <?php } ?>
                                 <br />
                                 <br />
                                 <br />

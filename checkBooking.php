@@ -264,49 +264,78 @@
                         </div>
                         <br />
                     </fieldset>
-                    
+
+                    <script>
+
+                        $(document).on("click", ".viewdetail", function() {
+                            $(".modal-body-booking #bookid").html($(this).data('bookid'));
+                            $(".modal-body-booking #name").html($(this).data('name'));
+                            $(".modal-body-booking #date").html($(this).data('date'));
+                            $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
+                            if ($(this).data('slip') === "") {
+                                document.getElementById("slip").setAttribute("src", "/images/picture_slip/default_slip_picture.jpg");
+                            } else {
+                                document.getElementById("slip").setAttribute("src", "/images/picture_slip/" + $(this).data('slip'));
+                            }
+                            $(".modal-body-booking #status").html($(this).data('status'));
+                            $(".modal-body-booking #dormname").html($(this).data('dormname'));
+                            $(".modal-body-booking #room").html($(this).data('room'));
+                            $(".modal-body-booking #totalprice").html($(this).data('totalprice'));
+                            if ($(this).data('transfername') !== "") {
+                                $(".modal-body-booking #transfername").html($(this).data('transfername'));
+                            } else {
+                                $(".modal-body-booking #transfername").html("Empty Data");
+                            }
+                            if ($(this).data('transfername') !== "") {
+                                $(".modal-body-booking #transfertime").html($(this).data('transfertime'));
+                            } else {
+                                $(".modal-body-booking #transfertime").html("Empty Data");
+                            }
+
+                        });
+
+                    </script>
                     <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content" style="background-color: #f5f5f5">
                                 <form id="addcontent" action="" method="post" enctype="multipart/form-data">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title" id="myModalLabel">Booking ID : </h4>
+                                        <h4 class="modal-title" id="myModalLabel">Book Modal</h4>
                                     </div>
                                     <div class="modal-body-booking" style="background-color: white;padding:30px">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <legend style="font-style: italic;text-align: center">Booking Detail</legend>
+                                                <legend style="font-style: italic;text-align: right">Booking Detail</legend>
                                             </div>
-                                            <div class="col-md-12" style="text-align: center;margin-bottom: 30px">
-                                                
-                                                <img style="width: 340px;height: 370px" src="images/picture_evidence/evidance_9_LNERU" class="img-thumbnail">
+                                            <div class="col-md-4" style="text-align: center;margin-bottom: 30px;margin-left: 60px">
+                                                <h5 style="text-align: center">Slip Image</h5>
+                                                <img id="slip" style="width: 340px;height: 370px;" src="images/picture_evidence/evidance_9_LNERU" class="img-thumbnail">
                                             </div>
-                                            <div class="col-md-3" style="margin-left: 230px">
-                                                <h5 style="text-align: left">Customer Name :</h5><h5> </h5>
-                                                <h5 style="text-align: left">Dormitory Name :</h5>
-                                                <h5 style="text-align: left">Room Type : </h5>
-                                                <h5 style="text-align: left">Booking Status :</h5>
-                                                <h5 style="text-align: left">Booking Date :</h5>
-                                                <h5 style="text-align: left">Booking Date Expire :</h5>
-                                                <h5 style="text-align: left;color: #33cc00">Total Price :</h5>
-                                            </div>
-                                            <div class="col-md-5" style="margin-left:0px">
-                                                <h5 style="text-align: left">Ajchariya Arunaramwong</h5>
-                                                <h5 style="text-align: left">Myplace 2</h5>
-                                                <h5 style="text-align: left">Superior</h5>
-                                                <h5 style="text-align: left;color: red">Waiting</h5>
-                                                <h5 style="text-align: left">2014-09-08 22:50:43</h5>
-                                                <h5 style="text-align: left">2014-09-08 22:50:43</h5>
-                                                <h5 style="text-align: left;color: #33cc00">6,000 Bath</h5>
+                                            <div class="col-md-7" style="margin-top: 0px">
+                                                <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right">14</span></h5>
+                                                <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>
+                                                <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right">Myplace 2</span></h5>
+                                                <h5 style="text-align: left">Room Type : <span id="room" class="pull-right">Superior</span></h5>
+                                                <h5 style="text-align: left">Booking Status :<select class="form-control pull-right" style="width: 20%;height: 26px"><option>Approve</option><option>Checking</option><option>Waiting</option><option>Cancel</option><option>Reject</option></select></h5>
+                                                <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right">2014-09-08 22:50:43</span></h5>
+                                                <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right">2014-09-08 22:50:43</span></h5>
+                                                <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Bath</span></h5>
+                                                <legend style="font-style: italic;text-align: right">Money Transfer Evidence</legend>
+                                                <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername">นาย ยอช เอง</span></h5>
+                                                <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                                        <button type="reset" class="btn btn-danger">Reset</button>
-                                        <button id="submitbutton" type="button" name="confirm" class="confirm btn btn-success">Add Content</button>
+                                        <button id="submitbutton" type="button" name="confirm" class="confirm btn btn-success">Change Status</button>
                                     </div>
+                                <script>
+                                
+                                
+                                
+                                </script>
                                 </form>
                             </div>
                         </div>

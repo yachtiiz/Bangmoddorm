@@ -304,7 +304,7 @@ function getBookingDorm($page, $order_by, $dormID) {
     mysqli_query($con, "SET NAMES UTF8");
 
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID order by $order_by limit $limit_start , 8";
+    $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID order by $order_by limit $limit_start , 8";
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
         echo '<tr>';
@@ -315,17 +315,19 @@ function getBookingDorm($page, $order_by, $dormID) {
         echo '<td>' . $row["expire_date"] . '</td>';
         echo '<td>';
         echo '<select class="form-control input-medium" style="width:100px">';
-        $msg = $row["booking_status"] === "Waiting" ? "selected" : "";
-        echo '<option ' . $msg . '>Waiting</option>';
-        $msg2 = $row["booking_status"] === 'Approve' ? "selected" : "";
-        echo '<option ' . $msg2 . '>Approve</option>';
+        $msg = $row["booking_status"] === "Approve" ? "selected" : "";
+        echo '<option ' . $msg . '>Approve</option>';
+        $msg1 = $row["booking_status"] === 'Waiting' ? "selected" : "";
+        echo '<option ' . $msg1 . '>Waiting</option>';
+        $msg2 = $row["booking_status"] === 'Checking' ? "selected" : "";
+        echo '<option ' . $msg2 . '>Checking</option>';
         $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
         echo '<option ' . $msg3 . '>Canceled</option>';
         $msg4 = $row["booking_status"] === 'Reject' ? "selected" : "";
         echo '<option ' . $msg4 . '>Reject</option>';
         echo '</select>';
         echo '</td>';
-        echo '<td><button type="button" class="btn" data-bookID="' . $row["bookingID"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+        echo '<td><button type="button" class="btn viewdetail" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
         echo '</tr> ';
     }
     if (mysqli_num_rows($result) != 8 && mysqli_num_rows($result) != 0) {
@@ -527,11 +529,13 @@ function searchingBook($query) {
             echo '<td>' . $row["date"] . '</td>';
             echo '<td>' . $row["expire_date"] . '</td>';
             echo '<td>';
-            echo '<select class="form-control input-medium">';
-            $msg = $row["booking_status"] === "Waiting" ? "selected" : "";
-            echo '<option ' . $msg . '>Waiting</option>';
-            $msg2 = $row["booking_status"] === 'Approve' ? "selected" : "";
-            echo '<option ' . $msg2 . '>Approve</option>';
+            echo '<select class="form-control input-medium" style="width:100px">';
+            $msg = $row["booking_status"] === "Approve" ? "selected" : "";
+            echo '<option ' . $msg . '>Approve</option>';
+            $msg1 = $row["booking_status"] === 'Waiting' ? "selected" : "";
+            echo '<option ' . $msg1 . '>Waiting</option>';
+            $msg2 = $row["booking_status"] === 'Checking' ? "selected" : "";
+            echo '<option ' . $msg2 . '>Checking</option>';
             $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
             echo '<option ' . $msg3 . '>Canceled</option>';
             $msg4 = $row["booking_status"] === 'Reject' ? "selected" : "";
@@ -626,12 +630,37 @@ if (isset($_GET["membook_showpage"]) && is_numeric($_GET["membook_showpage"])) {
     getMembook($_SESSION["memberID"], $_GET["membook_showpage"]);
 }
 
-if(isset($_GET["membook_curpage"]) && is_numeric($_GET["membook_curpage"])){
+if (isset($_GET["membook_curpage"]) && is_numeric($_GET["membook_curpage"])) {
     $cur_page = $_GET["membook_curpage"];
     $memberID = $_SESSION["memberID"];
     $href = "callback.php?membook_showpage=";
     $query = "select bookingID from Booking where memberID = $memberID ";
     displayPage($cur_page, $query, $href);
+}
+
+//Member Cancel Booking
+
+function cancelBooking($bookingID) {
+
+    require 'connection.php';
+    $query = "update booking set booking_status = 'Canceled' where bookingID = $bookingID";
+
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+if (isset($_GET["cancel_booking"]) && is_numeric($_GET["cancel_booking"])) {
+
+    $bookingID = $_GET["cancel_booking"];
+    if (cancelBooking($bookingID)) {
+        echo 'Cancel This Booking <script>alert("Cancel Booking Success")</script>';
+        echo '<script>window.location = "index.php?chose_page=checkBookingHis"</script>';
+    } else {
+        echo 'Cancel This Booking <script> alert("Cant Cancel This Booking")</script>';
+    }
 }
 ?>
 
