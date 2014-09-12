@@ -60,7 +60,7 @@
                                         function displayPage($memberID, $cur_page) {
 
                                             require 'connection.php';
-                                            $query = "select bookingID from Booking where $memberID";
+                                            $query = "select bookingID from Booking where memberID = $memberID";
                                             $result = mysqli_query($con, $query);
                                             if (mysqli_num_rows($result) !== 0) {
                                                 $total_page = ceil(mysqli_num_rows($result) / 8);
@@ -108,13 +108,30 @@
                                             $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and r.dormID = d.dormID and b.memberID = $memberID order by date desc limit 0 , 8";
                                             $result = mysqli_query($con, $query);
                                             while ($book_row = mysqli_fetch_array($result)) {
+
+                                                $color = "black";
+
+                                                switch ($book_row["booking_status"]) {
+                                                    case "Canceled":
+                                                        $color = "red";
+                                                        break;
+                                                    case "Reject":
+                                                        $color = "red";
+                                                        break;
+                                                    case "Checking":
+                                                        $color = "#0480be";
+                                                        break;
+                                                    case "Approve":
+                                                        $color = "#00cc33";
+                                                        break;
+                                                }
                                                 ?>
                                                 <tr>
                                                     <td><p style="margin-left:20px"><?php echo $book_row["bookingID"] ?></p></td>
                                                     <td><p style="margin-left:20px"><?php echo $book_row["dormName"] ?></p></td>
                                                     <td><?php echo $book_row["roomType"] ?></td>
                                                     <td><?php echo $book_row["expire_date"] ?></td>
-                                                    <td><?php echo $book_row["booking_status"] ?></td>
+                                                    <td style="color:<?php echo $color; ?>" ><?php echo $book_row["booking_status"] ?></td>
                                                     <td><a href="index.php?chose_page=membookdetail&bookingID=<?php echo $book_row["bookingID"] ?>" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>
                                                 </tr>
                                             <?php } ?>

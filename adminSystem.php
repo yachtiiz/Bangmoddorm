@@ -12,7 +12,7 @@
                                         <legend><span>Admin</span> System</legend>
                                     </div>
                                     <div class="span4">
-                                        <a href="checkDormInfo.php"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Dormitory Information</button></a><br><br>
+                                        <a href="index.php?chose_page=checkDormitory"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Dormitory Information</button></a><br><br>
                                         <a href="index.php?chose_page=checkRequestDorm"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Request Dormitory</button></a>
                                     </div>
                                     <div class="span3">

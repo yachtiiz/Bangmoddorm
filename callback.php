@@ -166,13 +166,27 @@ function checkBooking($memberID) {
 
     require 'connection.php';
 
-    $query = "select * from booking where memberID = $memberID and booking_status = 'Waiting'";
+    $query = "select * from booking where memberID = $memberID and  (booking_status = 'Waiting' or booking_status = 'Checking')";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     if ($row !== NULL) {
         return 'Already Booking (Booking ID = ' . $row["bookingID"] . ')';
     } else {
         return 'PASS';
+    }
+}
+
+function checkRoomAvailable($roomID) {
+
+    require 'connection.php';
+
+    $query = "select roomAvailable from rooms where roomID = $roomID";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_array($result);
+    if ($row["roomAvailable"] !== '0') {
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -184,7 +198,11 @@ if (isset($_GET["memberID"]) && isset($_GET["dormID"]) && isset($_GET["roomID"])
         if ($msg !== 'PASS') {
             echo 'Booking<script>alert("' . $msg . '")</script>';
         } else {
-            echo 'Booking<script>window.location = "index.php?chose_page=book&dormID=' . $dormID . '&roomID=' . $roomID . '"</script>';
+            if (checkRoomAvailable($roomID)) {
+                echo 'Booking<script>window.location = "index.php?chose_page=book&dormID=' . $dormID . '&roomID=' . $roomID . '"</script>';
+            } else {
+                echo 'Booking<script>alert("This Room is Unavailable")</script>';
+            }
         }
     }
 }
@@ -225,24 +243,30 @@ function showDormBook($dormID) {
 
     while ($row = mysqli_fetch_array($result)) {
 
+        $color = "black";
+
+        switch ($row["booking_status"]) {
+            case "Canceled":
+                $color = "red";
+                break;
+            case "Reject":
+                $color = "red";
+                break;
+            case "Checking":
+                $color = "#0480be";
+                break;
+            case "Approve":
+                $color = "#00cc33";
+                break;
+        }
+
         echo '<tr>';
         echo '<td>' . $row["bookingID"] . '</td>';
         echo '<td>' . $row["roomType"] . '</td>';
         echo '<td>' . $_SESSION["firstname"] . '</td>';
         echo '<td>' . $_SESSION["lastname"] . '</td>';
         echo '<td>' . $row["expire_date"] . '</td>';
-        echo '<td>';
-        echo '<select class="form-control input-medium">';
-        $msg = $row["booking_status"] === "Waiting" ? "selected" : "";
-        echo '<option ' . $msg . '>Waiting</option>';
-        $msg2 = $row["booking_status"] === 'Approve' ? "selected" : "";
-        echo '<option ' . $msg2 . '>Approve</option>';
-        $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
-        echo '<option ' . $msg3 . '>Canceled</option>';
-        $msg4 = $row["booking_status"] === 'Absent' ? "selected" : "";
-        echo '<option ' . $msg4 . '>Absent</option>';
-        echo '</select>';
-        echo '</td>';
+        echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
         echo '<td><button type="button" class="btn ">Change Status</button></td>';
         echo '</tr> ';
     }
@@ -307,26 +331,31 @@ function getBookingDorm($page, $order_by, $dormID) {
     $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID order by $order_by limit $limit_start , 8";
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
+
+        $color = "black";
+
+        switch ($row["booking_status"]) {
+            case "Canceled":
+                $color = "red";
+                break;
+            case "Reject":
+                $color = "red";
+                break;
+            case "Checking":
+                $color = "#0480be";
+                break;
+            case "Approve":
+                $color = "#00cc33";
+                break;
+        }
+
         echo '<tr>';
         echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
         echo '<td>' . $row["firstName"] . '</td>';
         echo '<td>' . $row["lastName"] . '</td>';
         echo '<td>' . $row["date"] . '</td>';
         echo '<td>' . $row["expire_date"] . '</td>';
-        echo '<td>';
-        echo '<select class="form-control input-medium" style="width:100px">';
-        $msg = $row["booking_status"] === "Approve" ? "selected" : "";
-        echo '<option ' . $msg . '>Approve</option>';
-        $msg1 = $row["booking_status"] === 'Waiting' ? "selected" : "";
-        echo '<option ' . $msg1 . '>Waiting</option>';
-        $msg2 = $row["booking_status"] === 'Checking' ? "selected" : "";
-        echo '<option ' . $msg2 . '>Checking</option>';
-        $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
-        echo '<option ' . $msg3 . '>Canceled</option>';
-        $msg4 = $row["booking_status"] === 'Reject' ? "selected" : "";
-        echo '<option ' . $msg4 . '>Reject</option>';
-        echo '</select>';
-        echo '</td>';
+        echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
         echo '<td><button type="button" class="btn viewdetail" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
         echo '</tr> ';
     }
@@ -522,27 +551,31 @@ function searchingBook($query) {
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
 
+            $color = "black";
+
+            switch ($row["booking_status"]) {
+                case "Canceled":
+                    $color = "red";
+                    break;
+                case "Reject":
+                    $color = "red";
+                    break;
+                case "Checking":
+                    $color = "#0480be";
+                    break;
+                case "Approve":
+                    $color = "#00cc33";
+                    break;
+            }
+
             echo '<tr>';
-            echo '<td style="text-align:center">' . $row["bookingID"] . '</td>';
+            echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
             echo '<td>' . $row["firstName"] . '</td>';
             echo '<td>' . $row["lastName"] . '</td>';
             echo '<td>' . $row["date"] . '</td>';
             echo '<td>' . $row["expire_date"] . '</td>';
-            echo '<td>';
-            echo '<select class="form-control input-medium" style="width:100px">';
-            $msg = $row["booking_status"] === "Approve" ? "selected" : "";
-            echo '<option ' . $msg . '>Approve</option>';
-            $msg1 = $row["booking_status"] === 'Waiting' ? "selected" : "";
-            echo '<option ' . $msg1 . '>Waiting</option>';
-            $msg2 = $row["booking_status"] === 'Checking' ? "selected" : "";
-            echo '<option ' . $msg2 . '>Checking</option>';
-            $msg3 = $row["booking_status"] === 'Cancled' ? "selected" : "";
-            echo '<option ' . $msg3 . '>Canceled</option>';
-            $msg4 = $row["booking_status"] === 'Reject' ? "selected" : "";
-            echo '<option ' . $msg4 . '>Reject</option>';
-            echo '</select>';
-            echo '</td>';
-            echo '<td><button type="button" class="btn ">Change Status</button></td>';
+            echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
+            echo '<td><button type="button" class="btn viewdetail" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
             echo '</tr> ';
         }
     } else {
@@ -660,6 +693,31 @@ if (isset($_GET["cancel_booking"]) && is_numeric($_GET["cancel_booking"])) {
         echo '<script>window.location = "index.php?chose_page=checkBookingHis"</script>';
     } else {
         echo 'Cancel This Booking <script> alert("Cant Cancel This Booking")</script>';
+    }
+}
+
+//Change Booking Status Function
+
+function change_booking($bookID, $status) {
+
+    require 'connection.php';
+    $query = "update booking set booking_status = '$status' where bookingID = $bookID";
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+if (isset($_GET["change_booking_status"]) && isset($_GET["change_booking_id"]) && is_numeric($_GET["change_booking_id"])) {
+
+    $status = filter_var($_GET["change_booking_status"]);
+    $bookID = $_GET["change_booking_id"];
+
+    if (change_booking($bookID, $status)) {
+        echo 'Change Status <script>alert("Change Status Complete");</script>';
+    } else {
+        echo 'Change Status <script>alert("Change Status Failed");</script>';
     }
 }
 ?>

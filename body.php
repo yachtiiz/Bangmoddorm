@@ -64,6 +64,12 @@ switch ($page) {
     case "ownerbookDetail":
         require_once("ownerbook_detail.php");
         break;
+    case "checkDormitory":
+        require_once("checkDormInfo.php");
+        break;
+    case "checkDormDetail":
+        require_once("checkDormDetail.php");
+        break;
     
     default:
         require_once("main.php");

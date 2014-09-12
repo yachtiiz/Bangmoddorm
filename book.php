@@ -21,6 +21,34 @@ function reduce_room($roomID) {
     }
 }
 
+function checkBooking($memberID) {
+
+    require 'connection.php';
+
+    $query = "select * from booking where memberID = $memberID and  (booking_status = 'Waiting' or booking_status = 'Checking')";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_array($result);
+    if ($row !== NULL) {
+        return 'Already Booking (Booking ID = ' . $row["bookingID"] . ')';
+    } else {
+        return 'PASS';
+    }
+}
+
+function checkRoomAvailable($roomID) {
+
+    require 'connection.php';
+
+    $query = "select roomAvailable from rooms where roomID = $roomID";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_array($result);
+    if ($row["roomAvailable"] !== '0') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 if (isset($_GET["dormID"]) && isset($_GET["roomID"]) && is_numeric($_GET["dormID"]) && is_numeric($_GET["roomID"])) {
 
     require 'connection.php';
@@ -49,16 +77,27 @@ if (isset($_GET["dormID"]) && isset($_GET["roomID"]) && is_numeric($_GET["dormID
 
         $query = "INSERT INTO `Booking` (`memberID`, `roomID`, `date`, `expire_date`, `booking_status`, `notiStatus`, `totalPrice`) VALUES($memberID,$roomID, '$start_date', '$expire_date','Waiting', 0 , $total_price);";
 
-        if (mysqli_query($con, $query)) {
-            if (reduce_room($roomID)) {
-                echo '<script>alert("Booking Success (Deadline : ' . $expire_date . ')");</script>';
-                echo '<script>window.location = "index.php"</script>';
+        $msg = checkBooking($memberID);
+        if ($msg == 'PASS') {
+            if (checkRoomAvailable($roomID)) {
+                if (mysqli_query($con, $query)) {
+                    if (reduce_room($roomID)) {
+                        echo '<script>alert("Booking Success (Deadline : ' . $expire_date . ')");</script>';
+                        echo '<script>window.location = "index.php"</script>';
+                    } else {
+                        echo '<script>alert("Booking Failed");</script>';
+                        echo '<script>window.location = "index.php"</script>';
+                    }
+                } else {
+                    echo '<script>alert("Booking Failed");</script>';
+                    echo '<script>window.location = "index.php"</script>';
+                }
             } else {
-                echo '<script>alert("Booking Failed");</script>';
+                echo '<script>alert("This Room is Unavailable");</script>';
                 echo '<script>window.location = "index.php"</script>';
             }
         } else {
-            echo '<script>alert("Booking Failed");</script>';
+            echo '<script>alert("' . $msg . '");</script>';
             echo '<script>window.location = "index.php"</script>';
         }
     }

@@ -1,10 +1,38 @@
 
-<?php include 'header.php' ?>
-
 <?php
+
+function displayPage($cur_page) {
+
+    require 'connection.php';
+    $query = "select dormID from Dormitories";
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        $total_page = ceil(mysqli_num_rows($result) / 8);
+    } else {
+        $total_page = 1;
+    }
+    if ($cur_page == 1) {
+        $prev_page = 1;
+    } else {
+        $prev_page = $cur_page - 1;
+    }
+    if ($cur_page == $total_page) {
+        $next_page = $cur_page;
+    } else {
+        $next_page = $cur_page + 1;
+    }
+
+    echo '<li><a value=' . $prev_page . ' href="callback.php?membook_showpage=' . $prev_page . '">&laquo;</a></li>';
+    for ($i = 1; $i <= $total_page; $i++) {
+        $class = ($cur_page == $i ? "class = 'active'" : "");
+        echo '<li ' . $class . '><a value=' . $i . ' href="callback.php?membook_showpage=' . $i . '">' . $i . '</a></li>';
+    }
+    echo '<li><a value=' . $next_page . ' href="callback.php?membook_showpage=' . $next_page . '">&raquo;</a></li>';
+}
+
 require 'connection.php';
 
-$query = "select * from dormitories d join members m where d.memberID = m.memberID";
+$query = "select dormID,dormName,firstName,lastName,d.type from dormitories d join members m where d.memberID = m.memberID limit 0,8";
 $result = mysqli_query($con, $query);
 ?>
 <div class="row booking_summary">
@@ -32,15 +60,16 @@ $result = mysqli_query($con, $query);
                             </div>
                             <br><br><br><br><br><br>
                             <div class="span12">
-                                <table class="table table-striped">
+                                <table class="table table-striped table-hover" style="border: solid 1px #cccccc">
                                     <th>#</th>
                                     <th>Dormitory ID</th>
                                     <th>Dormitory Name</th>
                                     <th>Owner Name</th>
                                     <th>Dormitory Type</th>
                                     <th></th>
-                                    <?php while ($row = mysqli_fetch_array($result)) {
-                                        $num = 1;
+                                    <?php
+                                    $num = 1;
+                                    while ($row = mysqli_fetch_array($result)) {
                                         ?>
                                         <tr>
                                             <td><?php echo $num; ?></td>
@@ -48,45 +77,17 @@ $result = mysqli_query($con, $query);
                                             <td><?php echo $row["dormName"]; ?></td>
                                             <td><?php echo $row["firstName"] . " " . $row["lastName"]; ?></td>
                                             <td><?php echo $row["type"]; ?></td>
-                                            <td><a href="checkDormDetail.jsp"><button type="button" class="btn btn-success book-now">Detail</button></a></td>
+                                            <td><a href="index.php?chose_page=checkDormDetail"><button type="button" class="btn btn-success book-now">Detail</button></a></td>
                                         </tr>
-                                        <?php $num = $num + 1;
+                                        <?php
+                                        $num = $num + 1;
                                     }
                                     ?>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>0003</td>
-                                        <td>44 Garden</td>
-                                        <td>Ajchariya</td>
-                                        <td>Female</td>
-                                        <td><button type="button" class="btn btn-success book-now">Detail</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>0004</td>
-                                        <td>Thonburi Sport Club</td>
-                                        <td>Thanakorn Kamarj</td>
-                                        <td>Male & Female</td>
-                                        <td><button type="button" class="btn btn-success book-now">Detail</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>0005</td>
-                                        <td>3Brother</td>
-                                        <td>Patawee Namtewee</td>
-                                        <td>Male & Female</td>
-                                        <td><button type="button" class="btn btn-success book-now">Detail</button></td>
-                                    </tr>
                                 </table>
-                                <ul class="pagination">
-                                    <li><a href="#">&laquo;</a>
-                                        <a href="#">1</a>
-                                        <a href="#">2</a>
-                                        <a href="#">3</a>
-                                        <a href="#">4</a>
-                                        <a href="#">5</a>
-                                        <a href="#">&raquo;</a></li>
+                                <ul class="pagination pull-right" style="margin-top: 0px">
+                                    <?php displayPage(1) ?>
                                 </ul>
+
                             </div>
                         </div>
                         <a href="adminsystem.jsp" class="btn btn-primary btn-large book-now pull-left">Back</a>

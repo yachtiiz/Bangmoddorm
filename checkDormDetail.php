@@ -1,34 +1,26 @@
 
-<?php include 'header.php' ?>
 <div class="row booking_summary">
 
     <div class="span12">	
 
         <div class="row">
             <div class="span10">
-                <form class="form-horizontal" />
+                <form class="form-horizontal">
                 <fieldset>
                     <div class="row">
 
-                        <div class="span8">
+                        <div class="span10">
                             <legend><span>Dormitory </span>Information</legend>
                         </div>
 
-                        <div class="span3">
-                            <label>Dormitory Name
-                                <input type="text" value="Myplac1" />
-                            </label>
-                        </div>	
-                        <div class="span3">
-                            <label>Dormitory Type
-                                <select name="type"><option value="female" />Female Only<option value="male" />Male Only<option value="both" />Female & Male</select>
-                            </label>
+                        <div class="col-md-9" style="margin-left:70px">
+                            
+                            <h4>Dormitory Name : <span class="pull-right">My Place 2</span></h4>
+                            <h4>Dormitory Type : <span class="pull-right">Male & Female</span></h4>
+                            
+                            
                         </div>
-                        <div class="span3">
-                            <label>Distance From University
-                                <input type="text" value="650m" />
-                            </label>
-                        </div>	
+                        
                     </div>		
                     <br />
                     <div class="row">
@@ -193,5 +185,3 @@
         </div>
     </div></div>
 </div><!-- /container -->
-
-<?php include 'footer.php' ?>

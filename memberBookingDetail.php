@@ -82,7 +82,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                         }
                                     } else {
                                         ?>
-                                        <form id="confirm_form" action='' method='get' enctype="multipart/form-data">
+                                        <form id="confirm_form" action='' method='post' enctype="multipart/form-data">
                                             <div style='border:solid 2px black;padding: 30px;margin-bottom:50px'>
                                                 <h3 style='margin-left:120px'><span>Money</span> Transfer Evidence</h3>
                                                 <div class="input-group" style="width: 60%;margin-left:100px">

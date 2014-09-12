@@ -269,6 +269,7 @@
 
                         $(document).on("click", ".viewdetail", function() {
                             $(".modal-body-booking #bookid").html($(this).data('bookid'));
+                            document.getElementById("submitbutton").setAttribute("value",$(this).data('bookid'));
                             $(".modal-body-booking #name").html($(this).data('name'));
                             $(".modal-body-booking #date").html($(this).data('date'));
                             $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -277,7 +278,21 @@
                             } else {
                                 document.getElementById("slip").setAttribute("src", "/images/picture_slip/" + $(this).data('slip'));
                             }
-                            $(".modal-body-booking #status").html($(this).data('status'));
+                            if ($(this).data('status') === "Approve") {
+                                document.getElementById("approve").setAttribute("selected", "");
+                            }
+                            if ($(this).data('status') === "Checking") {
+                                document.getElementById("checking").setAttribute("selected", "");
+                            }
+                            if ($(this).data('status') === "Canceled") {
+                                document.getElementById("cancel").setAttribute("selected", "");
+                            }
+                            if ($(this).data('status') === "Reject") {
+                                document.getElementById("reject").setAttribute("selected", "");
+                            }
+                            if ($(this).data('status') === "Waiting") {
+                                document.getElementById("waiting").setAttribute("selected", "");
+                            }
                             $(".modal-body-booking #dormname").html($(this).data('dormname'));
                             $(".modal-body-booking #room").html($(this).data('room'));
                             $(".modal-body-booking #totalprice").html($(this).data('totalprice'));
@@ -292,6 +307,31 @@
                                 $(".modal-body-booking #transfertime").html("Empty Data");
                             }
 
+                        });
+
+                        $(function() {
+
+                            $("#submitbutton").on("click", function() {
+                                
+                                change_url = "callback.php?change_booking_status=" + $("#book_status").val() + "&change_booking_id=" + $(this).val();
+                                $("#submitbutton").load(change_url);
+                                
+                                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+");
+                                if ($("#only_bookid").attr("checked")) {
+                                    special_url = url + "&search_only=bookingID";
+                                    $("#show_result").load(special_url);
+                                } else
+                                if ($("#only_date").attr("checked")) {
+                                    special_url = url + "&search_only=expire_date";
+                                    $("#show_result").load(special_url);
+                                } else
+                                if ($("#only_status").attr("checked")) {
+                                    special_url = url + "&search_only=booking_status";
+                                    $("#show_result").load(special_url);
+                                } else {
+                                    $("#show_result").load(url);
+                                }
+                            });
                         });
 
                     </script>
@@ -317,7 +357,7 @@
                                                 <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>
                                                 <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right">Myplace 2</span></h5>
                                                 <h5 style="text-align: left">Room Type : <span id="room" class="pull-right">Superior</span></h5>
-                                                <h5 style="text-align: left">Booking Status :<select class="form-control pull-right" style="width: 20%;height: 26px"><option>Approve</option><option>Checking</option><option>Waiting</option><option>Cancel</option><option>Reject</option></select></h5>
+                                                <h5 style="text-align: left">Booking Status :<select class="form-control pull-right" id="book_status" style="width: 20%;height: 26px"><option id="approve">Approve</option><option id="checking">Checking</option><option id="waiting">Waiting</option><option id="cancel">Canceled</option><option id="reject">Reject</option></select></h5>
                                                 <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right">2014-09-08 22:50:43</span></h5>
                                                 <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right">2014-09-08 22:50:43</span></h5>
                                                 <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Bath</span></h5>
@@ -331,11 +371,11 @@
                                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                                         <button id="submitbutton" type="button" name="confirm" class="confirm btn btn-success">Change Status</button>
                                     </div>
-                                <script>
-                                
-                                
-                                
-                                </script>
+                                    <script>
+
+
+
+                                    </script>
                                 </form>
                             </div>
                         </div>

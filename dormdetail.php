@@ -47,14 +47,14 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
     <br><br>
 
     <h1><span>Dormitory</span> Facilities &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-    Rate &nbsp;<span style="color: gold">
-                        <?php
-                        for ($i = 1; $i <= $dorm_row["dormitory_rate"]; $i++) {
-                            echo '&#9733;';
-                        } for ($i = $dorm_row["dormitory_rate"]; $i < 5; $i++) {
-                            echo '&#9734;';
-                        }
-                        ?></span></h1>
+        Rate &nbsp;<span style="color: gold">
+            <?php
+            for ($i = 1; $i <= $dorm_row["dormitory_rate"]; $i++) {
+                echo '&#9733;';
+            } for ($i = $dorm_row["dormitory_rate"]; $i < 5; $i++) {
+                echo '&#9734;';
+            }
+            ?></span></h1>
     <div class="col-md-12" style="padding-left:0px">
         <table class="table table-striped">
             <tr>
@@ -113,17 +113,17 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     <h3 style="text-align:left"> <?php echo $fac_dorm_row["parking"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; PARKING</h3>
                 </td>
                 <td>
-                    
+
                 </td>
             </tr>
         </table>
         <br><br><br><br>
-       
+
     </div>
-    
-    
+
+
     <hr>
-    
+
     <table class="table table-condensed">
         <thead>
         <h1><span>Type </span>Of Rooms</h1>
@@ -139,60 +139,60 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     </th>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>
-                            Areas : 
-                        </td>
-                        <td>
-                        <?php echo $dorm_room_row["areas"]; ?> SQ.M.    
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                           Price :  
-                        </td>
-                        <td>
-                           <?php echo $dorm_room_row["price"]; ?> BATH/MONTH 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Number of Rooms : 
-                        </td>
-                        <td>
-                            <?php echo $dorm_room_row["numOfRoom"]; ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="color: green">Room Available : </span>
-                        </td>
-                        <td>
-                            <span style="color: green"><?php echo $dorm_room_row["roomAvailable"] ?></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    
+                        <tr>
+                            <td>
+                                Areas : 
+                            </td>
+                            <td>
+                                <?php echo $dorm_room_row["areas"]; ?> SQ.M.    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Price :  
+                            </td>
+                            <td>
+                                <?php echo $dorm_room_row["price"]; ?> BATH/MONTH 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Number of Rooms : 
+                            </td>
+                            <td>
+                                <?php echo $dorm_room_row["numOfRoom"]; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color: green">Room Available : </span>
+                            </td>
+                            <td>
+                                <span style="color: green"><?php echo $dorm_room_row["roomAvailable"] ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+
                 </table>
                 <br>
                 <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
                 <script>
-                
-                $(document).on("click","#booking<?php echo $dorm_room_row["roomType"] ?>",function(){
-                    event.preventDefault;
-                    $("#booking").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
-                });
-                
+
+                    $(document).on("click", "#booking<?php echo $dorm_room_row["roomType"] ?>", function() {
+                        event.preventDefault;
+                        $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                    });
+
                 </script>
                 <!-- Button trigger modal -->
                 <button class="btn btn-primary btn-lg book-now" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: 50px; ">
                     Detail
                 </button>
                 <br><br>
-                
+
                 <!-- Modal -->
                 <div class="modal fade" id="room<?php echo $dorm_room_row["roomID"]; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -288,7 +288,13 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
-                                    <button id="booking" type="button" class="btn book-now">Booking</button>
+                                    <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now">Booking</button>
+                                    <script>
+                                        $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomType"] ?>", function() {
+                                            event.preventDefault;
+                                            $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                                        });
+                                    </script>
                                 </div>
                             </div>
                         </div>
@@ -296,7 +302,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             </td>
         </tr>
     <?php } ?>
-    
+
     </table>
     <br><br>
     <legend><h1><span>Map</span>Direction</h1></legend>
