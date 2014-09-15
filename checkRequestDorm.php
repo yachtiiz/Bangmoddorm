@@ -16,7 +16,7 @@ function getRequest($page, $order_by) {
         echo '<td>' . $row["dormName"] . '</td>';
         echo '<td>' . $row["license"] . '</td>';
         echo '<td>' . $row["date"] . '</td>';
-        if ($row["approval"] == "Rejected") {
+        if ($row["approval"] == "Reject") {
             echo '<td style="color: red" >' . $row["approval"] . '</td>';
         } else if ($row["approval"] == "Waiting") {
             echo '<td style="color: black">' . $row["approval"] . '</td>';
@@ -232,7 +232,7 @@ function displayPage($cur_page) {
                                 </table>
                             </div>
                             <div class="span12">
-                                <ul id='show_page_request' class="page_request pagination pull-right" style="margin-top: 0px">
+                                <ul id='show_page_request' class="page_request pagination pull-right" style="margin-top: 0px;height: 34px">
                                     <?php
                                     if (!isset($_GET["request_page"])) {
                                         $cur_page = 1;
@@ -241,7 +241,7 @@ function displayPage($cur_page) {
                                     ?>
                                 </ul>
                             </div>
-                            <a href="adminsystem.jsp" style="margin-top:0px;margin-left:350px" class="btn btn-primary btn-large book-now">Back</a>
+                            <a href="index.php?chose_page=adminsystem" style="margin-top:0px;margin-left:50%" class="btn btn-primary btn-large book-now">Back</a>
 
 
                         </div>

@@ -163,7 +163,6 @@
                         }
                     }
 
-
                     $pic_main_path_query = $main_dorm_path === NULL ? "" : ", dorm_pictures = '$main_dorm_path'";
 
                     $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel'" . $pic_main_path_query . " where dormID = $dormID ";

@@ -21,7 +21,60 @@
                         });
                     });
 
+                    $(".sort_mem_book li a").live("click", function() {
+                        event.preventDefault();
+                        url = $(this).attr("href");
+                        cur_page = "callback.php?sortby_memberbooking_curpage=" + $(this).attr("value") + "&sortby_membook=" + $("#sort_by").val();
+                        $("#sort_mem_book").load(cur_page);
+                        $("#show_mem_result").animate({
+                            opacity: 0
+                        }, 100, function() {
+                            $("#show_mem_result").load(url, function() {
+                                $("#show_mem_result").animate({
+                                    opacity: 1
+                                }, 200);
+                            });
+                        });
+                    });
 
+                    $("#searching").on("keyup", function() {
+
+                        url = "callback.php?search_member_value=" + $(this).val().replace(/ /g, "+");
+                        cur_page = "callback.php?membook_curpage=1";
+                        $("#show_mem_book").html("");
+                        $("#sort_mem_book").html("");
+                        $("#show_mem_result").load(url);
+                        document.getElementById("sortby_date").setAttribute("selected","");
+                        if ($(this).val() === "") {
+                            $("#show_mem_book").load(cur_page);
+                        }
+                    });
+
+                    $("#sort_by").on("change", function() {
+
+                        url = "callback.php?sortby_memberbooking=" + $(this).val() + "&sortby_memberbooking_page=1";
+                        cur_page = "callback.php?sortby_memberbooking_curpage=1&sortby_membook=" + $(this).val();
+                        $("#show_mem_book").html("");
+                        $("#show_mem_result").animate({
+                            opacity: 0
+                        }, 100, function() {
+                            $("#show_mem_result").load(url, function() {
+                                $("#show_mem_result").animate({
+                                    opacity: 1
+                                }, 200);
+                            });
+                        });
+                        $("#sort_mem_book").animate({
+                            opacity: 0
+                        }, 100, function() {
+                            $("#sort_mem_book").load(cur_page, function() {
+                                $("#sort_mem_book").animate({
+                                    opacity: 1
+                                }, 200);
+                            });
+                        });
+
+                    });
                 });
 
             </script>
@@ -34,15 +87,12 @@
                                 <legend>
                                     <span>Booking</span> System
                                 </legend>
-                                Search Booking : 
-                                <input type="text" style="width: 40%" placeholder="" class="form-control">
-                                <select class="form-control pull-right" style="width:25%">
-                                    <option>Sort By Date</option>
-                                    <option>Sort By Status</option>
-                                    <option>Sort By Member</option>
-                                    <option>Sort By Status Waiting Only</option>
-                                    <option>Sort By Status Approve Only</option>
-                                    <option>Sort By Status Over Time Only</option>
+                                Search Booking ID : 
+                                <input id="searching" type="text" style="width: 40%" placeholder="" class="form-control">
+                                <select id="sort_by" class="form-control pull-right" style="width:25%">
+                                    <option id="sortby_date" value="date">Sort By Expire Date</option>
+                                    <option value="booking_status">Sort By Status</option>
+                                    <option value="bookingID">Sort By Booking ID</option>
                                 </select>
                             </div>
                             <br><br><br><br><br><br>
@@ -134,21 +184,38 @@
                                                     <td style="color:<?php echo $color; ?>" ><?php echo $book_row["booking_status"] ?></td>
                                                     <td><a href="index.php?chose_page=membookdetail&bookingID=<?php echo $book_row["bookingID"] ?>" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>
                                                 </tr>
-                                            <?php } ?>
-                                        <?php } else { ?>
+                                            <?php
+                                            }
+                                            for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+                                                echo '<tr>';
+                                                echo '<td colspan="8" style="height:49px"></td>';
+                                                echo '</tr>';
+                                            }
+                                            ?>
+<?php } else { ?>
                                             <tr>
                                                 <td colspan="8">Something Error</td>
                                             </tr>
                                         </tbody>
-                                    <?php } ?>
+                                        <?php
+                                        for ($i = 1; $i < 8; $i++) {
+                                            echo '<tr>';
+                                            echo '<td colspan="8" style="height:49px"></td>';
+                                            echo '</tr>';
+                                        }
+                                    }
+                                    ?>
 
                                 </table>
-                                <ul id="show_mem_book" class="mem_book pagination pull-right" style="margin-top: 0px">
-                                    <?php displayPage($_SESSION["memberID"], 1) ?>
+                                <ul id="show_mem_book" class="mem_book pagination pull-right" style="margin-top: 0px;height: 34px">
+<?php displayPage($_SESSION["memberID"], 1) ?>
+                                </ul>
+                                <ul id="sort_mem_book" class="sort_mem_book pagination pull-right" style="margin-top: 0px;height: 34px">
+
                                 </ul>
                             </div>
                         </div>
-                        <a href="membersystem.jsp" class="btn btn-primary btn-large book-now pull-left">Back</a>
+                        <a href="index.php?chose_page=membersystem" class="btn btn-primary btn-large book-now" style="margin-left: 50%">Back</a>
                     </fieldset>
                 </form>
             </div>

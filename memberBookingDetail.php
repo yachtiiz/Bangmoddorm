@@ -101,7 +101,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                             </div>
                                         </form>
                                     <?php } ?>
-                                <?php } else if ($book_row["booking_status"] !== "Canceled") { ?>
+                                <?php } else if ($book_row["booking_status"] !== "Canceled" && $book_row["booking_status"] !== "Reject") { ?>
                                     <div class="col-md-12" style='padding: 30px;margin-bottom:50px'>
                                         <legend><h3 style='margin-left:120px'><span>Money</span> Transfer Evidence</h3></legend>
                                         <img style="margin-left: 130px ;width: 250px;height: 300px" class='img-thumbnail' src='/images/picture_slip/<?php echo $book_row["slip"]; ?>'><br>
@@ -168,7 +168,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                             <div class="pull-left strong"><input name="idcard" class="form-control" type="text" required></div>
                                                             <div class="pull-right strong" style="width: 40%"><input name="telephone" class="form-control" type="text" required></div><br>-->
 
-                                <?php if ($book_row["booking_status"] !== "Canceled") { ?><button id="cancel_booking" type="button" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancle This Booking</button> <?php } ?>
+                                <?php if ($book_row["booking_status"] !== "Canceled" && $book_row["booking_status"] !== "Reject") { ?><button id="cancel_booking" type="button" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancle This Booking</button> <?php } ?>
                                 <br />
                                 <br />
                                 <br />

@@ -60,3 +60,5 @@ $dorm_result = mysqli_query($con, $query);
         </div>
     </div>	
 </div>
+
+</div>
