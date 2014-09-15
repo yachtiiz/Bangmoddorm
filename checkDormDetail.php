@@ -6,180 +6,110 @@
         <div class="row">
             <div class="span10">
                 <form class="form-horizontal">
-                <fieldset>
-                    <div class="row">
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-md-10" style="margin-left: 70px">
+                                <legend style="text-align: center"><span>Dormitory </span>Information</legend>
+                            </div>
+                            <div class="col-md-4" style="margin-left:70px">
+                                <h4>Name <span class="pull-right">: </span></h4>
+                                <h4>Type <span class="pull-right">: </span> </h4>
+                                <h4>Owner <span class="pull-right">: </span> </h4>
+                                <h4>Contact <span class="pull-right">: </span> </h4>
+                                <h4>Email <span class="pull-right">: </span> </h4>
+                                <h4 style="margin-top: 20px">Distance From University <span class="pull-right">: </span> </h4>
+                                <h4>Rate <span class="pull-right">: </span> </h4>
+                                <h4>Number Of Rooms Type <span class="pull-right">: </span> </h4>
+                                <h4>Number Of Rooms <span class="pull-right">: </span> </h4>
+                                <h4>All Available Room <span class="pull-right">: </span> </h4>
+                                <h4>All Reserve Room <span class="pull-right">: </span> </h4>
 
-                        <div class="span10">
-                            <legend><span>Dormitory </span>Information</legend>
-                        </div>
+                            </div>
+                            <div class="col-md-6" style="margin-left:0px">
+                                <h4><span class="pull-right">My Place 2</span></h4><br>
+                                <h4><span class="pull-right">Male & Female</span></h4><br>
+                                <h4><a class="pull-right" href="index.php?chose_page=index" style="color: #0099ff">Ajchariya Arunramwong</a></h4><br>
+                                <h4><span class="pull-right">(+66)90-971-1786</span></h4><br>
+                                <h4><span class="pull-right">surachai@gmail.com</span></h4><br><br>
+                                <h4><span class="pull-right">5 Kilometers</span></h4><br>
+                                <h4><span class="pull-right" style="color:gold">&#9733;&#9733;&#9733;&#9733;&#9733;</span></h4><br>
+                                <h4><span class="pull-right"> 3 Type</span></h4><br>
+                                <h4><span class="pull-right"> 50 Rooms</span></h4><br>
+                                <h4><span class="pull-right"> 30 Rooms</span></h4><br>
+                                <h4><span class="pull-right"> 20 Rooms</span></h4><br>
+                            </div>
+                            <div class="col-md-10" style="margin-left:70px">
+                                <h3 style="text-align: center">Dormitory Facilities</h3>
+                                <?php
+                                require 'connection.php';
+                                $fac_dorm_query = "select * from FacilitiesInDorm where dormID = 9";
+                                $fac_dorm_result = mysqli_query($con, $fac_dorm_query);
+                                $fac_dorm_row = mysqli_fetch_array($fac_dorm_result);
+                                ?>
+                                <table class="table table-striped" style="border:solid 1px #cccccc">
+                                    <tr>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["wifi"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WIFI</h3>
+                                        </td>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["lan"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; LAN</h3> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["airCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; AIRCLEANSERVICE</h3>
+                                        </td>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["roomCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ROOMCLEANSERVICE</h3> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["washingService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WASHINGSERVICE</h3>
+                                        </td>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["busService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; BUSSERVICE</h3> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["fitness"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; FITNESS</h3>
+                                        </td>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["pool"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; POOL</h3> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["restaurant"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; RESTAURANT</h3>
+                                        </td>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["vendingMachine"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; VENDINGMACHINE</h3> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["laundry"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; LAUNDRY</h3>
+                                        </td>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["elevator"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ELEVATOR</h3> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["cctv"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; CCTV</h3>
+                                        </td>
+                                        <td>
+                                            <h3 style="text-align:left"> <?php echo $fac_dorm_row["parking"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; PARKING</h3>
+                                        </td>
 
-                        <div class="col-md-9" style="margin-left:70px">
-                            
-                            <h4>Dormitory Name : <span class="pull-right">My Place 2</span></h4>
-                            <h4>Dormitory Type : <span class="pull-right">Male & Female</span></h4>
-                            
-                            
-                        </div>
-                        
-                    </div>		
-                    <br />
-                    <div class="row">
-                        <div class="span8">
-                            <legend><span>Dormitory</span> address</legend>
-                        </div>
-
-                        <div class="span3">
-                            <label>Address No.
-                                <input type="text" value="33/3">
-                            </label>
-                            <label>Sub Distinct
-                                <input type="text" value="Thungkru">
-                            </label>
-                            <label>Zipcode
-                                <input type="text" value="10140">
-                            </label>
-                        </div>				
-
-                        <div class="span3">
-                            <label>Soi
-                                <input type="text" value="Prachauthid45"/>
-                            </label>
-                            <label>Distinct
-                                <input type="text" value="Thungkru" />
-                            </label>
-                            <label>Latitude
-                                <input type="text" value="128.00" />
-                            </label>
-                        </div>
-
-                        <div class="span3">
-                            <label>Road
-                                <input type="text" value="Prachautid" />
-                            </label>
-                            <label>Province
-                                <input type="text" value="Bangkok" />
-                            </label>
-                            <label>Longitude
-                                <input type="text" value="150.00"/>
-                            </label>
-                        </div>
-
-                    </div>  
-                    <br />
-                    <div class="row">
-                        <div class="span8">
-                            <legend><span>Dormitory</span> Contact</legend>
-                        </div>
-                        <div class="span3">
-                            <label>Email
-                                <input type="text" value="Ajchariya@abcmail.com" />
-                            </label>
-                        </div>
-
-                        <div class="span3">
-                            <label>Telephone
-                                <input type="text" value="091-012-0123"/>
-                            </label>
-                        </div>	
-                    </div>
-                    <br />
-
-                    <div class="row">
-
-                        <div class="span8">
-                            <legend><span>Dormitories </span>Facilities</legend>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>		
-
-                        <div class="span3">
-                            <div class="custom_container">
-                                <div class="pull-left">WiFi</div><div class="pull-right"><input type="checkbox" checked="checked" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Clean Service</div><div class="pull-right"><input type="checkbox" checked="checked" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Washing Service</div><div class="pull-right"><input type="checkbox" checked="checked" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Vending Machine</div><div class="pull-right"><input type="checkbox" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Restaurant</div><div class="pull-right"><input type="checkbox" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Swimming Pool</div><div class="pull-right"><input type="checkbox" /></div>
-                            </div>
-                        </div>
-                        <div class="span3 offset1">
-                            <div class="custom_container">
-                                <div class="pull-left ">Lan</div><div class="pull-right"><input type="checkbox" checked="checked" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Air Clean Service</div><div class="pull-right"><input type="checkbox" checked="checked" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Laundry</div><div class="pull-right"><input type="checkbox" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Bus Service</div><div class="pull-right"><input type="checkbox" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">Fitness</div><div class="pull-right"><input type="checkbox" /></div>
-                            </div>
-                            <div class="custom_container">
-                                <div class="pull-left ">CCTV</div><div class="pull-right"><input type="checkbox" /></div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="row">
-                        <div class="span5">
-                            <label>Parking    
-                                <input type="text" value="30 Cars" />
-                            </label>
-                        </div>
-                    </div>
-
-                    <br/>
-                    <div class="row">
-                        <div class="span8">
-                            <legend><span>Dormitory</span> Picture</legend>
-                        </div>
-                        <div class="span4">
-                            <label>Picture1 
-                                <input type="file" placeholder="" />
-                            </label>
-                        </div>
-                        <div class="span4">
-                            <label>Picture2
-                                <input type="file" placeholder=""/>
-                            </label>
-                        </div>
-                        <div class="span4">
-                            <label>Picture3 
-                                <input type="file" placeholder="" />
-                            </label>
-                        </div>
-                        <div class="span4">
-                            <label>Picture4 
-                                <input type="file" placeholder="" />
-                            </label>
-                        </div>
-                        <div class="span4">
-                            <label>Picture5 
-                                <input type="file" placeholder="" />
-                            </label>
-                        </div>
-                        <div class="span4">
-                            <label>Picture6 
-                                <input type="file" placeholder="" />
-                            </label>
-                        </div>
-                    </div>
-                    <br />
-                    <a href="checkDormInfo.jsp" class="btn btn-primary btn-large book-now pull-left">Back</a>
-                </fieldset>
+                        <br />
+                        <a href="checkDormInfo.jsp" class="btn btn-primary btn-large book-now" style="margin-left:38%;margin-bottom: 50px">Back</a>
+                    </fieldset>
                 </form>
             </div>
         </div>

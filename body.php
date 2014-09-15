@@ -70,6 +70,12 @@ switch ($page) {
     case "checkDormDetail":
         require_once("checkDormDetail.php");
         break;
+    case "checkMemberInfo":
+        require_once("checkMemberInfo.php");
+        break;
+    case "memberInfo":
+        require_once("memberInfo.php");
+        break;
     
     default:
         require_once("main.php");

@@ -45,6 +45,7 @@
                         $("#sort_mem_book").html("");
                         $("#show_mem_result").load(url);
                         document.getElementById("sortby_date").setAttribute("selected","");
+
                         if ($(this).val() === "") {
                             $("#show_mem_book").load(cur_page);
                         }

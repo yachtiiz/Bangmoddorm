@@ -103,13 +103,13 @@ function approve_dormitory($confirmID, $dorm_rate) {
     }
 }
 
-function reject_dormitory($confirmID){
+function reject_dormitory($confirmID) {
     require 'connection.php';
     $query = "update ConfirmationDorm set approval = 'Reject' where confirmID = $confirmID ";
-    
-    if(mysqli_query($con, $query)){
+
+    if (mysqli_query($con, $query)) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
@@ -848,7 +848,7 @@ if (isset($_GET["sortby_memberbooking_curpage"]) && is_numeric($_GET["sortby_mem
 
 // Checking Dorm Info
 
-function getAllDorm($page,$order_by) {
+function getAllDorm($page, $order_by) {
 
     require 'connection.php';
     $limit_start = ((8 * $page) - 8);
@@ -890,7 +890,7 @@ function getAllDorm($page,$order_by) {
     }
 }
 
-function searchDormitories($query){
+function searchDormitories($query) {
     require 'connection.php';
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
@@ -931,32 +931,182 @@ function searchDormitories($query){
 
 if (isset($_GET["checkdorm_currentpage"]) && is_numeric($_GET["checkdorm_currentpage"])) {
     $page = $_GET["checkdorm_currentpage"];
-    getAllDorm($page,"dormID");
+    getAllDorm($page, "dormID");
 }
 
 if (isset($_GET["checkdorm_showpage"]) && is_numeric($_GET["checkdorm_showpage"])) {
     $href = "callback.php?checkdorm_currentpage=";
     $query = "select * from dormitories";
-    if(isset($_GET["sortby_dorm"])){
+    if (isset($_GET["sortby_dorm"])) {
         $sort_by = $_GET["sortby_dorm"];
-        $href = "callback.php?sortby_dormitories=". $sort_by ."&sortby_dormitories_page=";
+        $href = "callback.php?sortby_dormitories=" . $sort_by . "&sortby_dormitories_page=";
     }
-    displayPage($_GET["checkdorm_showpage"], $query , $href);
+    displayPage($_GET["checkdorm_showpage"], $query, $href);
 }
 
-if(isset($_GET["search_dormitories"])){
+if (isset($_GET["search_dormitories"])) {
     $value = $_GET["search_dormitories"];
     $query = "select dormID,dormName,firstName,lastName,d.type,d.status from dormitories d join members m where d.memberID = m.memberID and  (dormID like '%$value%' or dormName like '%$value%' or firstName like '%$value%' or lastName like '%$value%' or d.type like '%$value%' or d.status like '%$value%') limit 0,8";
     searchDormitories($query);
 }
 
-if(isset($_GET["sortby_dormitories"]) && isset($_GET["sortby_dormitories_page"]) && is_numeric($_GET["sortby_dormitories_page"])){
+if (isset($_GET["sortby_dormitories"]) && isset($_GET["sortby_dormitories_page"]) && is_numeric($_GET["sortby_dormitories_page"])) {
     $order_by = $_GET["sortby_dormitories"];
-    if($order_by == "type"){
+    if ($order_by == "type") {
         $order_by = "type desc";
     }
     getAllDorm($_GET["sortby_dormitories_page"], $order_by);
 }
 
+//Get All Members
+function getAllMember($page, $order_by) {
+
+    require 'connection.php';
+    $limit_start = ((8 * $page) - 8);
+    $query = "select * from members order by $order_by limit $limit_start , 8";
+
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        while ($row = mysqli_fetch_array($result)) {
+
+            $color = "black";
+            switch ($row["type"]) {
+                case "Member":
+                    $color = "#00cc33";
+                    break;
+                case "Owner":
+                    $color = "#0480be";
+                    break;
+                case "Admin":
+                    $color = "red";
+                    break;
+            }
+
+            $bl_color = "black";
+            if ($row["status"] === "Blacklist") {
+                $bl_color = "red";
+            }
+
+            echo '<tr>';
+            echo '<td style="text-align: center;">' . $row["memberID"] . '</td>';
+            echo '<td>' . $row["username"] . '</td>';
+            echo '<td>' . $row["firstName"] . '</td>';
+            echo '<td>' . $row["lastName"] . '</td>';
+            echo '<td style="color:' . $color . '">' . $row["type"] . '</td>';
+            echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
+            echo '<td>' . $row["tel"] . '</td>';
+            echo '<td><a href="index.php?chose_page=memberInfo"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '</tr>';
+        }
+    } else {
+        echo '<tr>';
+        echo '<td colspan="8">No Result</td>';
+        echo '</tr>';
+
+        for ($i = 1; $i < 8; $i++) {
+            echo '<tr>';
+            echo '<td colspan="8" style="height:47px"></td>';
+            echo '</tr>';
+        }
+    }
+    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 8) {
+        for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+            echo '<tr>';
+            echo '<td colspan="8" style="height:47px"></td>';
+            echo '</tr>';
+        }
+    }
+}
+
+function searchingMembers($query) {
+
+    require 'connection.php';
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        while ($row = mysqli_fetch_array($result)) {
+
+            $color = "black";
+            switch ($row["type"]) {
+                case "Member":
+                    $color = "#00cc33";
+                    break;
+                case "Owner":
+                    $color = "#0480be";
+                    break;
+                case "Admin":
+                    $color = "red";
+                    break;
+            }
+
+            $bl_color = "black";
+            if ($row["status"] === "Blacklist") {
+                $bl_color = "red";
+            }
+
+            echo '<tr>';
+            echo '<td style="text-align: center">' . $row["memberID"] . '</td>';
+            echo '<td>' . $row["username"] . '</td>';
+            echo '<td>' . $row["firstName"] . '</td>';
+            echo '<td>' . $row["lastName"] . '</td>';
+            echo '<td style="color:' . $color . '">' . $row["type"] . '</td>';
+            echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
+            echo '<td>' . $row["tel"] . '</td>';
+            echo '<td><a href="index.php?chose_page=memberInfo"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '</tr>';
+        }
+    } else {
+        echo '<tr>';
+        echo '<td colspan="8" style="text-align:center">No Result</td>';
+        echo '</tr>';
+
+        for ($i = 1; $i < 8; $i++) {
+            echo '<tr>';
+            echo '<td colspan="8" style="height:47px"></td>';
+            echo '</tr>';
+        }
+    }
+    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 8) {
+        for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+            echo '<tr>';
+            echo '<td colspan="8" style="height:47px"></td>';
+            echo '</tr>';
+        }
+    }
+}
+
+if (isset($_GET["show_member_page"]) && is_numeric($_GET["show_member_page"])) {
+
+    $page = $_GET["show_member_page"];
+    $sort_by = "memberID";
+    if (isset($_GET["sortby_member"])) {
+        $sort_by = $_GET["sortby_member"];
+    }
+    getAllMember($page, $sort_by);
+}
+
+if (isset($_GET["show_member_curpage"]) && is_numeric($_GET["show_member_curpage"])) {
+    $query = "select * from Members";
+    $href = "callback.php?show_member_page=";
+    if (isset($_GET["sortby_member"])) {
+        $sort_by = $_GET["sortby_member"];
+        $href = "callback.php?sortby_member=$sort_by&show_member_page=";
+    }
+    displayPage($_GET["show_member_curpage"], $query, $href);
+}
+
+if (isset($_GET["search_members"])) {
+
+    $value = filter_var($_GET["search_members"], FILTER_SANITIZE_STRING);
+    $query = "select * from members where ( memberID like '%$value%' or firstName like '%$value%'  or lastName like '%$value%' or username like '%$value%' or idCard like '%$value%' or email like '%$value%' ) limit 0 , 8";
+    searchingMembers($query);
+}
+
+if (isset($_GET["sortby_member"]) && isset($_GET["sortby_member_page"])) {
+    $sort_by = $_GET["sortby_member"];
+    $page = $_GET["sortby_member_page"];
+    $limit_start = ((8 * $page) - 8);
+    $query = "select * from members order by $sort_by limit $limit_start , 8";
+    searchingMembers($query);
+}
 ?>
 
