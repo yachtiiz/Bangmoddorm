@@ -1,8 +1,6 @@
 
             <div class="row booking_summary">
-
                 <div class="span12">	
-
                     <div class="row">
                         <div class="span9">
                             <form class="form-horizontal" />

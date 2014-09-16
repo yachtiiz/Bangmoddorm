@@ -112,7 +112,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                 <td>
                     <h3 style="text-align:left"> <?php echo $fac_dorm_row["parking"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; PARKING</h3>
                 </td>
-                
+
             </tr>
         </table>
         <br><br><br>
@@ -307,31 +307,183 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
     <iframe width="950" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps?f=d&amp;source=s_d&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.648036,100.498716&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m&amp;output=embed"></iframe><br /><small>View <a href="https://www.google.com/maps?f=d&amp;source=embed&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.648036,100.498716&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m" style="color:#0000FF;text-align:left">Map Project</a> in a larger map</small>
     <br><br>
     <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
-        <h1><span>Review </span> And Comment</h1>
+        <h1><span>Review </span> And Comment <span class="pull-right"><h4 style="font-style:italic">Rate : 5.6 from 15 Reviews</h4></span></h1>
         <br>
-        <tr>
-            <td colspan="2"><h3>Richard M. </h3><br>Solo travelers</td>
-            <td colspan="10">Beautiful Balcony and Facilities.</td>
+        <tbody id="comment_table">
+            <?php
 
-        </tr>
-        <tr>
-            <td colspan="2"><h3>Vic L. </h3><br>Solo travelers</td>
-            <td colspan="10">Not far from University. So comfortable.</td>
-        </tr>
-        <tr>
-            <td colspan="2"><h3>Tommy F. </h3><br>Solo travelers</td>
-            <td colspan="10">I Like it.</td>
+            function getComment($dormID) {
+                require 'connection.php';
+                $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID order by date";
+                $result = mysqli_query($con, $query);
+                while ($row = mysqli_fetch_array($result)) {
+                    $star = "";
 
-        </tr>
+                    for ($i = 1; $i <= $row["rating"]; $i++) {
+                        $star = $star . "&#9733;";
+                    }
+                    for ($i = 1; $i <= 5 - $row["rating"]; $i++) {
+                        $star = $star . "&#9734;";
+                    }
+
+                    echo '<tr>';
+                    echo '<td colspan="2">';
+                    echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
+                    echo '<p class="pull-left">' . $row["date"] . '</p>';
+                    echo '<p class="pull-left" style="color:gold">' . $star . '</p>';
+                    echo '</td>';
+                    echo '<td colspan="10" style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
+                    echo '</tr>';
+                }
+            }
+
+            getComment($dormID);
+            ?>
+        </tbody>
         <tr>
-            <td colspan="2"><h3>Ajchariya K. </h3><br>Solo travelers</td>
-            <td colspan="10"><textarea rows="5" class="span8" ></textarea><br>
-                <button type="button" class="btn btn-success book-now">Comment</button>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <input type="reset" class="btn btn-danger book-now" value="Clear"></td>
+            <td colspan="2"><h3><?php echo $_SESSION["firstname"] . " " . substr($_SESSION["lastname"], 0, 1) . '.'; ?> </h3><br>Solo travelers</td>
+            <td colspan="10">
+                <h4>Give Score For This Dormitory</h4>
+                Comfortable
+                <label class="radio-inline" style="margin-left:32px">
+                    <input type="radio" name="comfort_score" id="inlineRadio1" value="option1"> 1
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="comfort_score" id="inlineRadio2" value="option2"> 2
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="comfort_score" id="inlineRadio2" value="option2"> 3
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="comfort_score" id="inlineRadio2" value="option2"> 4
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="comfort_score" id="inlineRadio3" value="option3"> 5
+                </label><br>
+                Beautiful
+                <label class="radio-inline" style="margin-left:57px">
+                    <input type="radio" name="beautiful_score" id="inlineRadio1" value="option1"> 1
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="beautiful_score" id="inlineRadio2" value="option2"> 2
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="beautiful_score" id="inlineRadio2" value="option2"> 3
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="beautiful_score" id="inlineRadio2" value="option2"> 4
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="beautiful_score" id="inlineRadio3" value="option3"> 5
+                </label><br>
+                Security
+                <label class="radio-inline" style="margin-left:62px">
+                    <input type="radio" name="secutiry_score" id="inlineRadio1" value="option1"> 1
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="secutiry_score" id="inlineRadio2" value="option2"> 2
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="secutiry_score" id="inlineRadio2" value="option2"> 3
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="secutiry_score" id="inlineRadio2" value="option2"> 4
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="secutiry_score" id="inlineRadio3" value="option3"> 5
+                </label><br>
+                Performance
+                <label class="radio-inline" style="margin-left:28px">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 3
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 4
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 5
+                </label><hr>
+                <textarea style="margin-bottom:20px" id="comment_value" rows="5" class="span8 from-control" required style="margin-bottom: 20px"></textarea>
+                <select id="comment_rate" class="form-control" style="width:25%;margin-top:0px;display:inline">
+                    <option value="default">Give Dormitory Rate</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Star</option>
+                    <option value="3">3 Star</option>
+                    <option value="4">4 Star</option>
+                    <option value="5">5 Star</option>
+                </select>
+                <span id="star" style="margin-top:0px;margin-left:20%;display: inline;color:gold">&#9734;&#9734;&#9734;&#9734;&#9734;</span><br>   
+                <span id="show" style="width:5%"></span>
+                <button id="comment_submit" class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 12%"> Comment</button>
+                <button class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 5%"> Clear</button>
 
-
+            </td>
         </tr>
+        <script>
+
+            $(function() {
+
+                $("#comment_submit").on("click", function() {
+                    if ($("#comment_value").val() !== "") {
+                        if ($("#comment_rate").val() !== "default") {
+                            url = "callback.php?comment_value=" + $("#comment_value").val().replace(/ /g, "+") + "&comment_dormID=<?php echo $_GET["dormID"]; ?>&comment_memberID=<?php echo $_SESSION["memberID"]; ?>&comment_rate=" + $("#comment_rate").val();
+                            $("#show").append('<img style="height:20px" src="images/loading.gif" />');
+                            var timer = setTimeout(function() {
+                                clearTimeout(timer);
+                                $("#show").html("");
+                                $("#comment_value").removeAttr("value");
+                                $("#comment_table").animate({
+                                    opacity: 0
+                                }, 100, function() {
+                                    $("#comment_table").load(url, function() {
+                                        $("#comment_table").animate({
+                                            opacity: 1
+                                        }, 1000);
+                                    });
+                                });
+                            }, 1000);
+                        } else {
+                            alert("Please Give Dormitory Rate");
+                        }
+                    } else {
+                        alert("Please Input Value");
+                    }
+                });
+
+                $("#comment_rate").on("change", function() {
+
+                    if ($("#comment_rate").val() !== "default") {
+                        if ($("#comment_rate").val() === "1") {
+                            $("#star").html("&#9733;&#9734;&#9734;&#9734;&#9734;");
+                        }
+                        if ($("#comment_rate").val() === "2") {
+                            $("#star").html("&#9733;&#9733;&#9734;&#9734;&#9734;");
+                        }
+                        if ($("#comment_rate").val() === "3") {
+                            $("#star").html("&#9733;&#9733;&#9733;&#9734;&#9734;");
+                        }
+                        if ($("#comment_rate").val() === "4") {
+                            $("#star").html("&#9733;&#9733;&#9733;&#9733;&#9734;");
+                        }
+                        if ($("#comment_rate").val() === "5") {
+                            $("#star").html("&#9733;&#9733;&#9733;&#9733;&#9733;");
+                        }
+                    } else {
+                        $("#star").html("&#9734;&#9734;&#9734;&#9734;&#9734;");
+                    }
+                });
+            });
+
+
+
+
+
+        </script>
 
     </table>
 

@@ -11,6 +11,16 @@
                             <div class="col-md-10" style="margin-left: 70px">
                                 <legend style="text-align: center"><span>Dormitory </span>Information</legend>
                             </div>
+                            <?php
+                            
+                            if(isset($_GET["dormID"]) && is_numeric($_GET["dormID"])){
+                                
+                                $dormID = $_GET["dormID"];
+                                require 'connection.php';
+                                $query = "select dormName,d.type,firstName,lastName,m.memberID,m.email,m.tel,disFromUni,dormitory_rate,count(roomType) as AllroomType,sum(numOfRoom) as Allroom,sum(roomAvailable) as AvailableRoom,d.status from dormitories d join rooms r join members m where d.dormID = r.dormID and d.memberID = m.memberID and d.dormID = $dormID";
+                                $result = mysqli_query($con, $query);
+                                $row = mysqli_fetch_array($result);                            
+                            ?>
                             <div class="col-md-4" style="margin-left:70px">
                                 <h4>Name <span class="pull-right">: </span></h4>
                                 <h4>Type <span class="pull-right">: </span> </h4>
@@ -22,27 +32,39 @@
                                 <h4>Number Of Rooms Type <span class="pull-right">: </span> </h4>
                                 <h4>Number Of Rooms <span class="pull-right">: </span> </h4>
                                 <h4>All Available Room <span class="pull-right">: </span> </h4>
-                                <h4>All Reserve Room <span class="pull-right">: </span> </h4>
+                                <h4>Status on page <span class="pull-right">: </span> </h4>
 
                             </div>
+                            
+                            <?php
+                            
+                            $star = "";
+                            
+                            for($i=1;$i<=$row["dormitory_rate"];$i++){
+                                $star = $star . "&#9733;";
+                            }
+                            for($i=1;$i<=5-$row["dormitory_rate"];$i++){
+                                $star = $star . "&#9734;";
+                            }
+                            
+                            ?>
                             <div class="col-md-6" style="margin-left:0px">
-                                <h4><span class="pull-right">My Place 2</span></h4><br>
-                                <h4><span class="pull-right">Male & Female</span></h4><br>
-                                <h4><a class="pull-right" href="index.php?chose_page=index" style="color: #0099ff">Ajchariya Arunramwong</a></h4><br>
-                                <h4><span class="pull-right">(+66)90-971-1786</span></h4><br>
-                                <h4><span class="pull-right">surachai@gmail.com</span></h4><br><br>
-                                <h4><span class="pull-right">5 Kilometers</span></h4><br>
-                                <h4><span class="pull-right" style="color:gold">&#9733;&#9733;&#9733;&#9733;&#9733;</span></h4><br>
-                                <h4><span class="pull-right"> 3 Type</span></h4><br>
-                                <h4><span class="pull-right"> 50 Rooms</span></h4><br>
-                                <h4><span class="pull-right"> 30 Rooms</span></h4><br>
-                                <h4><span class="pull-right"> 20 Rooms</span></h4><br>
+                                <h4><span class="pull-right"><?php echo $row["dormName"] ?></span></h4><br>
+                                <h4><span class="pull-right"><?php echo $row["type"] ?></span></h4><br>
+                                <h4><a class="pull-right" href="index.php?chose_page=memberInfo&memberID=<?php echo $row["memberID"]; ?>&backtodorm=<?php echo $dormID;  ?>" style="color: #0099ff"><?php echo $row["firstName"] . " " . $row["lastName"] ?></a></h4><br>
+                                <h4><span class="pull-right"><?php echo $row["tel"] ?></span></h4><br>
+                                <h4><span class="pull-right"><?php echo $row["email"] ?></span></h4><br><br>
+                                <h4><span class="pull-right"><?php echo $row["disFromUni"] ?> Kilometers</span></h4><br>
+                                <h4><span class="pull-right" style="color:gold"><?php echo $star ?></span></h4><br>
+                                <h4><span class="pull-right"> <?php echo $row["AllroomType"] ?> Room Type</span></h4><br>
+                                <h4><span class="pull-right"> <?php if($row["Allroom"] !== NULL) { echo $row["Allroom"]; } else { echo "Empty"; } ?> Rooms</span></h4><br>
+                                <h4><span class="pull-right"> <?php if($row["AvailableRoom"] !== NULL) { echo $row["AvailableRoom"]; } else { echo "Empty"; } ?> Rooms</span></h4><br>
+                                <h4><span class="pull-right"><?php echo $row["status"] ?></span></h4><br>
                             </div>
                             <div class="col-md-10" style="margin-left:70px">
                                 <h3 style="text-align: center">Dormitory Facilities</h3>
                                 <?php
-                                require 'connection.php';
-                                $fac_dorm_query = "select * from FacilitiesInDorm where dormID = 9";
+                                $fac_dorm_query = "select * from FacilitiesInDorm where dormID = $dormID";
                                 $fac_dorm_result = mysqli_query($con, $fac_dorm_query);
                                 $fac_dorm_row = mysqli_fetch_array($fac_dorm_result);
                                 ?>
@@ -105,10 +127,11 @@
 
                                     </tr>
                                 </table>
+                            <?php } ?>
                             </div>
                         </div>		
                         <br />
-                        <a href="checkDormInfo.jsp" class="btn btn-primary btn-large book-now" style="margin-left:38%;margin-bottom: 50px">Back</a>
+                        <a href="index.php?chose_page=checkDormitory" class="btn btn-primary btn-large book-now" style="margin-left:38%;margin-bottom: 50px">Back</a>
                     </fieldset>
                 </form>
             </div>

@@ -138,7 +138,7 @@ $result = mysqli_query($con, $query);
                                                 <td><?php echo $row["firstName"] . " " . $row["lastName"]; ?></td>
                                                 <td><?php echo $row["type"]; ?></td>
                                                 <td style="color:<?php echo $color ?>"><?php echo $row["status"]; ?></td>
-                                                <td><a href="index.php?chose_page=checkDormDetail"><button type="button" class="btn btn-success book-now">Detail</button></a></td>
+                                                <td><a href="index.php?chose_page=checkDormDetail&dormID=<?php echo $row["dormID"] ?>"><button type="button" class="btn btn-success book-now">Detail</button></a></td>
                                             </tr>
                                             <?php
                                         }

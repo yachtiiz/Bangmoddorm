@@ -67,7 +67,7 @@ function getAllMember($page, $order_by) {
             echo '<td style="color:'. $color . '">' . $row["type"] . '</td>';
             echo '<td style="color:'. $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["tel"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID='. $row["memberID"] .'"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
             echo '</tr>';
         }
     } else {

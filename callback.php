@@ -995,7 +995,7 @@ function getAllMember($page, $order_by) {
             echo '<td style="color:' . $color . '">' . $row["type"] . '</td>';
             echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["tel"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -1051,7 +1051,7 @@ function searchingMembers($query) {
             echo '<td style="color:' . $color . '">' . $row["type"] . '</td>';
             echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["tel"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -1107,6 +1107,60 @@ if (isset($_GET["sortby_member"]) && isset($_GET["sortby_member_page"])) {
     $limit_start = ((8 * $page) - 8);
     $query = "select * from members order by $sort_by limit $limit_start , 8";
     searchingMembers($query);
+}
+
+// Comment Dormitory
+function commentDorm($dormID, $memberID, $detail, $rate) {
+
+    require 'connection.php';
+    $query = "INSERT INTO `Comment` (`memberID`, `dormID`, `detail`, `date`, `rating`) VALUES ( $memberID, $dormID, '$detail', NOW(), $rate);";
+
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function getComment($dormID) {
+    require 'connection.php';
+    $query = "select * from comment c join members m where c.memberID = m.memberID and dormID = $dormID order by date";
+    $result = mysqli_query($con, $query);
+}
+
+if (isset($_GET["comment_value"]) && isset($_GET["comment_dormID"]) && isset($_GET["comment_memberID"]) && isset($_GET["comment_rate"])) {
+    if (is_numeric($_GET["comment_dormID"]) && is_numeric($_GET["comment_memberID"]) && is_numeric($_GET["comment_rate"])) {
+        $detail = filter_var($_GET["comment_value"], FILTER_SANITIZE_STRING);
+        $memberID = $_GET["comment_memberID"];
+        $dormID = $_GET["comment_dormID"];
+        $rate = $_GET["comment_rate"];
+        if (commentDorm($dormID, $memberID, $detail, $rate)) {
+            require 'connection.php';
+            $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID";
+            $result = mysqli_query($con, $query);
+            while ($row = mysqli_fetch_array($result)) {
+                $star = "";
+
+                for ($i = 1; $i <= $row["rating"]; $i++) {
+                    $star = $star . "&#9733;";
+                }
+                for ($i = 1; $i <= 5 - $row["rating"]; $i++) {
+                    $star = $star . "&#9734;";
+                }
+
+                echo '<tr>';
+                echo '<td colspan="2">';
+                echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
+                echo '<p class="pull-left">' . $row["date"] . '</p>';
+                echo '<p class="pull-left" style="color:gold">' . $star . '</p>';
+                echo '</td>';
+                echo '<td colspan="10" style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
+                echo '</tr>';
+            }
+        } else {
+            echo '<script>alert("Cannot Comment This");</script>';
+        }
+    }
 }
 ?>
 
