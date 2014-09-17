@@ -152,7 +152,7 @@ function edit_room($roomID) {
         }
     }
 
-    if (isset($_FILES["main_room_pic"])){
+    if (isset($_FILES["main_room_pic"])) {
         if ($_FILES["main_room_pic"]["name"] !== "") {
             if (move_uploaded_file($_FILES["main_room_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"])) {
                 $main_room_path = "main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"];
@@ -186,7 +186,6 @@ function edit_room($roomID) {
         return false;
     }
 }
-
 
 if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
     if (isset($_GET["roomID"]) && is_numeric($_GET["roomID"])) {
@@ -224,11 +223,49 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
     }
     ?>
 
+    <script>
+
+        $(document).ready(function() {
+
+            $("#form").validate({
+                rules: {
+                    areas: {
+                        checkSpecial: true,
+                        required: true,
+                        number: true
+                    },
+                    price: {
+                        required: true,
+                        checkSpecial: true,
+                        number: true
+                    },
+                    room_type: {
+                        required: true,
+                        checkSpecial: true,
+                    },
+                    room_available: {
+                        required: true,
+                        checkSpecial: true,
+                        number: true
+                    },
+                    number_of_room: {
+                        required: true,
+                        checkSpecial: true,
+                        number: true
+                    }
+
+                }
+            });
+        });
+
+
+    </script>
+
     <div class="row booking_summary">
         <div class="span12">	
             <div class="row">
                 <div class="span10">
-                    <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
+                    <form id="form" action="" method="post" class="form-horizontal" enctype="multipart/form-data">
                         <fieldset>
 
                             <h1>Add Your Room Type<br /><small>You can add your room type and fill the information.
@@ -278,12 +315,12 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     <label>Room Deposit
                                         <select class="form-control" name="room_deposit">
                                             <option value="default">Chose Your Room Deposit</option>
-                                            <option value="1" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 1 ? "selected":"" : "" ?>>1 Month</option>
-                                            <option value="2" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 2 ? "selected":"" : "" ?>>2 Month</option>
-                                            <option value="3" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 3 ? "selected":"" : "" ?>>3 Month</option>
-                                            <option value="4" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 4 ? "selected":"" : "" ?>>4 Month</option>
-                                            <option value="5" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 5 ? "selected":"" : "" ?>>5 Month</option>
-                                            <option value="6" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 6 ? "selected":"" : "" ?>>6 Month</option>
+                                            <option value="1" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 1 ? "selected" : ""  : "" ?>>1 Month</option>
+                                            <option value="2" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 2 ? "selected" : ""  : "" ?>>2 Month</option>
+                                            <option value="3" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 3 ? "selected" : ""  : "" ?>>3 Month</option>
+                                            <option value="4" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 4 ? "selected" : ""  : "" ?>>4 Month</option>
+                                            <option value="5" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 5 ? "selected" : ""  : "" ?>>5 Month</option>
+                                            <option value="6" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 6 ? "selected" : ""  : "" ?>>6 Month</option>
                                         </select>
                                     </label>
                                 </div>
@@ -414,14 +451,14 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <div class="span3">
                                             <h4>Main Picture :</h4><br>
                                             <p>Change Main Picture</p>
-                                            <input style='width:100%' class="form-control" name="change_main_room_pic" type="file" placeholder="" multipart/>
+                                            <input style='width:100%' class="form-control" name="change_main_room_pic" type="file" placeholder=""/>
                                         </div>
                                         <div class="span5 pull-right" >
                                             <img src="images/room_pictures/<?php echo $room_row["main_pic"]; ?>"
                                         </div>
                                     <?php } else { ?>
                                         <label>Main Picture : &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input class="form-control" style="width: 50%" name="room_main_pic" type="file" placeholder="" />
+                                            <input class="form-control" style="width: 50%" name="room_main_pic" type="file" placeholder="" required />
                                         </label>
                                     <?php } ?>
                                 </div>
@@ -456,10 +493,11 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                                 <input class="form-control" name="room_pic[]" type="file" />
                                             </label>
                                         </div>
-                                    <?php }
-                                }else{
-                                ?>
-                                <?php for ($i = 1; $i <= 6; $i++) {
+                                        <?php
+                                    }
+                                } else {
+                                    ?>
+                                    <?php for ($i = 1; $i <= 6; $i++) {
                                         ?>
                                         <div class="col-md-4" style="width:250px;height: 250px;margin-left:20px">
                                             <label>Picture <?php echo $i ?>

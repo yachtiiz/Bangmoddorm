@@ -336,78 +336,12 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     echo '</tr>';
                 }
             }
-
             getComment($dormID);
             ?>
         </tbody>
         <tr>
             <td colspan="2"><h3><?php echo $_SESSION["firstname"] . " " . substr($_SESSION["lastname"], 0, 1) . '.'; ?> </h3><br>Solo travelers</td>
             <td colspan="10">
-                <h4>Give Score For This Dormitory</h4>
-                Comfortable
-                <label class="radio-inline" style="margin-left:32px">
-                    <input type="radio" name="comfort_score" id="inlineRadio1" value="option1"> 1
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="comfort_score" id="inlineRadio2" value="option2"> 2
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="comfort_score" id="inlineRadio2" value="option2"> 3
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="comfort_score" id="inlineRadio2" value="option2"> 4
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="comfort_score" id="inlineRadio3" value="option3"> 5
-                </label><br>
-                Beautiful
-                <label class="radio-inline" style="margin-left:57px">
-                    <input type="radio" name="beautiful_score" id="inlineRadio1" value="option1"> 1
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="beautiful_score" id="inlineRadio2" value="option2"> 2
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="beautiful_score" id="inlineRadio2" value="option2"> 3
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="beautiful_score" id="inlineRadio2" value="option2"> 4
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="beautiful_score" id="inlineRadio3" value="option3"> 5
-                </label><br>
-                Security
-                <label class="radio-inline" style="margin-left:62px">
-                    <input type="radio" name="secutiry_score" id="inlineRadio1" value="option1"> 1
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="secutiry_score" id="inlineRadio2" value="option2"> 2
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="secutiry_score" id="inlineRadio2" value="option2"> 3
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="secutiry_score" id="inlineRadio2" value="option2"> 4
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="secutiry_score" id="inlineRadio3" value="option3"> 5
-                </label><br>
-                Performance
-                <label class="radio-inline" style="margin-left:28px">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 3
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 4
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 5
-                </label><hr>
                 <textarea style="margin-bottom:20px" id="comment_value" rows="5" class="span8 from-control" required style="margin-bottom: 20px"></textarea>
                 <select id="comment_rate" class="form-control" style="width:25%;margin-top:0px;display:inline">
                     <option value="default">Give Dormitory Rate</option>

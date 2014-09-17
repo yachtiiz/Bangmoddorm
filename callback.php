@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+date_default_timezone_set('Asia/Bangkok');
 
 function login($login, $password) {
     /* Query login matching password in DB */
@@ -382,17 +383,17 @@ function getBookingDorm($page, $order_by, $dormID) {
     if (mysqli_num_rows($result) != 8 && mysqli_num_rows($result) != 0) {
         for ($i = mysqli_num_rows($result); $i < 8; $i++) {
             echo '<tr style="height: 51px">';
-            echo '<td colspan="8"></td>';
+            echo '<td colspan="7"></td>';
             echo '</tr>';
         }
     }
     if (mysqli_num_rows($result) === 0) {
         echo '<tr style="height: 51px">';
-        echo '<td colspan="8" style="text-align: center"> No Result</td>';
+        echo '<td colspan="7" style="text-align: center"> No Result</td>';
         echo '</tr>';
         for ($i = 1; $i < 8; $i++) {
             echo '<tr style="height: 51px">';
-            echo '<td colspan="8"></td>';
+            echo '<td colspan="7"></td>';
             echo '</tr>';
         }
     }
@@ -403,11 +404,11 @@ if (isset($_GET["showbook_dormID"]) && isset($_GET["dormbook_showpage"]) && isse
         getBookingDorm($_GET['dormbook_showpage'], $_GET["dormbook_order"], $_GET["showbook_dormID"]);
     } else {
         echo '<tr style="height: 51px">';
-        echo '<td colspan="8" style="text-align: center"> Something Error</td>';
+        echo '<td colspan="7" style="text-align: center"> Something Error</td>';
         echo '</tr>';
         for ($i = 1; $i < 8; $i++) {
             echo '<tr style="height: 51px">';
-            echo '<td colspan="8"></td>';
+            echo '<td colspan="7"></td>';
             echo '</tr>';
         }
     }
@@ -600,18 +601,18 @@ function searchingBook($query) {
         }
     } else {
         echo '<tr style="height: 51px">';
-        echo '<td colspan="8" style="text-align: center"> No Result</td>';
+        echo '<td colspan="7" style="text-align: center"> No Result</td>';
         echo '</tr>';
         for ($i = 1; $i < 8; $i++) {
             echo '<tr style="height: 51px">';
-            echo '<td colspan="8"></td>';
+            echo '<td colspan="7"></td>';
             echo '</tr>';
         }
     }
     if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) <= 8) {
         for ($i = 1; $i <= 8 - mysqli_num_rows($result); $i++) {
             echo '<tr style="height: 51px">';
-            echo '<td colspan="8"></td>';
+            echo '<td colspan="7"></td>';
             echo '</tr>';
         }
     }
@@ -1161,6 +1162,39 @@ if (isset($_GET["comment_value"]) && isset($_GET["comment_dormID"]) && isset($_G
             echo '<script>alert("Cannot Comment This");</script>';
         }
     }
+}
+
+function updateBooking() {
+    require 'connection.php';
+
+    $query = "select * from booking where booking_status = 'Waiting'";
+    $result = mysqli_query($con, $query);
+    $update_row = 0;
+    $time_now = substr(strtr(substr(date("c"), 0, 19), "T", " "), 11, 19);
+    $date_now = strtr(substr(date("c"), 0, 19), "T", " ");
+    while ($row = mysqli_fetch_array($result)) {
+
+        $bookingID = $row["bookingID"];
+        $expire_time = $row["expire_date"];
+        if ($expire_time <= $date_now) { // Check Date Time
+            if (substr($expire_time, 11, 19) < $time_now) { // Check Time
+                $update_query = "update booking set booking_status = 'Reject' where bookingID = $bookingID";
+                if (mysqli_query($con, $update_query)) {
+                    $roomID = $row["roomID"];
+                    $plus_room_query = "update rooms set roomAvailable = roomAvailable + 1 where roomID = $roomID";
+                    if (mysqli_query($con, $plus_room_query)) {
+                        $update_row = $update_row + 1;
+                    }
+                }
+            }
+        }
+    }
+    return $update_row;
+}
+
+if (isset($_GET["updateBooking"])) {
+    $update_row = updateBooking();
+    echo 'UpdateBooking<script>alert("update ' . $update_row . ' rows")</script>';
 }
 ?>
 

@@ -226,31 +226,28 @@
                                     <th style="width: 100px"></th>
                                     <tbody id="show_result">
                                         <tr>
-                                            <td colspan="8" style="text-align: center"> No Result</td>
+                                            <td colspan="7" style="text-align: center;height: 51px"> No Result</td>
                                         </tr>
                                         <tr style="height: 51px">
-                                            <td colspan="8"></td>
+                                            <td colspan="7"></td>
                                         </tr>
                                         <tr style="height: 51px">
-                                            <td colspan="8"></td>
+                                            <td colspan="7"></td>
                                         </tr>
                                         <tr style="height: 51px">
-                                            <td colspan="8"></td>
+                                            <td colspan="7"></td>
                                         </tr>
                                         <tr style="height: 51px">
-                                            <td colspan="8"></td>
+                                            <td colspan="7"></td>
                                         </tr>
                                         <tr style="height: 51px">
-                                            <td colspan="8"></td>
+                                            <td colspan="7"></td>
                                         </tr>
                                         <tr style="height: 51px">
-                                            <td colspan="8"></td>
+                                            <td colspan="7"></td>
                                         </tr>
                                         <tr style="height: 51px">
-                                            <td colspan="8"></td>
-                                        </tr>
-                                        <tr style="height: 51px">
-                                            <td colspan="8"></td>
+                                            <td colspan="7"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -260,7 +257,7 @@
 
                                 </ul>
                             </div>
-                            <a href="ownersystem.jsp" class="btn btn-primary btn-large book-now" style="margin-left: 400px;margin-top: 30px">Back</a>
+                            <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now" style="margin-left: 400px;margin-top: 30px">Back</a>
                         </div>
                         <br />
                     </fieldset>

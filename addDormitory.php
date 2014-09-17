@@ -1,22 +1,50 @@
 
+<script>
+
+    $(document).ready(function() {
+
+        $("#form").validate({
+            rules: {
+                dorm_name: {
+                    checkSpecial: true,
+                    required: true,
+                    minlength: 2,
+                    maxlength: 256
+                },
+                license_dorm: {
+                    checkSpecial: true,
+                    required: true,
+                    minlength: 4,
+                    maxlength: 256
+                },
+                special_request: {
+                    checkSpecial: true,
+                    required: true,
+                }
+            }
+        });
+    });
+
+
+</script>
 <div class="row booking_summary">
     <div class="span12">
         <?php
 
         function gen_req_id() {
 
-            
-            $rand = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0,3);
+
+            $rand = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
 
             return $rand;
         }
 
         function up_evidance_picture($file, $username) {
-            
-            $rand = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0,5);
-            
+
+            $rand = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 5);
+
             if ($_FILES["$file"]["type"] == "image/jpg" || $_FILES["$file"]["type"] == "image/png" || $_FILES["$file"]["type"] == "image/jpeg" || $_FILES["$file"]["type"] == "image/gif" || $_FILES["$file"]["type"] == "image/pjpeg" || $_FILES["$file"]["type"] == "image/x-png") {
-                if (move_uploaded_file($_FILES["$file"]["tmp_name"], "images/picture_evidence/evidance_" . $username  . "_" . $rand)) {
+                if (move_uploaded_file($_FILES["$file"]["tmp_name"], "images/picture_evidence/evidance_" . $username . "_" . $rand)) {
                     return "images/picture_evidence/evidance_" . $username . "_" . $rand;
                 } else {
                     return "Cant Upload ..";
@@ -39,11 +67,11 @@
 VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , '$special_request' , NOW() );";
 
             if ($evidence_dorm === "Cant Upload .." || $evidence_dorm === "Invalid Picture File ..") {
-                return false;
+                return "ERR";
             }
 
             if (mysqli_query($con, $query)) {
-                return $evidence_dorm ;
+                return $evidence_dorm;
             } else {
                 return "ERR";
             }
@@ -53,8 +81,7 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
             ?>
             <div class="row">
                 <div class="span9">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        <br /><br />
+                    <form id="form" action="" method="post" enctype="multipart/form-data">
                         <h1><center>Add Dormitory				<br /><small>Owner send request to Admin for add your dormitory.
                                 </small></center></h1><br />
                         <div class="row">
@@ -81,7 +108,7 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
 
                             <div class="span3">
                                 <label>Evidence
-                                    <input id="evidence_dorm" name="evidence_dorm" class="form-control" type="file"/>
+                                    <input id="evidence_dorm" name="evidence_dorm" class="form-control" type="file" required/>
                                 </label>
                             </div>	
                         </div>
@@ -90,14 +117,14 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
                         <div class="row">
                             <div class="span9">
                                 <legend><span>Any</span> special requests?</legend>
-                                <textarea name="special_request" class="span9 form-control" rows="4" placeholder="Send your spacials request or question to Admin"></textarea>
+                                <textarea id="special_request" name="special_request" class="span9 form-control" rows="4" placeholder="Send your spacials request or question to Admin"></textarea>
                             </div>			
                         </div>
                         <div class="row">
                             <div class="span9">
                                 <br />
                                 <input name="submit_form" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px" value="Submit">
-                                <a href="ownersystem.jsp" class="btn btn-primary btn-large book-now pull-right">Back</a>
+                                <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
                                 <br />
                                 <br />
                             </div>
@@ -109,9 +136,9 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
             <?php
         } else {
             $msg = send_request();
-            if ($msg === "ERR") {
+            if ($msg == "ERR") {
                 echo '<script>alert("Send Request Failed");</script>';
-                echo '<script>window.location = "index.php?chose_page=adddormitory</script>';
+                echo '<script>window.location = "index.php?chose_page=adddormitory"</script>';
             }
             ?>
 
@@ -149,14 +176,14 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
                         </div>	
                     </div>
                     <br />
-                    
-                    <?php if($_POST["special_request"] !== ""){ ?>
-                    <div class="row">
-                        <div class="span9">
-                            <legend><span>Any</span> special requests?</legend>
-                            <p> <?php echo $_POST["special_request"]; ?></p>
-                        </div>			
-                    </div>
+
+                    <?php if ($_POST["special_request"] !== "") { ?>
+                        <div class="row">
+                            <div class="span9">
+                                <legend><span>Any</span> special requests?</legend>
+                                <p> <?php echo $_POST["special_request"]; ?></p>
+                            </div>			
+                        </div>
                     <?php } ?>
                     <div class="row" style="margin-top: 40px">
                         <div class="span9">
@@ -173,6 +200,6 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
                     </div>
                 </div>
             </div>
-<?php } ?>
+        <?php } ?>
     </div>
 </div></div> <!-- /container -->

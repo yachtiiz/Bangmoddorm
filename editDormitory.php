@@ -1,4 +1,86 @@
 
+<script>
+
+    $(document).ready(function() {
+
+        $("#form").validate({
+            rules: {
+                distance: {
+                    checkSpecial: true,
+                    required: true
+                },
+                address: {
+                    checkSpecial: true,
+                    required: true
+                },
+                soi: {
+                    checkSpecial: true,
+                    required: true
+                },
+                road: {
+                    checkSpecial: true,
+                    required: true
+                },
+                subdistinct: {
+                    required: true,
+                    checkSpecial: true
+                },
+                distinct: {
+                    checkSpecial: true,
+                    required: true
+                },
+                province: {
+                    checkSpecial: true,
+                    required: true
+                },
+                zipcode: {
+                    required: true,
+                    checkSpecial: true,
+                    number:true
+                },
+                latitude: {
+                    required: true,
+                    checkSpecial: true,
+                    number:true
+                },
+                longitude: {
+                    required: true,
+                    checkSpecial: true,
+                    number:true
+                },
+                displayname: {
+                    required: true,
+                    checkSpecial: true
+                },
+                email: {
+                    required: true,
+                    checkSpecial: true,
+                    email:true
+                },
+                tel: {
+                    checkSpecial: true,
+                    required:true
+                },
+                branch: {
+                    checkSpecial: true,
+                    required:true
+                },
+                bankkaccname: {
+                    checkSpecial: true,
+                    required:true
+                },
+                bankkaccid: {
+                    checkSpecial: true,
+                    required:true
+                }
+            }
+
+        });
+    });
+
+
+</script>
+
 <div class="row booking_summary">
     <div class="span12">	
         <div class="row">
@@ -213,7 +295,7 @@
                     $pic_query = "select * from DormPic where dormID=" . $_GET["dormID"];
                     $pic_result = mysqli_query($con, $pic_query);
                     ?>
-                    <form action="" method="post" class="form-horizontal" enctype="multipart/form-data">
+                    <form id="form" action="" method="post" class="form-horizontal" enctype="multipart/form-data">
                         <fieldset>
                             <br />
                             <h1>Edit Your Dormitory<br /><small>You can edit your dormitory information.
@@ -243,7 +325,7 @@
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Distance From University</span>
-                                        <input class="form-control" name="distance" type="text" placeholder="Insert only Number unit is KM." value='<?php echo $row["disFromUni"] ?>' >
+                                        <input id="distance" class="form-control" name="distance" type="text" placeholder="Insert only Number unit is KM." value='<?php echo $row["disFromUni"] ?>' >
                                         <span class="input-group-addon">Km.</span>
                                     </div>
                                 </div>
@@ -258,13 +340,13 @@
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Address No.</span>
-                                        <input class="form-control" type="text" name="addressNo" value='<?php echo $row["addressNo"] ?>'>
+                                        <input id="address" class="form-control" type="text" name="addressNo" value='<?php echo $row["addressNo"] ?>'>
                                     </div>
                                 </div>
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Soi</span>
-                                        <input class="form-control" type="text" name="soi" value='<?php echo $row["soi"] ?>' />
+                                        <input id="soi" class="form-control" type="text" name="soi" value='<?php echo $row["soi"] ?>' />
                                     </div>
                                 </div>
                             </div>
@@ -273,13 +355,13 @@
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Road</span>
-                                        <input class="form-control" type="text" name="road" value='<?php echo $row["road"] ?>' />
+                                        <input id="road" class="form-control" type="text" name="road" value='<?php echo $row["road"] ?>' />
                                     </div>
                                 </div>
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Sub Distinct</span>
-                                        <input class="form-control" type="text" name="sub_distinct" value='<?php echo $row["subDistinct"] ?>' >
+                                        <input id="subdistinct" class="form-control" type="text" name="sub_distinct" value='<?php echo $row["subDistinct"] ?>' >
                                     </div>
                                 </div>
                             </div>
@@ -288,13 +370,13 @@
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Distinct</span>
-                                        <input class="form-control" type="text" name="distinct" value='<?php echo $row["dorm_distinct"] ?>' >
+                                        <input id="distinct" class="form-control" type="text" name="distinct" value='<?php echo $row["dorm_distinct"] ?>' >
                                     </div>
                                 </div>
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Province</span>
-                                        <input class="form-control" type="text" name="province" value='<?php echo $row["province"] ?>' />
+                                        <input id="province" class="form-control" type="text" name="province" value='<?php echo $row["province"] ?>' />
                                     </div>
                                 </div>
                             </div>
@@ -303,7 +385,7 @@
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Zip Code</span>
-                                        <input class="form-control" type="text" name="zip_code" value='<?php echo $row["zip"] ?>'>
+                                        <input id="zipcode" class="form-control" type="text" name="zip_code" value='<?php echo $row["zip"] ?>'>
                                     </div>
                                 </div>
                             </div>
@@ -312,13 +394,13 @@
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Latitude</span>
-                                        <input class="form-control" type="text" name="latitude" value='<?php echo $row["latitude"] ?>'/>
+                                        <input id="latitude" class="form-control" type="text" name="latitude" value='<?php echo $row["latitude"] ?>'/>
                                     </div>
                                 </div>
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Longitude</span>
-                                        <input class="form-control" type="text" name="longtitude" value='<?php echo $row["longtitude"] ?>' />
+                                        <input id="longitude" class="form-control" type="text" name="longtitude" value='<?php echo $row["longtitude"] ?>' />
                                     </div>
                                 </div>
                             </div>
@@ -332,13 +414,13 @@
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Email</span>
-                                        <input class="form-control" type="text" name="email" value='<?php echo $row["email"] ?>'/>
+                                        <input id="email" class="form-control" type="text" name="email" value='<?php echo $row["email"] ?>'/>
                                     </div>
                                 </div>
                                 <div class='col-lg-6'>
                                     <div class="input-group">
                                         <span class="input-group-addon">Telephone</span>
-                                        <input class="form-control" type="text" name="tel" value='<?php echo $row["tel"] ?>' />
+                                        <input id="tel" class="form-control" type="text" name="tel" value='<?php echo $row["tel"] ?>' />
                                     </div>
                                 </div>
                             </div><br>
@@ -385,7 +467,7 @@
                                     <div class='col-lg-6'>
                                         <div class="input-group">
                                             <span class="input-group-addon">Branch</span>
-                                            <input class="form-control" type="text" name="new_bank_branch[]" value='' />
+                                            <input id="branch" class="form-control" type="text" name="new_bank_branch[]" value='' />
                                         </div>
                                     </div>
                                 </div><br>
@@ -393,13 +475,13 @@
                                     <div class='col-lg-6'>
                                         <div class="input-group">
                                             <span class="input-group-addon">Bank Account Name</span>
-                                            <input class="form-control" type="text" name="new_bank_acc_name[]" value=''/>
+                                            <input id="bankaccname" class="form-control" type="text" name="new_bank_acc_name[]" value=''/>
                                         </div>
                                     </div>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
                                             <span class="input-group-addon">Bank Account ID</span>
-                                            <input class="form-control" type="text" name="new_bank_acc_id[]" value='' />
+                                            <input id="bankaccid" class="form-control" type="text" name="new_bank_acc_id[]" value='' />
                                         </div>
                                     </div>
                                 </div><br>
@@ -434,7 +516,7 @@
                                         <div class='col-lg-6'>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Branch</span>
-                                                <input class="form-control" type="text" name="bank_branch[]" value='<?php echo $bank_row["branch"] ?>' />
+                                                <input id="branch" class="form-control" type="text" name="bank_branch[]" value='<?php echo $bank_row["branch"] ?>' />
                                             </div>
                                         </div>
                                     </div><br>
@@ -442,13 +524,13 @@
                                         <div class='col-lg-6'>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Bank Account Name</span>
-                                                <input class="form-control" type="text" name="bank_acc_name[]" value='<?php echo $bank_row["bankAccountName"] ?>'/>
+                                                <input id="bankaccname" class="form-control" type="text" name="bank_acc_name[]" value='<?php echo $bank_row["bankAccountName"] ?>'/>
                                             </div>
                                         </div>
                                         <div class='col-lg-6'>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Bank Account ID</span>
-                                                <input class="form-control" type="text" name="bank_acc_id[]" value='<?php echo $bank_row["bankAccountID"] ?>' />
+                                                <input id="bankaccid" class="form-control" type="text" name="bank_acc_id[]" value='<?php echo $bank_row["bankAccountID"] ?>' />
                                             </div>
                                         </div>
                                     </div><br>
@@ -647,7 +729,7 @@
                                         </div>
                                     <?php } else { ?>
                                         <label>Main Picture : &nbsp;&nbsp;&nbsp;
-                                            <input style='width:50%' class="form-control" name="main_dorm_pic" type="file" placeholder="" multipart/>
+                                            <input style='width:50%' class="form-control" name="main_dorm_pic" type="file" placeholder="" required/>
                                         </label>
                                     <?php } ?>
                                 </div>
@@ -686,7 +768,7 @@
                                     <br>
                                     <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
                                     <button tpye="button" id="<?php echo $row["status"] === "Active" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Active" ? "Hidden On Page" : "Showing On Page"; ?></button>
-                                    <a href="ownersystem.jsp" class="btn btn-primary btn-large book-now pull-right">Back</a>
+                                    <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
                                     <br><br>
                                 </div>
                                 <script>

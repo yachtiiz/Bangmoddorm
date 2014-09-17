@@ -1,4 +1,5 @@
-<?php session_start(); 
+<?php
+session_start();
 date_default_timezone_set('Asia/Bangkok');
 ?>
 <html lang="en">
@@ -55,16 +56,18 @@ date_default_timezone_set('Asia/Bangkok');
                                     <li class=""><a href="index.php">Home</a></li>
                                     <li class=""><a href="index.php?chose_page=dormitory">Dormitory</a></li>
                                     <li class=""><a href="index.php?chose_page=ownersystem">Owner</a></li>
-                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){ ?>
+                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){  ?>
                                     <li class=""><a href="index.php?chose_page=register">Register</a></li>
-                                    <?php //} ?>
+                                    <?php //}  ?>
                                     <li class=""><a href="index.php?chose_page=advancesearch">Advance Search</a></li>
-                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){ ?>
+                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){  ?>
                                     <li class=""><a href="index.php?chose_page=membersystem">Member System</a></li>
                                     <?php //} ?>
-                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){ ?>
+                                    <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
                                     <li class=""><a href="index.php?chose_page=adminsystem">Admin System</a></li>
-                                    <?php //} ?>
+                                    <?php //}  ?>
+                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>
+
                             </div>                
                             <!-- /.nav-collapse -->                
                         </div>            
@@ -130,9 +133,12 @@ date_default_timezone_set('Asia/Bangkok');
                         clearTimeout(timer);
                         $("#logout_button").load("callback.php?logout");
                     }, 500);
-
-
                 });
+
+                $(document).on("click", "#update_booking", function() {
+                    $("#update_booking").load("callback.php?updateBooking=1");
+                });
+                
 
 
             </script>
