@@ -66,14 +66,14 @@ date_default_timezone_set('Asia/Bangkok');
                                     <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
                                     <li class=""><a href="index.php?chose_page=adminsystem">Admin System</a></li>
                                     <?php //}  ?>
-                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>
-
+<!--                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>-->
+                                </ul>
                             </div>                
                             <!-- /.nav-collapse -->                
                         </div>            
                     </div><!-- /navbar -->       
                 </div>
-            </div>
+            </div><hr style="margin-bottom: 0px">
 
             <div id="showValue" class="row" style="margin-bottom:-10px">
 
@@ -95,7 +95,7 @@ date_default_timezone_set('Asia/Bangkok');
 
                     </form>                
                 <?php } ?>
-
+                <h3 class=""><span>Notification ( 1 )</span></h3>
 
 
             </div>

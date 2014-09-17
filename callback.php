@@ -747,6 +747,17 @@ function change_booking($bookID, $status) {
     require 'connection.php';
     $query = "update booking set booking_status = '$status' where bookingID = $bookID";
     if (mysqli_query($con, $query)) {
+        if($status === "Reject" || $status === "Canceled"){
+            $query = "select roomID from booking where bookingID = $bookID";
+            $result = mysqli_query($con, $query);
+            $row = mysqli_fetch_array($result);
+            $plus_room_query = "update rooms set roomAvailable = roomAvailable + 1 where roomID = $row[0]";
+            if(mysqli_query($con, $plus_room_query)){
+                return true;
+            }else{
+                return false;
+            }
+        }
         return true;
     } else {
         return false;

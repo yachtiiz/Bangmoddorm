@@ -210,32 +210,26 @@ if (isset($_GET["confirmID"]) && is_numeric($_GET["confirmID"])) {
 
                                         if (dorm_rate === "default") {
                                             $("#dorm_star").html("&#9734;&#9734;&#9734;&#9734;&#9734;");
-                                            document.getElementById("approve_button").setAttribute("onClick", "alert('Please Chose Dormitory Rating');");
                                             document.getElementById("approve_button").removeAttribute("href");
                                         }
                                         if (dorm_rate === "1") {
                                             $("#dorm_star").html("&#9733;&#9734;&#9734;&#9734;&#9734;");
-                                            document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=1");
                                             document.getElementById("approve_button").removeAttribute("onClick");
                                         }
                                         if (dorm_rate === "2") {
                                             $("#dorm_star").html("&#9733;&#9733;&#9734;&#9734;&#9734;");
-                                            document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=2");
                                             document.getElementById("approve_button").removeAttribute("onClick");
                                         }
                                         if (dorm_rate === "3") {
                                             $("#dorm_star").html("&#9733;&#9733;&#9733;&#9734;&#9734;");
-                                            document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=3");
                                             document.getElementById("approve_button").removeAttribute("onClick");
                                         }
                                         if (dorm_rate === "4") {
                                             $("#dorm_star").html("&#9733;&#9733;&#9733;&#9733;&#9734;");
-                                            document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=4");
                                             document.getElementById("approve_button").removeAttribute("onClick");
                                         }
                                         if (dorm_rate === "5") {
                                             $("#dorm_star").html("&#9733;&#9733;&#9733;&#9733;&#9733;");
-                                            document.getElementById("approve_button").setAttribute("href", "callback.php?approval_submit=<?php echo $row["confirmID"]; ?>&dorm_rate=5");
                                             document.getElementById("approve_button").removeAttribute("onClick");
                                         }
 
