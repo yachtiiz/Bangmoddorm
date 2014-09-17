@@ -318,7 +318,9 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                 $result = mysqli_query($con, $query);
                 while ($row = mysqli_fetch_array($result)) {
                     $star = "";
-
+                    $date = substr(date("r",strtotime($row["date"])),0,25);
+                    
+                    
                     for ($i = 1; $i <= $row["rating"]; $i++) {
                         $star = $star . "&#9733;";
                     }
@@ -329,7 +331,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     echo '<tr>';
                     echo '<td colspan="2">';
                     echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
-                    echo '<p class="pull-left">' . $row["date"] . '</p>';
+                    echo '<p class="pull-left">' . $date . '</p>';
                     echo '<p class="pull-left" style="color:gold">' . $star . '</p>';
                     echo '</td>';
                     echo '<td colspan="10" style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
