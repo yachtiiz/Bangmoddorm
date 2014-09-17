@@ -18,9 +18,17 @@ $dorm_result = mysqli_query($con, $query);
             <div class="col-md-4" style="margin-top: 40px">
                 <legend><span><?php echo $dorm_row["dormName"] ?></span></legend>
                 <a href="book-start.html"><img style="width: 405px;height: 250px" src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" alt="" /></a>
-                <ul class="thumbnails hotel-options no_margin_left">
-                    <li class="no_margin_left"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
-                    <li><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
+                <ul class="thumbnails hotel-options" style="margin-left:0px">
+                    <li class="no_margin_left" style="width:50px"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
+                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
+                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/wifi3.png" alt="" width="24" /></a></li>
+                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/restaurant7.png" alt="" width="24" /></a></li>
+                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/room4.png" alt="" width="24" /></a></li>
+                    <li style="width:50px;margin-left:0px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/room4.png" alt="" width="24" /></a></li>
+                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/bed6.png" alt="" width="24" /></a></li>
+                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/hotel4.png" alt="" width="24" /></a></li>
+                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/hotel24.png" alt="" width="24" /></a></li>
+                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/laptop12.png" width="24" /></a></li>
                 </ul>
                 <br>
                 <p>

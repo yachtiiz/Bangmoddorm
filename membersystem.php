@@ -19,24 +19,24 @@
             <?php $row = getMember(); 
             if($row !== NULL){
             ?>
-            <div class="span9">
+            <div class="span12">
                 <form class="form-horizontal">
                 <fieldset>
                     <br />
-                    <div class="row">
-                        <div class="span9">
-                            <legend><span>Member</span> System</legend>
+                    <div class="row" style="">
+                        <div class="span12">
+                            <legend><span style="margin-left:40%">Member</span> System</legend>
                         </div>
-                        <div class="span4">
+                        <div class="span4" style="margin-left:32%">
                             <a href="index.php?chose_page=checkBookingHis"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Your Booking History</button></a><br><br>
                             <a href="checkNotification.jsp"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Your Notification</button></a>
                         </div>
-                    </div><br><br><br>
-                    <div class="row">
-                        <div class="span9">
+                    </div><br><br>
+                        <div class="row">
+                        <div class="span12">
                             <legend><span>Your</span> Profile</legend>
                         </div>
-                        <div class="span3">
+                        <div class="span3" style="margin-left:10%">
                             <label>Display Picture
                                 <img class="img-thumbnail" style="width:220px;height: 200px" src="<?php echo $row["pic_path"] ?>">
                             </label>
@@ -56,11 +56,11 @@
                     </div>
                     <div class="row">
 
-                        <div class="span9">
+                        <div class="span12">
                             <legend><span>Your</span> name</legend>
                         </div>
 
-                        <div class="span3">
+                        <div class="span3" style="margin-left:10%">
                             <label>
                                 <select class="form-control">
                                     <option>Mr.</option>
@@ -83,10 +83,10 @@
                     </div>		
                     <br />
                     <div class="row">
-                        <div class="span9">
+                        <div class="span12">
                             <legend><span>Your</span> contact details</legend>
                         </div>
-                        <div class="span3">
+                        <div class="span3" style="margin-left:10%">
                             <label>Identity Card Number
                                 <input type="text" class="form-control" value="<?php echo $row["idCard"] ?>"/>
                             </label>
@@ -106,11 +106,11 @@
                     </div>
                     <br />
                     <div class="row">
-                        <div class="span9">
+                        <div class="span12">
                             <legend><span>Your</span> address</legend>
                         </div>
 
-                        <div class="span3">
+                        <div class="span3" style="margin-left:10%">
                             <label>Address
                                 <textarea class="form-control" rows="3"><?php echo $row["address"] ?></textarea>
                             </label>
@@ -133,11 +133,11 @@
                                 <input type="text" class="form-control" value="<?php echo $row["country"] ?>"
                             </label>
                         </div>
-                        <div class="span9">
+                        <div class="span12">
                             <legend><span>Your</span> Information</legend>
                         </div>
 
-                        <div class="span3">
+                        <div class="span3" style="margin-left:10%">
                             <label>About
                                 <textarea class="form-control" rows="3"><?php echo $row["about"] ?></textarea>
                             </label>
@@ -158,7 +158,7 @@
                         </div>	
                     </div><br><br>
                     <div class="row">
-                        <div class="span5">
+                        <div class="span5" style="margin-left:10%">
                             <button type="submit" class="btn btn-primary book-now" style="margin-left: 260px">Change Your Profile</button>
                         </div>
                     </div>
