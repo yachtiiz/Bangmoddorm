@@ -1,4 +1,10 @@
-<div class="row-fluid slideshow-row">
+
+</div>
+<div style="margin-top: -20px;">    
+    <img src="../images/IMG_4009.jpg" style="width: 100%; height: 630px">
+<!--    <img src="../images/search_box.jpg" style="position: absolute; left: 280px; top:250px; width:700px; height:300px; ">-->
+</div>    
+    <!--<div class="row-fluid slideshow-row">
     <iframe width="900" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.co.th/maps/ms?msa=0&amp;msid=202827098492161551372.0004f9988870873ff3abe&amp;hl=en&amp;ie=UTF8&amp;ll=13.651582,100.494049&amp;spn=0.009673,0.01368&amp;t=m&amp;output=embed"></iframe><br /><small>View <a href="https://www.google.co.th/maps/ms?msa=0&amp;msid=202827098492161551372.0004f9988870873ff3abe&amp;hl=en&amp;ie=UTF8&amp;ll=13.651582,100.494049&amp;spn=0.009673,0.01368&amp;t=m&amp;source=embed" style="color:#0000FF;text-align:left">Map Project</a> in a larger map</small>
     <br><br>            
     <div class="slideshow" style="margin:0px;width: 900px;" >
@@ -64,5 +70,7 @@
                         </blockquote>
                     </div>
                 </div>	
-            </div>
-        </div> <!-- /container -->
+            </div>-->
+
+<!-- /container -->
+

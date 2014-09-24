@@ -44,7 +44,7 @@
                         $("#show_mem_book").html("");
                         $("#sort_mem_book").html("");
                         $("#show_mem_result").load(url);
-                        document.getElementById("sortby_date").setAttribute("selected","");
+                        document.getElementById("sortby_date").setAttribute("selected", "");
 
                         if ($(this).val() === "") {
                             $("#show_mem_book").load(cur_page);
@@ -104,7 +104,7 @@
                                     <th>Room Type</th>
                                     <th>Expire Date</th>
                                     <th>Status</th>
-                                    <th></th>
+                                    <th> </th>
                                     <tbody id='show_mem_result'>
                                         <?php
 
@@ -183,25 +183,26 @@
                                                     <td><?php echo $book_row["roomType"] ?></td>
                                                     <td><?php echo $book_row["expire_date"] ?></td>
                                                     <td style="color:<?php echo $color; ?>" ><?php echo $book_row["booking_status"] ?></td>
-                                                    <td><a href="index.php?chose_page=membookdetail&bookingID=<?php echo $book_row["bookingID"] ?>" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>
+                                                    <td><a href="index.php?chose_page=membookdetail&bookingID=<?php echo $book_row["bookingID"] ?>" type="button" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>
+        <!--                                                    <td><a href="index.php?chose_page=membookdetail&bookingID=<?php echo $book_row["bookingID"] ?>" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>-->
                                                 </tr>
-                                            <?php
+                                                <?php
                                             }
                                             for ($i = mysqli_num_rows($result); $i < 8; $i++) {
                                                 echo '<tr>';
-                                                echo '<td colspan="8" style="height:49px"></td>';
+                                                echo '<td colspan="6" style="height:49px"></td>';
                                                 echo '</tr>';
                                             }
                                             ?>
-<?php } else { ?>
+                                        <?php } else { ?>
                                             <tr>
-                                                <td colspan="8">Something Error</td>
+                                                <td colspan="6">Something Error</td>
                                             </tr>
                                         </tbody>
                                         <?php
                                         for ($i = 1; $i < 8; $i++) {
                                             echo '<tr>';
-                                            echo '<td colspan="8" style="height:49px"></td>';
+                                            echo '<td colspan="6" style="height:49px"></td>';
                                             echo '</tr>';
                                         }
                                     }
@@ -209,14 +210,14 @@
 
                                 </table>
                                 <ul id="show_mem_book" class="mem_book pagination pull-right" style="margin-top: 0px;height: 34px">
-<?php displayPage($_SESSION["memberID"], 1) ?>
+                                    <?php displayPage($_SESSION["memberID"], 1) ?>
                                 </ul>
                                 <ul id="sort_mem_book" class="sort_mem_book pagination pull-right" style="margin-top: 0px;height: 34px">
 
                                 </ul>
                             </div>
                         </div>
-                        <a href="index.php?chose_page=membersystem" class="btn btn-primary btn-large book-now" style="margin-left: 50%">Back</a>
+                        <a href="index.php?chose_page=membersystem" class="btn1 btn1-danger" style="width: 30%">Back</a>
                     </fieldset>
                 </form>
             </div>

@@ -63,8 +63,8 @@
             $evidence_dorm = up_evidance_picture("evidence_dorm", $memberID);
             $special_request = filter_var($_POST["special_request"], FILTER_SANITIZE_STRING);
 
-            $query = "INSERT INTO `ConfirmationDorm` (`memberID`, `dormName`, `evidence`, `license`, `approval` , `special_request` , `date` )
-VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , '$special_request' , NOW() );";
+            $query = "INSERT INTO `ConfirmationDorm` (`memberID`, `dormName`, `evidence`, `license`, `approval` , `special_request` , `date` , `noti_status` )
+VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , '$special_request' , NOW() , 0);";
 
             if ($evidence_dorm === "Cant Upload .." || $evidence_dorm === "Invalid Picture File ..") {
                 return "ERR";
@@ -85,7 +85,7 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
                         <h1><center>Add Dormitory				<br /><small>Owner send request to Admin for add your dormitory.
                                 </small></center></h1><br />
                         <div class="row">
-                            <div class="span8">
+                            <div class="span9">
                                 <legend><span>Your</span> Dormitory Information</legend>
                             </div>
 
@@ -97,7 +97,7 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
                         </div>		
                         <br />
                         <div class="row">
-                            <div class="span8">
+                            <div class="span9">
                                 <legend><span>Your</span> Evidence</legend>
                             </div>
                             <div class="span3">
@@ -123,8 +123,8 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
                         <div class="row">
                             <div class="span9">
                                 <br />
-                                <input name="submit_form" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px" value="Submit">
-                                <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
+                                <input name="submit_form" type="submit" class="btn1 btn1-success pull-right" style="margin-left:15px;width: 30%" value="Submit">
+                                <a href="index.php?chose_page=ownersystem" class="btn1 btn1-danger pull-right" style="width: 30%">Back</a>
                                 <br />
                                 <br />
                             </div>

@@ -257,7 +257,7 @@
 
                                 </ul>
                             </div>
-                            <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now" style="margin-left: 400px;margin-top: 30px">Back</a>
+                            <a href="index.php?chose_page=ownersystem" class="btn1 btn1-danger" style="margin-left: 20px;margin-top: 30px; width: 30%">Back</a>
                         </div>
                         <br />
                     </fieldset>
@@ -365,8 +365,8 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                                        <button id="submitbutton" type="button" name="confirm" class="confirm btn btn-success">Change Status</button>
+                                        <button type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width: 20%">Close</button>
+                                        <button id="submitbutton" type="button" name="confirm" class="btn1 btn1-success" style="width: 20%">Change Status</button>
                                     </div>
                                     <script>
 

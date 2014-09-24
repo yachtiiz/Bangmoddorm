@@ -1,6 +1,15 @@
 <?php
 session_start();
 date_default_timezone_set('Asia/Bangkok');
+
+function getUserType() {
+    require 'connection.php';
+    $memberid = $_SESSION["memberID"];
+    $gettype = "select type from members where memberID = $memberid";
+    $result = mysqli_query($con, $gettype);
+    $row = mysqli_fetch_array($result);
+    return $row;
+}
 ?>
 <html lang="en">
 
@@ -22,6 +31,7 @@ date_default_timezone_set('Asia/Bangkok');
         <script type="text/javascript" src="js/global.js"></script>
 
         <!-- CSS -->
+        <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
         <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
         <link rel="stylesheet" href="css/bootstrap-responsive.min.css" type="text/css" />
         <link rel="stylesheet" href="css/hotel.css" type="text/css" />
@@ -37,71 +47,138 @@ date_default_timezone_set('Asia/Bangkok');
     <title>Bangmod Dormitory</title>
     <body style="padding-top:0px">
 
-        <div class="row" style="padding: 0px;height:90px"><!-- start header -->
+<!--        <div class="row" style="padding: 0px;height:90px"> 
             <div class="span12 logo" >
-                <a href="index.php">
-                    <div class="row" style="margin-left:50%">
+
+                <div class="row" style="margin-left:50%">
+                    <a href="index.php">
                         <div class="span3 logo">
                             <h1>Bangmod<span>Dormitory</span></h1>
                             <p>&#9733;&#9733;&#9733;&#9733;&#9734;</p>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
-        </div><hr style="margin-top:0px;margin-bottom: 0px;border:solid 1px #cccccc">
-        <div class="container-fluid">
-            <div class="row" style="margin-bottom: -20px">
-                <div class="navbar">
-                    <div class="container">
-                        <div class="nav-collapse">
-                            <ul class="nav nav-pills">
-                                <li ><a href="index.php"><h5>Home</h5></a></li>
-                                <li><a href="index.php?chose_page=dormitory"><h5>Dormitory</h5></a></li>
-                                <li class=""><a href="index.php?chose_page=ownersystem"><h5>Owner</h5></a></li>
-                                <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){  ?>
-                                <li class=""><a href="index.php?chose_page=register"><h5>Register</h5></a></li>
-                                <?php //}  ?>
-                                <li class=""><a href="index.php?chose_page=advancesearch"><h5>Advance Search</h5></a></li>
-                                <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){  ?>
-                                <li class=""><a href="index.php?chose_page=membersystem"><h5>Member System</h5></a></li>
-                                <?php //} ?>
-                                <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
-                                <li class=""><a href="index.php?chose_page=adminsystem"><h5>Admin System</h5></a></li>
-                                <?php //}  ?>
-                                <!--                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>-->
-                            </ul>
-                        </div>                
-                        <!-- /.nav-collapse -->                
-                    </div>            
-                </div><!-- /navbar -->       
-            </div>
+        </div>-->
+        <hr style="margin-top:2px;margin-bottom: 0px;border:solid 1px #cccccc">
+        <div class="row" style="margin-bottom: -20px">
+            <div class="navbar">
+                <div class="container">
+                    <div class="nav-collapse">
+                        <ul class="nav nav-pills" style="margin-left: 150px;">
+                            <li><a href="index.php"><h5 >Home</h5></a></li>
+                            <li><a href="index.php?chose_page=dormitory"><h5 >Dormitory</h5></a></li>
+                            <li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>
+                            <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){     ?>
+                            <li class=""><a href="index.php?chose_page=register"><h5 >Register</h5></a></li>
+                            <?php //}     ?>
+                            <li class=""><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>
+                            <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){     ?>
+                            <li class=""><a href="index.php?chose_page=membersystem"><h5 >Member System</h5></a></li>
+                            <?php //}    ?>
+                            <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
+                            <li class=""><a href="index.php?chose_page=adminsystem"><h5 >Admin System</h5></a></li>
+                            <?php //}    ?>
+                            <!--                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>-->
+                            <li style="margin-left:50px;width: 240px">
+                                <?php
+                                if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) {
+                                    $row = getUserType();
+                                    if ($row["type"] === "Member") {
+
+                                        function getNotification() {
+                                            require 'connection.php';
+                                            $memberID = $_SESSION["memberID"];
+                                            $query = "select * from booking where memberID = $memberID and member_noti = 1";
+                                            $result = mysqli_query($con, $query);
+                                            $noti = mysqli_num_rows($result);
+                                            return $noti;
+                                        }
+                                        ?>
+
+                                        <div class="dropdown dropdownuser">
+                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span><?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
+                                            <ul style="width: 230px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                <li><h5>Member</h5></li>
+                                                <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
+                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span></a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=checkBookingHis">Check Booking History</a></li>
+                                                <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
+                                            </ul>
+                                        </div>
+
+                                    <?php } ?>
+                                    <?php
+                                    if ($row["type"] === "Owner") {
+
+                                        function getOwnerNotification() {
+                                            require 'connection.php';
+                                            $memberID = $_SESSION["memberID"];
+                                            $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and owner_noti = 1";
+                                            $result = mysqli_query($con, $query);
+                                            $noti = mysqli_num_rows($result);
+                                            return $noti;
+                                        }
+                                        ?>
+
+                                        <div class="dropdown dropdownuser">
+                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
+                                            <ul style="width: 230px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                <li><h5>Owner</h5></li>
+                                                <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
+                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span></a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=checkDormBooking">Check All Booking</a></li>
+                                                <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
+                                                <li role="presentation"><a href="index.php?chose_page=adddormitory">Add Dormitory</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=ownersystem">Edit Your Dormitory</a></li>
+                                                <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
+                                            </ul>
+                                        </div>
+                                        <?php
+                                    }
+                                } else {
+                                    ?>
+                                    <a href="" style="margin-left:50px" data-toggle="modal" data-target="#LoginModal"><h5 style="color:#b81007"> Sign In </h5></a>
+                                    <div class="modal fade" id="LoginModal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="height: 50px">
+                                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="signin_form" action="callback.php" method="post">
+                                                        <h4 style="text-align:center"><span>Sign In</span></h4>
+                                                        <div class="input-group" style="width: 70%;margin-left: auto;margin-right: auto;margin-bottom: 10px;margin-top:30px">
+                                                            <span class="input-group-addon">Username</span>
+                                                            <input id="username" name="username" type="text" class="form-control" required>
+                                                        </div>
+                                                        <div class="input-group" style="width: 70%;margin-left: auto;margin-right: auto;margin-bottom: 5px">
+                                                            <span class="input-group-addon">Password</span>
+                                                            <input id="password" name="password" type="password" class="form-control" required>
+                                                        </div>
+                                                        <div id="show_error" style="text-align:center;margin-bottom: 10px">
+
+                                                        </div>
+                                                        <button id="submit" type="submit" style='width:20%;margin-left:25px; margin-top: 40px'class="btn1 btn1-success">Sign In</button>
+                                                        <a href="index.php?chose_page=register"><button type="button" style='width:20%;margin-left:20px; margin-top: 40px' class="btn1 btn1-warning">Register</button></a>
+                                                        <br>
+                                                    </form>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+<?php } ?>
+                            </li>
+                        </ul>
+                    </div>                
+                    <!-- /.nav-collapse -->                
+                </div>            
+            </div><!-- /navbar -->       
         </div>
         <hr style="margin: 0px;margin-bottom: 20px;border:solid 1px #cccccc">
         <div class="container-fluid">
-<!--            <div id="showValue" class="row" style="margin-bottom:-10px">
-
-                <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) { ?>
-                    <div class="span7">
-                        <h3><span>Welcome <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?> &nbsp;&nbsp; <button id="logout_button" type="button" class="btn btn-default">Logout</button></span></h3>
-                    </div>                
-                <?php } else { ?>
-                    <form id="signin_form" action="callback.php" method="post">
-                        <div class="span2">
-                            <input id="username" type="text" class="form-control" placeholder="username" required>
-                        </div>
-                        <div class="span2">
-                            <input id="password" type="password" class="form-control" placeholder="password" required>
-                        </div>
-                        <div id="showSubmit" style="color: red" class="span5">
-                            <button id="submit" type="submit" class="btn btn-default">Login</button>
-                        </div>
-
-                    </form>                
-                <?php } ?>
-                <h3 class=""><span>Notification ( 1 )</span></h3>
-
-
-            </div>-->
             <script>
                 $(function() {
                     $("#signin_form").submit(function() {
@@ -111,7 +188,7 @@ date_default_timezone_set('Asia/Bangkok');
                         if (false) {
 
                         } else {
-                            $("#submit").append('<img style="height:20px" src="images/loading.gif" />');
+                            $("#show_error").append('<img style="height:20px" src="images/loading.gif" />');
                             fnn = "auth";
                             //*****************Asyncronize JQuery AJAX*****************
                             var timer = setTimeout(function() {
@@ -119,9 +196,13 @@ date_default_timezone_set('Asia/Bangkok');
                                 $.post("callback.php", {fn: fnn, login: entered_login, password: entered_password},
                                 function(data) {
                                     if (data.length === 2) {
-                                        $("#showSubmit").html('<button id="submit" type="submit" class="btn btn-default">Login</button> &nbsp;&nbsp; Login Failed Please Login Again');
+                                        $("#show_error").html('<p style="color:red">Sign in Failed !</p>');
                                     } else {
-                                        $("#showValue").html("<div class='span7'><h3><span>Welcome " + data + " &nbsp;&nbsp; <button id='logout_button' type='button' class='btn btn-default'>Logout</button></span></h3>");
+                                        $("#show_error").html("<p style='color:green'>Sign in success !</p>");
+                                        var timer = setTimeout(function() {
+                                            clearTimeout(timer);
+                                            window.location = "index.php";
+                                        }, 1000);
                                     }
                                 });
                             }, 1000);
@@ -131,7 +212,7 @@ date_default_timezone_set('Asia/Bangkok');
                 });
 
                 $(document).on("click", "#logout_button", function() {
-                    $("#logout_button").append('<img style="height:20px" src="images/loading.gif" />');
+                    $("#logout_button").append('<img class="pull-right" style="height:20px" src="images/loading.gif" />');
                     var timer = setTimeout(function() {
                         clearTimeout(timer);
                         $("#logout_button").load("callback.php?logout");
@@ -145,4 +226,3 @@ date_default_timezone_set('Asia/Bangkok');
 
 
             </script>
-<!--            <hr style="color:red">-->

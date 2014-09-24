@@ -75,7 +75,7 @@ if (isset($_GET["dormID"]) && isset($_GET["roomID"]) && is_numeric($_GET["dormID
         $start_date = filter_var($_POST["start_date"], FILTER_SANITIZE_STRING);
         $expire_date = filter_var($_POST["expire_date"], FILTER_SANITIZE_STRING);
 
-        $query = "INSERT INTO `Booking` (`memberID`, `roomID`, `date`, `expire_date`, `booking_status`, `notiStatus`, `totalPrice`) VALUES($memberID,$roomID, '$start_date', '$expire_date','Waiting', 0 , $total_price);";
+        $query = "INSERT INTO `Booking` (`memberID`, `roomID`, `date`, `expire_date`, `booking_status`, `totalPrice`) VALUES($memberID,$roomID, '$start_date', '$expire_date','Waiting',$total_price);";
 
         $msg = checkBooking($memberID);
         if ($msg == 'PASS') {
@@ -107,7 +107,8 @@ if (isset($_GET["dormID"]) && isset($_GET["roomID"]) && is_numeric($_GET["dormID
     <div class="row book-pay">
         <div class="span12">	
             <br /><br />
-            <h1>Your Booking Summary</h1><br>
+            <h1>Your <span>Booking</span> Summary</h1>
+            <hr style="border-color:#cccccc; width: 80%"><br>
             <div class="row">
                 <div class="span12">		
                     <div class="row">
@@ -141,12 +142,16 @@ if (isset($_GET["dormID"]) && isset($_GET["roomID"]) && is_numeric($_GET["dormID
                                 <!--                            <div class="pull-left strong">Please Confirm Your Identity Card Number</div><div class="pull-right strong">Please Confirm Telephone Number</div><br>
                                                             <div class="pull-left strong"><input name="idcard" class="form-control" type="text" required></div>
                                                             <div class="pull-right strong" style="width: 40%"><input name="telephone" class="form-control" type="text" required></div><br>-->
-                                <button type="submit" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Confirm</button>
-                                <br />
-                                <br />
-                                <br />
-                                <br />
+                                <button type="submit" name="submit_book" style="margin-top: 30px;margin-left:435px; width: 30%" class="btn1 btn1-primary">Confirm</button>
+<!--                                <button type="submit" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Confirm</button>-->
+                                
                                 <div class ="span10" style="margin-top: 50px">
+                                    <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br>
+                                <br>
                                     <h3><span>You Should transfer money to Dormitory before <?php echo date("r", strtotime("+1 day", strtotime(date("r")))); ?> 
                                             <br>If you don't go to make contract the System will recognize
                                             <br>And If it already 3 times you will be a blacklist  </span></h3>

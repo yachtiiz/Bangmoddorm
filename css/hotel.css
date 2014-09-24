@@ -2186,6 +2186,7 @@ table th[class*="span"],
 .dropdown-toggle:active,
 .open .dropdown-toggle {
   outline: 0;
+  
 }
 .caret {
   display: inline-block;
@@ -2240,7 +2241,8 @@ table th[class*="span"],
   background-color: #e5e5e5;
   border-bottom: 1px solid #ffffff;
 }
-.dropdown-menu li > a {
+.dropdown-menu li > a,
+.dropdown-menu li > p{
   display: block;
   padding: 3px 20px;
   clear: both;
@@ -2250,6 +2252,7 @@ table th[class*="span"],
   white-space: nowrap;
 }
 .dropdown-menu li > a:hover,
+.dropdown-menu li > p:hover,
 .dropdown-menu li > a:focus,
 .dropdown-submenu:hover > a {
   text-decoration: none;
@@ -2957,6 +2960,7 @@ input[type="submit"].btn.btn-mini {
   -moz-border-radius: 0;
   border-radius: 0;
 }
+
 .btn-link:hover {
   color: #6e0a04;
   text-decoration: underline;
@@ -3452,6 +3456,9 @@ input[type="submit"].btn.btn-mini {
   color: #ffffff;
   background-color: #999999;
   border-color: #999999;
+}
+.dropdownuser:hover, .dropdownuser.open{
+    border-bottom: solid 5px #b81007;
 }
 .nav li.dropdown.open .caret,
 .nav li.dropdown.open.active .caret,

@@ -46,15 +46,15 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
     </div>
     <br><br>
     <div class="span12" style="margin-left:0px">
-    <h1><span>Dormitory</span> Facilities &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        Rate &nbsp;<span style="color: gold">
-            <?php
-            for ($i = 1; $i <= $dorm_row["dormitory_rate"]; $i++) {
-                echo '&#9733;';
-            } for ($i = $dorm_row["dormitory_rate"]; $i < 5; $i++) {
-                echo '&#9734;';
-            }
-            ?></span></h1>
+        <h1><span>Dormitory</span> Facilities &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Rate &nbsp;<span style="color: gold">
+                <?php
+                for ($i = 1; $i <= $dorm_row["dormitory_rate"]; $i++) {
+                    echo '&#9733;';
+                } for ($i = $dorm_row["dormitory_rate"]; $i < 5; $i++) {
+                    echo '&#9734;';
+                }
+                ?></span></h1>
         <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
             <tr>
                 <td>
@@ -122,7 +122,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
     <hr>
 
     <table class="table table-condensed">
-    <thead>
+        <thead>
         <h1><span>Type </span>Of Rooms</h1>
     </thead>
     <?php while ($dorm_room_row = mysqli_fetch_array($dorm_room_result)) { ?>
@@ -175,7 +175,17 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
 
                 </table>
                 <br>
-                <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
+                <!-- Button trigger modal -->
+                <button class="btn1 btn1-primary" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: -10px; margin-top: 40px; width: 40% ">
+                    Detail
+                </button>
+                <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button><br><br>
+
+                <!--<button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
+                <button class="btn btn-primary btn-lg book-now" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: 50px; ">
+                    Detail
+                </button>-->
+                <br><br>
                 <script>
 
                     $(document).on("click", "#booking<?php echo $dorm_room_row["roomType"] ?>", function() {
@@ -184,12 +194,6 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     });
 
                 </script>
-                <!-- Button trigger modal -->
-                <button class="btn btn-primary btn-lg book-now" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: 50px; ">
-                    Detail
-                </button>
-                <br><br>
-
                 <!-- Modal -->
                 <div class="modal fade" id="room<?php echo $dorm_room_row["roomID"]; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -284,8 +288,11 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
-                                    <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now">Booking</button>
+                                    <button type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width:30%">Close</button>
+                                    <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width:30%">Booking</button>
+
+                                    <!--<button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
+                                    <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now">Booking</button>-->
                                     <script>
                                         $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomType"] ?>", function() {
                                             event.preventDefault;
@@ -306,149 +313,149 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
     <iframe width="950" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps?f=d&amp;source=s_d&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.651124,100.487630&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m&amp;output=embed"></iframe><br /><small>View <a href="https://www.google.com/maps?f=d&amp;source=embed&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.648036,100.498716&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m" style="color:#0000FF;text-align:left">Map Project</a> in a larger map</small>
     <br><br>
     <div class="span12" style="margin-left:0px">
-    <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
-        <h1><span>Review </span> And Comment <span class="pull-right"><h4 style="font-style:italic">Rate : 5.6 from 15 Reviews</h4></span></h1>
-        <br>
-        <tbody id="comment_table">
-            <?php
+        <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
+            <h1><span>Review </span> And Comment <span class="pull-right"><h4 style="font-style:italic">Rate : 5.6 from 15 Reviews</h4></span></h1>
+            <br>
+            <tbody id="comment_table">
+                <?php
 
-            function getComment($dormID) {
-                require 'connection.php';
-                $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID order by date";
-                $result = mysqli_query($con, $query);
-                while ($row = mysqli_fetch_array($result)) {
-                    $star = "";
-                    $date = substr(date("r", strtotime($row["date"])), 0, 25);
+                function getComment($dormID) {
+                    require 'connection.php';
+                    $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID order by date";
+                    $result = mysqli_query($con, $query);
+                    while ($row = mysqli_fetch_array($result)) {
+                        $star = "";
+                        $date = substr(date("r", strtotime($row["date"])), 0, 25);
 
 
-                    for ($i = 1; $i <= $row["rating"]; $i++) {
-                        $star = $star . "&#9733;";
+                        for ($i = 1; $i <= $row["rating"]; $i++) {
+                            $star = $star . "&#9733;";
+                        }
+                        for ($i = 1; $i <= 5 - $row["rating"]; $i++) {
+                            $star = $star . "&#9734;";
+                        }
+
+                        echo '<tr>';
+                        echo '<td colspan="2">';
+                        echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
+                        echo '<p class="pull-left">' . $date . '</p>';
+                        echo '<p class="pull-left" style="color:gold">' . $star . '</p>';
+                        echo '</td>';
+                        echo '<td colspan="10" style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
+                        echo '</tr>';
                     }
-                    for ($i = 1; $i <= 5 - $row["rating"]; $i++) {
-                        $star = $star . "&#9734;";
-                    }
-
-                    echo '<tr>';
-                    echo '<td colspan="2">';
-                    echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
-                    echo '<p class="pull-left">' . $date . '</p>';
-                    echo '<p class="pull-left" style="color:gold">' . $star . '</p>';
-                    echo '</td>';
-                    echo '<td colspan="10" style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
-                    echo '</tr>';
                 }
-            }
 
-            getComment($dormID);
-            ?>
-        </tbody>
-        <tr>
-            <td colspan="2"><h3><?php echo $_SESSION["firstname"] . " " . substr($_SESSION["lastname"], 0, 1) . '.'; ?> </h3><br>Solo travelers</td>
-            <td colspan="10">
-                <textarea style="margin-bottom:20px" id="comment_value" rows="5" class="span8 from-control" required style="margin-bottom: 20px"></textarea>
-                <select id="comment_rate" class="form-control" style="width:25%;margin-top:0px;display:inline">
-                    <option value="default">Give Dormitory Rate</option>
-                    <option value="1">1 Star</option>
-                    <option value="2">2 Star</option>
-                    <option value="3">3 Star</option>
-                    <option value="4">4 Star</option>
-                    <option value="5">5 Star</option>
-                </select>
-                <span id="star" style="margin-top:0px;margin-left:20%;display: inline;color:gold">&#9734;&#9734;&#9734;&#9734;&#9734;</span><br>   
-                <span id="show" style="width:5%"></span>
-                <button id="comment_submit" class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 12%"> Comment</button>
-                <button class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 5%"> Clear</button>
+                getComment($dormID);
+                ?>
+            </tbody>
+            <tr>
+                <td colspan="2"><h3><?php echo $_SESSION["firstname"] . " " . substr($_SESSION["lastname"], 0, 1) . '.'; ?> </h3><br>Solo travelers</td>
+                <td colspan="10">
+                    <textarea style="margin-bottom:20px" id="comment_value" rows="5" class="span8 from-control" required style="margin-bottom: 20px"></textarea>
+                    <select id="comment_rate" class="form-control" style="width:25%;margin-top:0px;display:inline">
+                        <option value="default">Give Dormitory Rate</option>
+                        <option value="1">1 Star</option>
+                        <option value="2">2 Star</option>
+                        <option value="3">3 Star</option>
+                        <option value="4">4 Star</option>
+                        <option value="5">5 Star</option>
+                    </select>
+                    <span id="star" style="margin-top:0px;margin-left:20%;display: inline;color:gold">&#9734;&#9734;&#9734;&#9734;&#9734;</span><br>   
+                    <span id="show" style="width:5%"></span>
+                    <br>
+                    <button id="comment_submit" class="btn1 btn1-success" style="margin-top:20px;width: 30%;"> Comment</button>
+                    <button class="btn1 btn1-danger" style="margin-top:20px;width: 30%;margin-left: 5%"> Clear</button>
 
-            </td>
-        </tr>
-        <script>
+<!--                <button id="comment_submit" class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 12%"> Comment</button>
+                    <button class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 5%"> Clear</button>-->
 
-            $(function() {
+                </td>
+            </tr>
+            <script>
 
-                $("#comment_submit").on("click", function() {
-                    if ($("#comment_value").val() !== "") {
-                        if ($("#comment_rate").val() !== "default") {
-                            url = "callback.php?comment_value=" + $("#comment_value").val().replace(/ /g, "+") + "&comment_dormID=<?php echo $_GET["dormID"]; ?>&comment_memberID=<?php echo $_SESSION["memberID"]; ?>&comment_rate=" + $("#comment_rate").val();
-                            $("#show").append('<img style="height:20px" src="images/loading.gif" />');
-                            var timer = setTimeout(function() {
-                                clearTimeout(timer);
-                                $("#show").html("");
-                                $("#comment_value").removeAttr("value");
-                                $("#comment_table").animate({
-                                    opacity: 0
-                                }, 100, function() {
-                                    $("#comment_table").load(url, function() {
-                                        $("#comment_table").animate({
-                                            opacity: 1
-                                        }, 1000);
+                $(function() {
+
+                    $("#comment_submit").on("click", function() {
+                        if ($("#comment_value").val() !== "") {
+                            if ($("#comment_rate").val() !== "default") {
+                                url = "callback.php?comment_value=" + $("#comment_value").val().replace(/ /g, "+") + "&comment_dormID=<?php echo $_GET["dormID"]; ?>&comment_memberID=<?php echo $_SESSION["memberID"]; ?>&comment_rate=" + $("#comment_rate").val();
+                                $("#show").append('<img style="height:20px" src="images/loading.gif" />');
+                                var timer = setTimeout(function() {
+                                    clearTimeout(timer);
+                                    $("#show").html("");
+                                    $("#comment_value").removeAttr("value");
+                                    $("#comment_table").animate({
+                                        opacity: 0
+                                    }, 100, function() {
+                                        $("#comment_table").load(url, function() {
+                                            $("#comment_table").animate({
+                                                opacity: 1
+                                            }, 1000);
+                                        });
                                     });
-                                });
-                            }, 1000);
+                                }, 1000);
+                            } else {
+                                alert("Please Give Dormitory Rate");
+                            }
                         } else {
-                            alert("Please Give Dormitory Rate");
+                            alert("Please Input Value");
                         }
-                    } else {
-                        alert("Please Input Value");
-                    }
+                    });
+
+                    $("#comment_rate").on("change", function() {
+
+                        if ($("#comment_rate").val() !== "default") {
+                            if ($("#comment_rate").val() === "1") {
+                                $("#star").html("&#9733;&#9734;&#9734;&#9734;&#9734;");
+                            }
+                            if ($("#comment_rate").val() === "2") {
+                                $("#star").html("&#9733;&#9733;&#9734;&#9734;&#9734;");
+                            }
+                            if ($("#comment_rate").val() === "3") {
+                                $("#star").html("&#9733;&#9733;&#9733;&#9734;&#9734;");
+                            }
+                            if ($("#comment_rate").val() === "4") {
+                                $("#star").html("&#9733;&#9733;&#9733;&#9733;&#9734;");
+                            }
+                            if ($("#comment_rate").val() === "5") {
+                                $("#star").html("&#9733;&#9733;&#9733;&#9733;&#9733;");
+                            }
+                        } else {
+                            $("#star").html("&#9734;&#9734;&#9734;&#9734;&#9734;");
+                        }
+                    });
                 });
 
-                $("#comment_rate").on("change", function() {
-
-                    if ($("#comment_rate").val() !== "default") {
-                        if ($("#comment_rate").val() === "1") {
-                            $("#star").html("&#9733;&#9734;&#9734;&#9734;&#9734;");
-                        }
-                        if ($("#comment_rate").val() === "2") {
-                            $("#star").html("&#9733;&#9733;&#9734;&#9734;&#9734;");
-                        }
-                        if ($("#comment_rate").val() === "3") {
-                            $("#star").html("&#9733;&#9733;&#9733;&#9734;&#9734;");
-                        }
-                        if ($("#comment_rate").val() === "4") {
-                            $("#star").html("&#9733;&#9733;&#9733;&#9733;&#9734;");
-                        }
-                        if ($("#comment_rate").val() === "5") {
-                            $("#star").html("&#9733;&#9733;&#9733;&#9733;&#9733;");
-                        }
-                    } else {
-                        $("#star").html("&#9734;&#9734;&#9734;&#9734;&#9734;");
-                    }
-                });
-            });
 
 
 
 
+            </script>
 
-        </script>
-
-    </table>
+        </table>
 
 
-    <div class="row">
-        <div class="span12 what_people_say">
-            <div id="quotes">
-                <blockquote class="textItem" style="display: none;">
-                    <p>Easy to find</p>
-                    <small>Someone famous <cite title="Source Title">Source Title</cite></small>
-                </blockquote>			
+        <div class="row">
+            <div class="span12 what_people_say">
+                <div id="quotes">
+                    <blockquote class="textItem" style="display: none;">
+                        <p>Easy to find</p>
+                    </blockquote>			
 
-                <blockquote class="textItem" style="display: none;">
-                    <p>Safe Dormitory</p>
-                    <small>Someone famous <cite title="Source Title">Source Title</cite></small>
-                </blockquote>			
+                    <blockquote class="textItem" style="display: none;">
+                        <p>Safe Dormitory</p>
+                    </blockquote>			
 
-                <blockquote class="textItem" style="display: none;">
-                    <p>Beyond All Comfortable</p>
-                    <small>Someone famous <cite title="Source Title">Source Title</cite></small>
-                </blockquote>
-                <blockquote class="textItem" style="display: none;">
-                    <p>All in Bangmod Dorm</p>
-                    <small>Someone famous <cite title="Source Title">Source Title</cite></small>
-                </blockquote>
-            </div>
-        </div>	
-    </div>
+                    <blockquote class="textItem" style="display: none;">
+                        <p>Beyond All Comfortable</p>
+                    </blockquote>
+                    <blockquote class="textItem" style="display: none;">
+                        <p>All in Bangmod Dorm</p>
+                    </blockquote>
+                </div>
+            </div>	
+        </div>
     </div>
 <?php } ?>
 </div> <!-- /container -->

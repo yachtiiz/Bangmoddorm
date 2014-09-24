@@ -76,6 +76,18 @@ switch ($page) {
     case "memberInfo":
         require_once("memberInfo.php");
         break;
+    case "ownernotification":
+        require_once("checkowner_Notification.php");
+        break;
+    case "membernotification":
+        require_once("checkmember_Notification.php");
+        break;
+    case "checkblacklist":
+        require_once("checkBlacklist.php");
+        break;
+    case "myprofile":
+        require_once("profile.php");
+        break;
     
     default:
         require_once("main.php");

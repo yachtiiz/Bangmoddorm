@@ -75,7 +75,7 @@ function upPicture($file, $username) {
 function approve_dormitory($confirmID, $dorm_rate) {
 
     require 'connection.php';
-    $query = "update ConfirmationDorm set approval = 'Approve' where confirmID = $confirmID ";
+    $query = "update ConfirmationDorm set approval = 'Approve' , noti_status = 1 where confirmID = $confirmID ";
 
     if (mysqli_query($con, $query)) {
 
@@ -377,7 +377,7 @@ function getBookingDorm($page, $order_by, $dormID) {
         echo '<td>' . $row["date"] . '</td>';
         echo '<td>' . $row["expire_date"] . '</td>';
         echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
-        echo '<td><button type="button" class="btn viewdetail" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+        echo '<td><button type="button" class="btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
         echo '</tr> ';
     }
     if (mysqli_num_rows($result) != 8 && mysqli_num_rows($result) != 0) {
@@ -596,7 +596,7 @@ function searchingBook($query) {
             echo '<td>' . $row["date"] . '</td>';
             echo '<td>' . $row["expire_date"] . '</td>';
             echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
-            echo '<td><button type="button" class="btn viewdetail" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+            echo '<td><button type="button" class="btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
             echo '</tr> ';
         }
     } else {
@@ -745,16 +745,20 @@ if (isset($_GET["cancel_booking"]) && is_numeric($_GET["cancel_booking"])) {
 function change_booking($bookID, $status) {
 
     require 'connection.php';
-    $query = "update booking set booking_status = '$status' where bookingID = $bookID";
+    $noti = "";
+    if ($status === "Approve" || $status === "Reject") {
+        $noti = ", member_noti = 1";
+    }
+    $query = "update booking set booking_status = '$status' $noti where bookingID = $bookID";
     if (mysqli_query($con, $query)) {
-        if($status === "Reject" || $status === "Canceled"){
+        if ($status === "Reject" || $status === "Canceled") {
             $query = "select roomID from booking where bookingID = $bookID";
             $result = mysqli_query($con, $query);
             $row = mysqli_fetch_array($result);
             $plus_room_query = "update rooms set roomAvailable = roomAvailable + 1 where roomID = $row[0]";
-            if(mysqli_query($con, $plus_room_query)){
+            if (mysqli_query($con, $plus_room_query)) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -1146,8 +1150,8 @@ if (isset($_GET["comment_value"]) && isset($_GET["comment_dormID"]) && isset($_G
             $result = mysqli_query($con, $query);
             while ($row = mysqli_fetch_array($result)) {
                 $star = "";
-                $date = substr(date("r",strtotime($row["date"])),0,25);
-                
+                $date = substr(date("r", strtotime($row["date"])), 0, 25);
+
                 for ($i = 1; $i <= $row["rating"]; $i++) {
                     $star = $star . "&#9733;";
                 }
@@ -1201,6 +1205,166 @@ function updateBooking() {
 if (isset($_GET["updateBooking"])) {
     $update_row = updateBooking();
     echo 'UpdateBooking<script>alert("update ' . $update_row . ' rows")</script>';
+}
+
+//Add Blacklist 
+function addBlacklist($memberID, $reason) {
+    require 'connection.php';
+    $query = "update members set status = 'Blacklist' , status_reason = '$reason' where memberID = $memberID";
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function removeBlacklist($memberID) {
+    require 'connection.php';
+    $query = "update members set status = 'Normal' where memberID = $memberID";
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+if (isset($_GET["addblacklist"]) && is_numeric($_GET["addblacklist"]) && isset($_GET["blacklist_reason"])) {
+    $memberID = $_GET["addblacklist"];
+    $reason = filter_var($_GET["blacklist_reason"], FILTER_SANITIZE_STRING);
+    if (addBlacklist($memberID, $reason)) {
+        echo 'Add to Blacklist<script>alert("Add member to blacklist Success"); window.location = "index.php?chose_page=memberInfo&memberID=' . $memberID . '"</script>';
+    } else {
+        echo 'Add to Blacklist<script>alert("Add member to blacklist failed"); window.location = "index.php?chose_page=memberInfo&memberID=' . $memberID . '"</script>';
+    }
+}
+
+if (isset($_GET["removeblacklist"]) && is_numeric($_GET["removeblacklist"])) {
+    $memberID = $_GET["removeblacklist"];
+    if (removeBlacklist($memberID)) {
+        echo 'Remove Blacklist<script>alert("Remove blacklist success"); window.location = "index.php?chose_page=memberInfo&memberID=' . $memberID . '"</script>';
+    } else {
+        echo 'Remove Blacklist<script>alert("Remove blacklist failed"); window.location = "index.php?chose_page=memberInfo&memberID=' . $memberID . '"</script>';
+    }
+}
+
+//Get Owner Notification
+function getAllNotification($cur_page, $order_by) {
+    require 'connection.php';
+    if ($order_by === "date") {
+        $order_by = "date desc";
+    }
+    if ($order_by === "booking_status"){
+        $order_by = "booking_status = 'Checking' desc";
+    }
+    $limit_start = ((8 * $cur_page) - 8);
+    $memberID = $_SESSION["memberID"];
+    $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by $order_by limit $limit_start,8";
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        while ($row = mysqli_fetch_array($result)) {
+            $unread = "";
+            if ($row["owner_noti"] == "1") {
+                $unread = 'style="background-color:#f9f9f9"';
+            }
+            $color = "black";
+
+            switch ($row["booking_status"]) {
+                case "Canceled":
+                    $color = "red";
+                    break;
+                case "Reject":
+                    $color = "red";
+                    break;
+                case "Checking":
+                    $color = "#0480be";
+                    break;
+                case "Approve":
+                    $color = "#00cc33";
+                    break;
+            }
+            echo '<tr ' . $unread . '>';
+            echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
+            echo '<td>' . $row["firstName"] . " " . $row["lastName"] . '</td>';
+            echo '<td>' . $row["date"] . '</td>';
+            echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
+            echo '<td>' . $row[30] . '</td>';
+            echo '<td><button type="button" class="btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+            echo '</tr>';
+            if ($row["owner_noti"] == "1") {
+                if (!readAble($row["bookingID"])) {
+                    echo '<script>alert("something error")<script>';
+                    break;
+                }
+            }
+        }
+    } else {
+        echo '<tr>';
+        echo '<td colspan="6" style="text-align:center">No Result</td>';
+        echo '</tr>';
+
+        for ($i = 1; $i < 8; $i++) {
+            echo '<tr>';
+            echo '<td colspan="6" style="height:47px"></td>';
+            echo '</tr>';
+        }
+    }
+    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 8) {
+        for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+            echo '<tr>';
+            echo '<td colspan="6" style="height:47px"></td>';
+            echo '</tr>';
+        }
+    }
+}
+
+if (isset($_GET["ownernoti_orderby"]) && isset($_GET["ownernoti_curpage"])) {
+    $order_by = filter_var($_GET["ownernoti_orderby"]);
+    getAllNotification($_GET["ownernoti_curpage"], $order_by);
+    
+}
+
+if (isset($_GET["owner_noti_curpage"]) && is_numeric($_GET["owner_noti_curpage"])) {
+    $cur_page = $_GET["owner_noti_curpage"];
+    $memberID = $_SESSION["memberID"];
+    $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
+    $href = "callback.php?owner_noti_curpage=";
+    displayPage($cur_page, $query, $href);
+}
+
+// Change Password AJAX
+function change_password($oldpass,$newpass){
+    
+    require 'connection.php';
+    $change_pass = false;
+    $memberID = $_SESSION["memberID"];
+    $query = "select password from members where memberID = $memberID";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_array($result);
+    if($row !== NULL && $row[0] === md5($oldpass)){
+        $newpass = md5($newpass);
+        $update_query = "update members set password = '$newpass' where memberID = $memberID";
+        if(mysqli_query($con, $update_query)){
+            $change_pass = true;
+        }
+    }
+    return $change_pass;
+}
+
+if(isset($_POST["change_pass"]) && isset($_POST["oldpass"]) && isset($_POST["newpass"]) && isset($_POST["confirm_newpass"])){
+    
+    $oldpass = filter_var($_POST["oldpass"],FILTER_SANITIZE_STRING);
+    $newpass = filter_var($_POST["newpass"],FILTER_SANITIZE_STRING);
+    $confirm_newpass = filter_var($_POST["confirm_newpass"],FILTER_SANITIZE_STRING);
+    
+    if($confirm_newpass === $newpass){
+        if(change_password($oldpass, $newpass)){
+            echo 'Change Password Success';
+        }else{
+            echo 'Change Password Failed';
+        }
+    }
+    
+    
 }
 ?>
 
