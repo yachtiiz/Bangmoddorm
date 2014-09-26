@@ -162,7 +162,7 @@
                                 </legend>
                             </div>
                             <div class="span12" style="margin-bottom: 30px">
-                                <select id="select_dorm" class="form-control pull-left" style="width:30%">
+                                <select id="select_dorm" class="form-control pull-left" style="width:20%">
                                     <option value="default">Select Dormitories</option>
                                     <?php
                                     require 'connection.php';
@@ -175,10 +175,20 @@
                                         <option value="<?php echo $row["dormID"]; ?>"><?php echo $row["dormName"]; ?> </option>
                                     <?php } ?>
                                 </select>
+
+
                                 <div class="input-group pull-right" style="width:30%">
-                                    <span class="input-group-addon">Sort By Booking Date</span>
+                                    <span class="input-group-addon">Search By Booking Date</span>
                                     <input id="sort_chosendate" type="date" class="form-control" placeholder="Username">
                                 </div>
+                                <select class="form-control" style="width:20%;margin-left:20%">
+                                    <option>Search By Status</option>
+                                    <option>Approve</option>
+                                    <option>Checking</option>
+                                    <option>Waiting</option>
+                                    <option>Canceled</option>
+                                    <option>Reject</option>
+                                </select>
                             </div>
                             <div class="span12">
                                 <div class="col-md-7" style="padding: 0px">
@@ -193,24 +203,14 @@
                                         <option value="booking_status">Sort By Status</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 radio" style="padding-left: 5px">
-                                    <label>
-                                        <input id="only_bookid" name="search_only" type="radio"> Only Booking ID
-                                    </label>
-                                </div>
-                                <div class="col-md-2 radio">
-                                    <label>
-                                        <input id="only_date" name="search_only" type="radio"> Only Date
-                                    </label>
-                                </div>
-                                <div class="col-md-2 radio">
-                                    <label>
-                                        <input id="only_status" name="search_only" type="radio"> Only Status
-                                    </label>
-                                </div>
                                 <div class="col-md-2 radio">
                                     <label>
                                         <input id="all_type" name="search_only" type="radio" checked> All Type
+                                    </label>
+                                </div>
+                                <div class="col-md-2 radio" style="padding-left: 5px">
+                                    <label>
+                                        <input id="only_bookid" name="search_only" type="radio"> By Booking ID
                                     </label>
                                 </div>
                             </div>
@@ -266,7 +266,7 @@
 
                         $(document).on("click", ".viewdetail", function() {
                             $(".modal-body-booking #bookid").html($(this).data('bookid'));
-                            document.getElementById("submitbutton").setAttribute("value",$(this).data('bookid'));
+                            document.getElementById("submitbutton").setAttribute("value", $(this).data('bookid'));
                             $(".modal-body-booking #name").html($(this).data('name'));
                             $(".modal-body-booking #date").html($(this).data('date'));
                             $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -309,10 +309,10 @@
                         $(function() {
 
                             $("#submitbutton").on("click", function() {
-                                
+
                                 change_url = "callback.php?change_booking_status=" + $("#book_status").val() + "&change_booking_id=" + $(this).val();
                                 $("#submitbutton").load(change_url);
-                                
+
                                 url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+");
                                 if ($("#only_bookid").attr("checked")) {
                                     special_url = url + "&search_only=bookingID";

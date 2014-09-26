@@ -65,22 +65,22 @@ function getUserType() {
             <div class="navbar">
                 <div class="container">
                     <div class="nav-collapse">
-                        <ul class="nav nav-pills" style="margin-left: 150px;">
+                        <ul class="nav nav-pills" style="padding-left: 150px;padding-right:150px;width:100%;height: 10%">
                             <li><a href="index.php"><h5 >Home</h5></a></li>
                             <li><a href="index.php?chose_page=dormitory"><h5 >Dormitory</h5></a></li>
-                            <li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>
+                            <!--<li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>-->
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){     ?>
-                            <li class=""><a href="index.php?chose_page=register"><h5 >Register</h5></a></li>
+                            <?php if(!isset($_SESSION["auth"])) { ?><li class=""><a href="index.php?chose_page=register"><h5 >Register</h5></a></li> <?php } ?>
                             <?php //}     ?>
                             <li class=""><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){     ?>
-                            <li class=""><a href="index.php?chose_page=membersystem"><h5 >Member System</h5></a></li>
+                            <!--<li class=""><a href="index.php?chose_page=membersystem"><h5 >Member System</h5></a></li>-->
                             <?php //}    ?>
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
                             <li class=""><a href="index.php?chose_page=adminsystem"><h5 >Admin System</h5></a></li>
                             <?php //}    ?>
                             <!--                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>-->
-                            <li style="margin-left:50px;width: 240px">
+                            <li class="pull-right">
                                 <?php
                                 if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) {
                                     $row = getUserType();
@@ -98,7 +98,7 @@ function getUserType() {
 
                                         <div class="dropdown dropdownuser">
                                             <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span><?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
-                                            <ul style="width: 230px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Member</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
                                                 <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span></a></li>
@@ -107,7 +107,6 @@ function getUserType() {
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
                                             </ul>
                                         </div>
-
                                     <?php } ?>
                                     <?php
                                     if ($row["type"] === "Owner") {
@@ -124,7 +123,7 @@ function getUserType() {
 
                                         <div class="dropdown dropdownuser">
                                             <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
-                                            <ul style="width: 230px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Owner</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
                                                 <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span></a></li>
