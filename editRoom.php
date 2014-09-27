@@ -120,15 +120,15 @@ VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $room_availa
         }
         if (mysqli_query($con, $fac_query)) {
             if (add_fac_room($id_row[0])) {
-                return "Add Complete";
+                return "Add Complete.";
             } else {
-                return "Add Fac Fail";
+                return "Add Fac Fail.";
             }
         } else {
-            return "Add FacInRoom Failed";
+            return "Add FacInRoom Failed.";
         }
     } else {
-        return "Add Room Failed." . $main_pic_path;
+        return "Add Room Failed.";
     }
 }
 
@@ -314,7 +314,8 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     </label>
                                     <label>Room Deposit
                                         <select class="form-control" name="room_deposit">
-                                            <option value="default">Chose Your Room Deposit</option>
+                                            <option value="0">Chose Your Room Deposit</option>
+                                            <option value="0" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 0 ? "selected" : ""  : "" ?>>No Room Deposit</option>
                                             <option value="1" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 1 ? "selected" : ""  : "" ?>>1 Month</option>
                                             <option value="2" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 2 ? "selected" : ""  : "" ?>>2 Month</option>
                                             <option value="3" <?php echo isset($room_row["roomDeposit"]) ? $room_row["roomDeposit"] == 3 ? "selected" : ""  : "" ?>>3 Month</option>

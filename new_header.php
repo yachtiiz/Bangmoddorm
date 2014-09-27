@@ -47,41 +47,51 @@ function getUserType() {
     <title>Bangmod Dormitory</title>
     <body style="padding-top:0px">
 
-<!--        <div class="row" style="padding: 0px;height:90px"> 
-            <div class="span12 logo" >
-
-                <div class="row" style="margin-left:50%">
-                    <a href="index.php">
-                        <div class="span3 logo">
-                            <h1>Bangmod<span>Dormitory</span></h1>
-                            <p>&#9733;&#9733;&#9733;&#9733;&#9734;</p>
+        <!--        <div class="row" style="padding: 0px;height:90px"> 
+                    <div class="span12 logo" >
+        
+                        <div class="row" style="margin-left:50%">
+                            <a href="index.php">
+                                <div class="span3 logo">
+                                    <h1>Bangmod<span>Dormitory</span></h1>
+                                    <p>&#9733;&#9733;&#9733;&#9733;&#9734;</p>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-            </div>
-        </div>-->
+                    </div>
+                </div>-->
         <hr style="margin-top:2px;margin-bottom: 0px;border:solid 1px #cccccc">
         <div class="row" style="margin-bottom: -20px;">
             <div class="navbar">
                 <div class="container">
                     <div class="nav-collapse">
+                        <?php
+
+                        function getNotification() {
+                            require 'connection.php';
+                            $memberID = $_SESSION["memberID"];
+                            $query = "select * from booking where memberID = $memberID and member_noti = 1";
+                            $result = mysqli_query($con, $query);
+                            $noti = mysqli_num_rows($result);
+                            return $noti;
+                        }
+                        ?>
                         <ul class="nav nav-pills" style="padding-left: 0px;padding-right:100px;width:100%;height: 10%;">
                             <li style="margin-left: -3%;"><img src="images/logo2.png" style="width: 50%"></li>
                             <li style="margin-top: 1%;margin-left: -3%"><a href="index.php"><h5>Home</h5></a></li>
                             <li style="margin-top: 1%;"><a href="index.php?chose_page=dormitory"><h5>Dormitory</h5></a></li>
                             <!--<li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>-->
-                            <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){     ?>
-                            <?php if(!isset($_SESSION["auth"])) { ?><li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >Register</h5></a></li> <?php } ?>
+                            <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){      ?>
+                            <?php if (!isset($_SESSION["auth"])) { ?><li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >Register</h5></a></li> <?php } ?>
                             <?php //}     ?>
                             <li style="margin-top: 1%;"><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>
-                            <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){     ?>
+                            <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){      ?>
                             <!--<li class=""><a href="index.php?chose_page=membersystem"><h5 >Member System</h5></a></li>-->
-                            <?php //}    ?>
+                            <?php //}     ?>
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
                             <li style="margin-top: 1%;"><a href="index.php?chose_page=adminsystem"><h5 >Admin System</h5></a></li>
-                            <?php //}    ?>
+                            <?php //}     ?>
                             <!--                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>-->
-                            <li class="pull-right" style="margin-top: 1%;">
                                 <?php
                                 if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) {
                                     $row = getUserType();
@@ -96,7 +106,8 @@ function getUserType() {
                                             return $noti;
                                         }
                                         ?>
-
+                                        <li style="margin-top: 1%;"><a href="index.php?chose_page=membernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span> </h5></a></li>
+                                        <li class="pull-right" style="margin-top: 1%;">
                                         <div class="dropdown dropdownuser">
                                             <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span><?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
                                             <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -108,6 +119,7 @@ function getUserType() {
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
                                             </ul>
                                         </div>
+                                        </li>
                                     <?php } ?>
                                     <?php
                                     if ($row["type"] === "Owner") {
@@ -121,7 +133,8 @@ function getUserType() {
                                             return $noti;
                                         }
                                         ?>
-
+                                        <li style="margin-top: 1%;"><a href="index.php?chose_page=ownernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span> </h5></a></li>
+                                        <li class="pull-right" style="margin-top: 1%;">
                                         <div class="dropdown dropdownuser">
                                             <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
                                             <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -136,6 +149,7 @@ function getUserType() {
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
                                             </ul>
                                         </div>
+                                        </li>
                                         <?php
                                     }
                                 } else {
@@ -169,7 +183,7 @@ function getUserType() {
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
                                     </div><!-- /.modal -->
-<?php } ?>
+                                <?php } ?>
                             </li>
                         </ul>
                     </div>                

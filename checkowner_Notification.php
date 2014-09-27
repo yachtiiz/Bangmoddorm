@@ -101,7 +101,7 @@
                                                     echo '<td>' . $row["date"] . '</td>';
                                                     echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
                                                     echo '<td>' . $row[30] . '</td>';
-                                                    echo '<td><button type="button" class="btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+                                                    echo '<td><button type="button" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
                                                     echo '</tr>';
                                                     if ($row["owner_noti"] == "1") {
                                                         if (!readAble($row["bookingID"])) {
@@ -137,7 +137,9 @@
 
                                         $(document).on("click", ".viewdetail", function() {
                                             $(".modal-body-booking #bookid").html($(this).data('bookid'));
-                                            document.getElementById("submitbutton").setAttribute("value", $(this).data('bookid'));
+                                            document.getElementById("approvebutton").setAttribute("value", $(this).data('bookid'));
+                                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
+                                            document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
                                             $(".modal-body-booking #name").html($(this).data('name'));
                                             $(".modal-body-booking #date").html($(this).data('date'));
                                             $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -147,20 +149,21 @@
                                                 document.getElementById("slip").setAttribute("src", "/images/picture_slip/" + $(this).data('slip'));
                                             }
                                             if ($(this).data('status') === "Approve") {
-                                                document.getElementById("approve").setAttribute("selected", "");
+                                                document.getElementById("status").setAttribute("style", "color:#00cc33");
                                             }
                                             if ($(this).data('status') === "Checking") {
-                                                document.getElementById("checking").setAttribute("selected", "");
+                                                document.getElementById("status").setAttribute("style", "color:#0480be");
                                             }
                                             if ($(this).data('status') === "Canceled") {
-                                                document.getElementById("cancel").setAttribute("selected", "");
+                                                document.getElementById("status").setAttribute("style", "color:red");
                                             }
                                             if ($(this).data('status') === "Reject") {
-                                                document.getElementById("reject").setAttribute("selected", "");
+                                                document.getElementById("status").setAttribute("style", "color:red");
                                             }
                                             if ($(this).data('status') === "Waiting") {
-                                                document.getElementById("waiting").setAttribute("selected", "");
+                                                document.getElementById("status").setAttribute("style", "color:black");
                                             }
+                                            $(".modal-body-booking #status").html($(this).data('status'));
                                             $(".modal-body-booking #dormname").html($(this).data('dormname'));
                                             $(".modal-body-booking #room").html($(this).data('room'));
                                             $(".modal-body-booking #totalprice").html($(this).data('totalprice'));
@@ -195,24 +198,29 @@
                                                                 <img id="slip" style="width: 340px;height: 370px;" src="images/picture_evidence/evidance_9_LNERU" class="img-thumbnail">
                                                             </div>
                                                             <div class="col-md-7" style="margin-top: 0px">
-                                                                <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right">14</span></h5>
-                                                                <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>
-                                                                <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right">Myplace 2</span></h5>
-                                                                <h5 style="text-align: left">Room Type : <span id="room" class="pull-right">Superior</span></h5>
-                                                                <h5 style="text-align: left">Booking Status :<select class="form-control pull-right" id="book_status" style="width: 20%;height: 26px"><option id="approve">Approve</option><option id="checking">Checking</option><option id="waiting">Waiting</option><option id="cancel">Canceled</option><option id="reject">Reject</option></select></h5>
-                                                                <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right">2014-09-08 22:50:43</span></h5>
-                                                                <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right">2014-09-08 22:50:43</span></h5>
-                                                                <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Bath</span></h5>
+                                                                <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right"></span></h5>
+                                                                <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right"></span></h5>
+                                                                <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right"></span></h5>
+                                                                <h5 style="text-align: left">Room Type : <span id="room" class="pull-right"></span></h5>
+                                                                <h5 style="text-align: left">Booking Status :<span id="status" class="pull-right"></span></h5>
+                                                                <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right"></span></h5>
+                                                                <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right"></span></h5>
+                                                                <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00"></span></h5>
                                                                 <legend style="font-style: italic;text-align: right">Money Transfer Evidence</legend>
-                                                                <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername">นาย ยอช เอง</span></h5>
-                                                                <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
+                                                                <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername"></span></h5>
+                                                                <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime"></span></h5>
+                                                                <br>
+                                                                <h5 style="text-align: center">Change Status</h5>
+                                                                <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
+                                                                <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
+                                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Cancled By Member</button>
+                                                                <br><br>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn1 btn1-danger" data-dismiss="modal">Close</button>
-                                                        <button id="submitbutton" type="button" name="confirm" class="btn1 btn1-success">Change Status</button>
-                                                        <button id="linkbutton" type="button" class="btn1 btn1-primary" >Check Booking Page</button>
+                                                        <button type="button" class="btn1 btn1-default" data-dismiss="modal">Close</button>
+                                                        <button id="linkbutton" type="button" class="btn1 btn1-default" >Check Booking Page</button>
                                                     </div>
                                                     <script>
 
@@ -221,12 +229,32 @@
                                                             $("#linkbutton").on("click", function() {
                                                                 window.location = "index.php?chose_page=checkDormBooking&memberID=<?php echo $_SESSION["memberID"]; ?>";
                                                             });
-
-                                                            $("#submitbutton").on("click", function() {
+                                                                                                                        
+                                                            $("#approvebutton").on("click", function() {
                                                                 if (confirm("Confirm to Change Status ?")) {
-                                                                    change_url = "callback.php?change_booking_status=" + $("#book_status").val() + "&change_booking_id=" + $(this).val();
-                                                                    $("#submitbutton").load(change_url);
-                                                                    alert("Change Status Complete");
+                                                                    change_url = "callback.php?change_booking_status=Approve&change_booking_id=" + $(this).val();
+                                                                    $("#approvebutton").load(change_url);
+                                                                    event.preventDefault();
+                                                                    window.location = "index.php?chose_page=ownernotification";
+                                                                } else {
+                                                                    event.preventDefault();
+                                                                }
+                                                            });
+                                                            $("#rejectbutton").on("click", function() {
+                                                                if (confirm("Confirm to Change Status ?")) {
+                                                                    change_url = "callback.php?change_booking_status=Reject&change_booking_id=" + $(this).val();
+                                                                    $("#rejectbutton").load(change_url);
+                                                                    event.preventDefault();
+                                                                    window.location = "index.php?chose_page=ownernotification";
+                                                                } else {
+                                                                    event.preventDefault();
+                                                                }
+                                                            });
+                                                            $("#canceledbutton").on("click", function() {
+                                                                if (confirm("Confirm to Change Status ?")) {
+                                                                    change_url = "callback.php?change_booking_status=Canceled&change_booking_id=" + $(this).val();
+                                                                    $("#canceledbutton").load(change_url);
+                                                                    event.preventDefault();
                                                                     window.location = "index.php?chose_page=ownernotification";
                                                                 } else {
                                                                     event.preventDefault();
