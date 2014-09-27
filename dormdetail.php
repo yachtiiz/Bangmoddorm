@@ -25,7 +25,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
     <div class="row">
         <div class="span12">	
             <br /><br />
-            <h1><?php echo $dorm_row["dormName"] ?></h1>
+            <legend><h1><?php echo $dorm_row["dormName"] ?></h1></legend>
             <br>
             <div class="row">
                 <div class="span12">
@@ -45,71 +45,186 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
         </div>
     </div>
     <br><br>
+
     <div class="span12" style="margin-left:0px">
-        <h1><span>Dormitory</span> Facilities &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Rate &nbsp;<span style="color: gold">
-                <?php
-                for ($i = 1; $i <= $dorm_row["dormitory_rate"]; $i++) {
-                    echo '&#9733;';
-                } for ($i = $dorm_row["dormitory_rate"]; $i < 5; $i++) {
-                    echo '&#9734;';
-                }
-                ?></span></h1>
+        <legend><h1><span>Dormitory </span>Information</h1></legend>
+        <div class="span6 pull-left" >
+            <table style=" width: 90%;">
+                <tbody>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Type : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["type"] ?>
+                        </td>
+                    </tr>            
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Distance From University : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["disFromUni"] ?> KM.
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Contract length : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["contractLength"] ?> 6 Months
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px">
+                        <td>
+                            <h4><span>Address No : </span></h4>  
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["addressNo"] ?>
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Soi : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["soi"] ?>
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px">
+                        <td>
+                            <h4><span>Road : </span></h4> 
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["road"] ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="span5 pull-right" >   
+            <table style="width: 100%;">
+                <tbody>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Sub Distinct : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["subDistinct"] ?>
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Distinct : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["dorm_distinct"] ?>
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>City : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["province"] ?>
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Zipcode : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["zip"] ?>
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Email : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["email"] ?>
+                        </td>
+                    </tr>
+                    <tr style=" border-bottom: #cccccc solid 1px"> 
+                        <td>
+                            <h4><span>Telephone : </span></h4>
+                        </td>
+                        <td>
+                            <?php echo $dorm_row["tel"] ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <br><br><br>
+        </div>
+    </div>
+
+    <div class="span12" style="margin-left:0px">
+        <legend><h1><span>Dormitory</span> Facilities &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Rate &nbsp;<span style="color: gold">
+                    <?php
+                    for ($i = 1; $i <= $dorm_row["dormitory_rate"]; $i++) {
+                        echo '&#9733;';
+                    } for ($i = $dorm_row["dormitory_rate"]; $i < 5; $i++) {
+                        echo '&#9734;';
+                    }
+                    ?></span></h1></legend>
+        <br>
         <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
-            <tr>
+            <tr style="">
                 <td>
-                    <h3 style="margin-left:40px"><?php echo $fac_dorm_row["wifi"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WIFI<span class="flaticon-wifi3"></span> </h3>
+                    <h4 style="margin-left:40px"><?php echo $fac_dorm_row["wifi"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WIFI </h4>
                 </td>
                 <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["lan"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; LAN</h3> 
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["airCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; AIRCLEANSERVICE</h3>
-                </td>
-                <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["roomCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ROOMCLEANSERVICE</h3> 
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["lan"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; LAN</h4> 
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["washingService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WASHINGSERVICE</h3>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["airCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; AIRCLEANSERVICE</h4>
                 </td>
                 <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["busService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; BUSSERVICE</h3> 
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["fitness"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; FITNESS</h3>
-                </td>
-                <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["pool"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; POOL</h3> 
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["roomCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ROOMCLEANSERVICE</h4> 
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["restaurant"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; RESTAURANT <span class="glyph-icon flaticon-wifi3"></span></h3>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["washingService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WASHINGSERVICE</h4>
                 </td>
                 <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["vendingMachine"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; VENDINGMACHINE</h3> 
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["laundry"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; LAUNDRY</h3>
-                </td>
-                <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["elevator"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ELEVATOR</h3> 
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["busService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; BUSSERVICE</h4> 
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["cctv"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; CCTV</h3>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["fitness"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; FITNESS</h4>
                 </td>
                 <td>
-                    <h3 style="margin-left:40px"> <?php echo $fac_dorm_row["parking"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; PARKING</h3>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["pool"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; POOL</h4> 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["restaurant"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; RESTAURANT </h4>
+                </td>
+                <td>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["vendingMachine"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; VENDINGMACHINE</h4> 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["laundry"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; LAUNDRY</h4>
+                </td>
+                <td>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["elevator"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ELEVATOR</h4> 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["cctv"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; CCTV</h4>
+                </td>
+                <td>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["parking"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; PARKING</h4>
                 </td>
 
             </tr>
@@ -118,202 +233,204 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
 
     </div>
 
+    <div class="span12" style="margin-left:0px">
+        <table class="table table-condensed">
+            <thead>
+            <h1><span>Type </span>Of Rooms</h1>
+            </thead>
+            <?php while ($dorm_room_row = mysqli_fetch_array($dorm_room_result)) { ?>
+                <tr>
+                    <td><img style="width: 410px;height: 300px" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>" class="img-thumbnail"/></td>
+                    <td class="span5">
+                        <table>
+                            <thead>
+                            <th style="text-align:center">
+                            <h3> <?php echo $dorm_room_row["roomType"] ?></h3>
+                            </th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Areas : 
+                                    </td>
+                                    <td>
+                                        <?php echo $dorm_room_row["areas"]; ?> SQ.M.    
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Price :  
+                                    </td>
+                                    <td>
+                                        <?php echo $dorm_room_row["price"]; ?> BATH/MONTH 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Number of Rooms : 
+                                    </td>
+                                    <td>
+                                        <?php echo $dorm_room_row["numOfRoom"]; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="color: green">Room Available : </span>
+                                    </td>
+                                    <td>
+                                        <span style="color: green"><?php echo $dorm_room_row["roomAvailable"] ?></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
 
-    <hr>
+                        </table>
 
-    <table class="table table-condensed">
-        <thead>
-        <h1><span>Type </span>Of Rooms</h1>
-    </thead>
-    <?php while ($dorm_room_row = mysqli_fetch_array($dorm_room_result)) { ?>
-        <tr>
-            <td><img style="width: 410px;height: 300px" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>" class="img-thumbnail"/></td>
-            <td class="span5">
-                <table>
-                    <thead>
-                    <th style="text-align:center">
-                    <h3> <?php echo $dorm_room_row["roomType"] ?></h3>
-                    </th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Areas : 
-                            </td>
-                            <td>
-                                <?php echo $dorm_room_row["areas"]; ?> SQ.M.    
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Price :  
-                            </td>
-                            <td>
-                                <?php echo $dorm_room_row["price"]; ?> BATH/MONTH 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Number of Rooms : 
-                            </td>
-                            <td>
-                                <?php echo $dorm_room_row["numOfRoom"]; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span style="color: green">Room Available : </span>
-                            </td>
-                            <td>
-                                <span style="color: green"><?php echo $dorm_room_row["roomAvailable"] ?></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        <br>
+                        <!-- Button trigger modal -->
+                        <button class="btn1 btn1-primary" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: -10px; margin-top: 40px; width: 40% ">
+                            Detail
+                        </button>
+                        <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button><br><br>
 
-                </table>
-                <br>
-                <!-- Button trigger modal -->
-                <button class="btn1 btn1-primary" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: -10px; margin-top: 40px; width: 40% ">
-                    Detail
-                </button>
-                <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button><br><br>
+                                                                                                                                <!--<button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
+                                                                                                                                <button class="btn btn-primary btn-lg book-now" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: 50px; ">
+                                                                                                                                    Detail
+                                                                                                                                </button>-->
+                        <br><br>
 
-                                                                                                <!--<button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
-                                                                                                <button class="btn btn-primary btn-lg book-now" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: 50px; ">
-                                                                                                    Detail
-                                                                                                </button>-->
-                <br><br>
-                <script>
 
-                    $(document).on("click", "#booking<?php echo $dorm_room_row["roomType"] ?>", function() {
-                        event.preventDefault;
-                        $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
-                    });
+                        <script>
 
-                </script>
-                <!-- Modal -->
-                <div class="modal fade" id="room<?php echo $dorm_room_row["roomID"]; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel"><?php echo $dorm_room_row["roomType"] ?></h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="span12">
-                                        <img class="img-thumbnail" style="margin-left: 50px;width: 80%" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>"/>
+                            $(document).on("click", "#booking<?php echo $dorm_room_row["roomType"] ?>", function() {
+                                event.preventDefault;
+                                $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                            });
+
+                        </script>
+                        <!-- Modal -->
+                        <div class="modal fade" id="room<?php echo $dorm_room_row["roomID"]; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel"><?php echo $dorm_room_row["roomType"] ?></h4>
                                     </div>
-                                    <?php
-                                    $room_id = $dorm_room_row["roomID"];
-                                    $room_pic_query = "select * from RoomPic where roomID = $room_id";
-                                    $room_pic_result = mysqli_query($con, $room_pic_query);
-                                    while ($room_pic_row = mysqli_fetch_array($room_pic_result)) {
-                                        ?>
-                                        <div class="span5">
-                                            <br><br>
-                                            <img class="img-thumbnail" style="width:350px;height: 250px;margin-left: 50px"src="images/room_pictures/<?php echo $room_pic_row["roomPicPath"] ?>"/>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="span12">
+                                                <img class="img-thumbnail" style="margin-left: 50px;width: 80%" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>"/>
+                                            </div>
+                                            <?php
+                                            $room_id = $dorm_room_row["roomID"];
+                                            $room_pic_query = "select * from RoomPic where roomID = $room_id";
+                                            $room_pic_result = mysqli_query($con, $room_pic_query);
+                                            while ($room_pic_row = mysqli_fetch_array($room_pic_result)) {
+                                                ?>
+                                                <div class="span5">
+                                                    <br><br>
+                                                    <img class="img-thumbnail" style="width:350px;height: 250px;margin-left: 50px"src="images/room_pictures/<?php echo $room_pic_row["roomPicPath"] ?>"/>
+                                                </div>
+                                            <?php } ?>
+
+                                            <div style="margin-left: 70px;margin-top:30px" class="span10">
+
+                                                <?php
+                                                $fac_room = "select * from FacilitiesInRoom where roomID = $room_id";
+                                                $fac_room_result = mysqli_query($con, $fac_room);
+                                                $fac_room_row = mysqli_fetch_array($fac_room_result);
+                                                ?>
+                                                <h3><span>Facilities</span> in room</h3>
+                                                <div class="col-md-12" style="padding-left:0px">
+                                                    <table class="table table-striped">
+                                                        <tr>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["air"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Air Condition</h4>
+                                                            </td>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["wardrobe"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Wardrobe</h4> 
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["refrigerator"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Refrigerator</h4>
+                                                            </td>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["table_fac"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Table</h4> 
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["chair"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Chair</h4>
+                                                            </td>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["fan"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Fan</h4> 
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["waterHeater"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Water Heater</h4>
+                                                            </td>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["bed"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Bed</h4> 
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["mattress"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Mattress</h4>
+                                                            </td>
+                                                            <td>
+                                                                <h4 style="text-align:left"> <?php echo $fac_room_row["television"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Television</h4> 
+                                                            </td>
+                                                        </tr>
+
+
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-6" style="padding-left:0px;margin-top:30px">
+                                                    <div class="pull-left strong">Areas of room : <?php echo $dorm_room_row["areas"] ?> SQM.</div>
+                                                </div>
+                                                <div class="col-md-6" style="padding-left:0px;margin-top:30px">
+                                                    <div class="pull-left strong" style="color:green">Number Room Available : <?php echo $dorm_room_row["roomAvailable"]; ?></div>
+                                                </div>
+                                                <div class="pull-right"><h3>Price <?php echo $dorm_room_row["price"] ?> Bath/Month</h3></div>
+
+
+
+
+
+                                            </div>
                                         </div>
-                                    <?php } ?>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width:30%">Close</button>
+                                            <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width:30%">Booking</button>
 
-                                    <div style="margin-left: 70px;margin-top:30px" class="span10">
-
-                                        <?php
-                                        $fac_room = "select * from FacilitiesInRoom where roomID = $room_id";
-                                        $fac_room_result = mysqli_query($con, $fac_room);
-                                        $fac_room_row = mysqli_fetch_array($fac_room_result);
-                                        ?>
-                                        <h3><span>Facilities</span> in room</h3>
-                                        <div class="col-md-12" style="padding-left:0px">
-                                            <table class="table table-striped">
-                                                <tr>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["air"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Air Condition</h4>
-                                                    </td>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["wardrobe"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Wardrobe</h4> 
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["refrigerator"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Refrigerator</h4>
-                                                    </td>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["table_fac"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Table</h4> 
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["chair"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Chair</h4>
-                                                    </td>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["fan"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Fan</h4> 
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["waterHeater"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Water Heater</h4>
-                                                    </td>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["bed"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Bed</h4> 
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["mattress"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Mattress</h4>
-                                                    </td>
-                                                    <td>
-                                                        <h4 style="text-align:left"> <?php echo $fac_room_row["television"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; Television</h4> 
-                                                    </td>
-                                                </tr>
-
-
-                                            </table>
+                                            <!--<button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
+                                            <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now">Booking</button>-->
+                                            <script>
+                                                $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomType"] ?>", function() {
+                                                    event.preventDefault;
+                                                    $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                                                });
+                                            </script>
                                         </div>
-                                        <div class="col-md-6" style="padding-left:0px;margin-top:30px">
-                                            <div class="pull-left strong">Areas of room : <?php echo $dorm_room_row["areas"] ?> SQM.</div>
-                                        </div>
-                                        <div class="col-md-6" style="padding-left:0px;margin-top:30px">
-                                            <div class="pull-left strong" style="color:green">Number Room Available : <?php echo $dorm_room_row["roomAvailable"]; ?></div>
-                                        </div>
-                                        <div class="pull-right"><h3>Price <?php echo $dorm_room_row["price"] ?> Bath/Month</h3></div>
-
-
-
-
-
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width:30%">Close</button>
-                                    <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width:30%">Booking</button>
-
-                                    <!--<button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
-                                    <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now">Booking</button>-->
-                                    <script>
-                                        $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomType"] ?>", function() {
-                                            event.preventDefault;
-                                            $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
-                                        });
-                                    </script>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-            </td>
-        </tr>
-    <?php } ?>
+                    </td>
+                </tr>
+            <?php } ?>
 
-    </table>
-    <legend><h1><span>Dormitory </span>Information</h1></legend>
-    <p><h3><span>Distance From University : </span> 5 Kilometers<br><span> Address No :</span> 81/72 <br> <span>Road :</span> Pracha Uthid <br><span> Soi : </span>Paracha Uthid 45</h3></p>
-    <br>
-    <legend><h1><span>Map</span>Direction</h1></legend>
-    <iframe width="950" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps?f=d&amp;source=s_d&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.651124,100.487630&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m&amp;output=embed"></iframe><br /><small>View <a href="https://www.google.com/maps?f=d&amp;source=embed&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.648036,100.498716&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m" style="color:#0000FF;text-align:left">Map Project</a> in a larger map</small>
-    <br><br>
+        </table>
+    </div>
+
+    <div class="span12" style="margin-left:0px">
+        <legend><h1><span>Map</span>Direction</h1></legend>
+        <iframe width="950" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps?f=d&amp;source=s_d&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.651124,100.487630&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m&amp;output=embed"></iframe><br /><small>View <a href="https://www.google.com/maps?f=d&amp;source=embed&amp;saddr=%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B9%80%E0%B8%97%E0%B8%84%E0%B9%82%E0%B8%99%E0%B9%82%E0%B8%A5%E0%B8%A2%E0%B8%B5%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%88%E0%B8%AD%E0%B8%A1%E0%B9%80%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%B2%E0%B8%98%E0%B8%99%E0%B8%9A%E0%B8%B8%E0%B8%A3%E0%B8%B5+Pracha+Uthit+Rd,+Bang+Mot,+Thung+Khru,+Bangkok,+Thailand&amp;daddr=%E0%B8%AB%E0%B8%AD%E0%B8%9E%E0%B8%B1%E0%B8%81%E0%B8%8A%E0%B8%B2%E0%B8%A2+%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%9E%E0%B8%A5%E0%B8%AA+2+%4013.648036,100.498716&amp;geocode=FZ9R0AAdMGr9BSHQMQs9swABDylx4AKOUaLiMDHQMQs9swABDw%3BFaRA0AAdHH39BQ&amp;aq=0&amp;oq=%E0%B8%A1%E0%B8%AB%E0%B8%B2&amp;sll=13.649438,100.497823&amp;sspn=0.006683,0.009645&amp;hl=en&amp;mra=ls&amp;ie=UTF8&amp;ll=13.649438,100.497823&amp;spn=0.00348,0.003072&amp;t=m" style="color:#0000FF;text-align:left">Map Project</a> in a larger map</small>
+        <br><br>
+    </div>
     <div class="span12" style="margin-left:0px">
         <?php
 
@@ -349,7 +466,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
         $rate = getRating($dormID);
         ?>
         <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
-            <h1><span>Review </span> And Comment <span id="show_rating" class="pull-right"><h4 style="font-style:italic">Review Rate : <span style="color:gold"><?php echo calStar($rate[0]) ?> </span><br><small class="pull-right">from <?php echo $rate[1] ?> Reviews</small></h4></span></h1>
+            <legend><h1><span>Review </span> And Comment <span id="show_rating" class="pull-right"><h4 style="font-style:italic">Review Rate : <span style="color:gold"><?php echo calStar($rate[0]) ?> </span><br><small class="pull-right">from <?php echo $rate[1] ?> Reviews</small></h4></span></h1></legend>
             <br>
             <tbody id="comment_table">
                 <?php
