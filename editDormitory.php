@@ -41,12 +41,10 @@
                 latitude: {
                     required: true,
                     checkSpecial: true,
-                    number:true
                 },
                 longitude: {
                     required: true,
                     checkSpecial: true,
-                    number:true
                 },
                 displayname: {
                     required: true,
@@ -54,7 +52,6 @@
                 },
                 email: {
                     required: true,
-                    checkSpecial: true,
                     email:true
                 },
                 tel: {

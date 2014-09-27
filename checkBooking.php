@@ -265,7 +265,17 @@
                                     <span class="input-group-addon">Search By Booking Date</span>
                                     <input id="sort_chosendate" type="date" class="form-control" placeholder="Username">
                                 </div>
-                                <select id="search_status" class="form-control" style="width:20%;margin-left:20%">
+                                
+                            </div>
+                            <div class="span12">
+                                <div class="col-md-5" style="padding: 0px">
+                                    <div class="input-group" style="width:100%">
+                                        <span class="input-group-addon">Search Booking</span>
+                                        <input id="searching" class="form-control" type="text">
+                                    </div>
+                                </div>
+                                <div class="col-md-3" style="">
+                                <select id="search_status" class="form-control" style="width:100%;margin-left:20%">
                                     <option id="status_default" value="default">Search By Status</option>
                                     <option value="Approve">Approve</option>
                                     <option value="Checking">Checking</option>
@@ -273,13 +283,6 @@
                                     <option value="Canceled">Canceled</option>
                                     <option value="Reject">Reject</option>
                                 </select>
-                            </div>
-                            <div class="span12">
-                                <div class="col-md-7" style="padding: 0px">
-                                    <div class="input-group" style="width:100%">
-                                        <span class="input-group-addon">Search Booking</span>
-                                        <input id="searching" class="form-control" type="text">
-                                    </div>
                                 </div>
                                 <div class="col-md-3 pull-right" style="margin-left:20px">
                                     <select id="book_order" class="form-control pull-right" style="width:100%">
@@ -287,6 +290,8 @@
                                         <option value="booking_status">Sort By Status</option>
                                     </select>
                                 </div>
+                            </div>
+                            <div class="span12">
                                 <div class="col-md-2 radio">
                                     <label>
                                         <input id="all_type" name="search_only" type="radio" checked> All Type
