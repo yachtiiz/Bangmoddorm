@@ -66,7 +66,7 @@ function getUserType() {
                 <div class="container">
                     <div class="nav-collapse">
                         <ul class="nav nav-pills" style="padding-left: 0px;padding-right:100px;width:100%;height: 10%;">
-                            <li style="margin-left: -3%;"><img src="images/logo2.png" style="width: 50%"></li>
+                            <li style="margin-left: -3%;"><img src="images/logo3.png" style="width: 70% ; margin-top: -9%"></li>
                             <li style="margin-top: 1%;margin-left: -3%"><a href="index.php"><h5>Home</h5></a></li>
                             <li style="margin-top: 1%;"><a href="index.php?chose_page=dormitory"><h5>Dormitory</h5></a></li>
                             <!--<li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>-->
