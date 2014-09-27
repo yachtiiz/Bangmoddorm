@@ -16,6 +16,10 @@
                 $("#show_book_page").html("");
             }
             else {
+                document.getElementById("status_default").setAttribute("selected", " ");
+                document.getElementById("sort_default").setAttribute("selected", " ");
+                $("#show_status_page").html("");
+                $("#show_sort_page").html("");
                 $("#show_result").animate({
                     opacity: 0
                 }, 100, function() {
@@ -62,6 +66,10 @@
             if ($("#select_dorm").val() !== "default") {
                 url = "callback.php?showbook_dormID=" + $("#select_dorm").val() + "&dormbook_order=" + $(this).val() + "&dormbook_showpage=1";
                 cur_page = "callback.php?showpage_dormID=" + $("#select_dorm").val() + "&dormbook_page=1";
+                $("#show_status_page").html("");
+                $("#show_sort_page").html("");
+                $("#sort_chosendate").removeAttr("value");
+                document.getElementById("status_default").setAttribute("selected", " ");
                 $("#show_result").animate({
                     opacity: 0
                 }, 100, function() {
@@ -74,7 +82,7 @@
                 $("#show_book_page").animate({
                     opacity: 0
                 }, 100, function() {
-                    $("#show_book_page").load(show_page, function() {
+                    $("#show_book_page").load(cur_page, function() {
                         $("#show_book_page").animate({
                             opacity: 1
                         }, 200);
@@ -91,6 +99,11 @@
             if ($("#select_dorm").val() !== "default") {
                 event.preventDefault();
                 $("#show_book_page").html("");
+                $("#show_sort_page").html("");
+                $("#show_status_page").html("");
+                $("#sort_chosendate").removeAttr("value");
+                document.getElementById("status_default").setAttribute("selected", " ");
+                document.getElementById("sort_default").setAttribute("selected", " ");
                 url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $(this).val().replace(/ /g, "+");
                 if ($("#only_bookid").attr("checked")) {
                     special_url = url + "&search_only=bookingID";
@@ -138,10 +151,81 @@
 
         $("#sort_chosendate").live("change", function() {
             if ($("#select_dorm").val() !== "default") {
+                $("#show_book_page").html("");
+                $("#show_status_page").html("");
+                document.getElementById("sort_default").setAttribute("selected", " ");
+                document.getElementById("status_default").setAttribute("selected", " ");
                 url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $(this).val() + "&search_only=date";
+                cur_page = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&search_date=" + $(this).val() + "&search_date_page=1";
                 $("#show_result").load(url);
+                $("#show_sort_page").load(cur_page);
             }
         });
+
+        $(".page_sort_date li a").live("click", function() {
+            event.preventDefault();
+            url = $(this).attr("href") + "&dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#sort_chosendate").val() + "&search_only=date";
+            cur_page = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&search_date=" + $("#sort_chosendate").val() + "&search_date_page=" + $(this).attr("value");
+            $("#show_sort_page").load(cur_page);
+            $("#show_result").animate({
+                opacity: 0
+            }, 100, function() {
+                $("#show_result").load(url, function() {
+                    $("#show_result").animate({
+                        opacity: 1
+                    }, 200);
+                });
+            });
+        });
+
+        $("#search_status").on("change", function() {
+            if ($('#select_dorm').val() !== "default") {
+                if ($("#search_status").val() !== "default") {
+                    status = $("#search_status").val();
+                    url = "callback.php?dormbookID=" + $("#select_dorm").val() + "&search_by_status=" + $(this).val();
+                    searchpage = "callback.php?search_by_status=" + $(this).val() + "&search_status_page=1" + "&dormID=" + $("#select_dorm").val();
+                    $("#show_book_page").html("");
+                    $("#show_sort_page").html("");
+                    $("#sort_chosendate").removeAttr("value");
+                    document.getElementById("sort_default").setAttribute("selected", " ");
+                    $("#show_result").animate({
+                        opacity: 0
+                    }, 100, function() {
+                        $("#show_result").load(url, function() {
+                            $("#show_result").animate({
+                                opacity: 1
+                            }, 200);
+                        });
+                    });
+                    $("#show_status_page").animate({
+                        opacity: 0
+                    }, 100, function() {
+                        $("#show_status_page").load(searchpage, function() {
+                            $("#show_status_page").animate({
+                                opacity: 1
+                            }, 200);
+                        });
+                    });
+                }
+            }
+        });
+
+        $(".page_status li a").live("click", function() {
+            event.preventDefault();
+            url = $(this).attr("href") + "&dormbookID=" + $("#select_dorm").val() + "&search_by_status=" + $("#search_status").val();
+            cur_page = "callback.php?search_by_status=" + $("#search_status").val() + "&search_status_page=" + $(this).attr("value") + "&dormID=" + $("#select_dorm").val();
+            $("#show_status_page").load(cur_page);
+            $("#show_result").animate({
+                opacity: 0
+            }, 100, function() {
+                $("#show_result").load(url, function() {
+                    $("#show_result").animate({
+                        opacity: 1
+                    }, 200);
+                });
+            });
+        });
+
 
     });
 
@@ -181,13 +265,13 @@
                                     <span class="input-group-addon">Search By Booking Date</span>
                                     <input id="sort_chosendate" type="date" class="form-control" placeholder="Username">
                                 </div>
-                                <select class="form-control" style="width:20%;margin-left:20%">
-                                    <option>Search By Status</option>
-                                    <option>Approve</option>
-                                    <option>Checking</option>
-                                    <option>Waiting</option>
-                                    <option>Canceled</option>
-                                    <option>Reject</option>
+                                <select id="search_status" class="form-control" style="width:20%;margin-left:20%">
+                                    <option id="status_default" value="default">Search By Status</option>
+                                    <option value="Approve">Approve</option>
+                                    <option value="Checking">Checking</option>
+                                    <option value="Waiting">Waiting</option>
+                                    <option value="Canceled">Canceled</option>
+                                    <option value="Reject">Reject</option>
                                 </select>
                             </div>
                             <div class="span12">
@@ -199,7 +283,7 @@
                                 </div>
                                 <div class="col-md-3 pull-right" style="margin-left:20px">
                                     <select id="book_order" class="form-control pull-right" style="width:100%">
-                                        <option value="date%20desc">Sort By Date</option>
+                                        <option id="sort_default" value="date%20desc">Sort By Date</option>
                                         <option value="booking_status">Sort By Status</option>
                                     </select>
                                 </div>
@@ -256,6 +340,13 @@
                                 <ul id="show_book_page" class="page_book pagination pull-right" style="margin-top: 0px">
 
                                 </ul>
+                                <ul id="show_status_page" class="page_status pagination pull-right" style="margin-top: 0px">
+
+                                </ul>
+                                <ul id="show_sort_page" class="page_sort_date pagination pull-right" style="margin-top: 0px">
+
+                                </ul>
+
                             </div>
                             <a href="index.php?chose_page=ownersystem" class="btn1 btn1-danger" style="margin-left: 20px;margin-top: 30px; width: 30%">Back</a>
                         </div>

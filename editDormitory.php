@@ -767,7 +767,7 @@
                                 <div class="span10">
                                     <br>
                                     <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
-                                    <button tpye="button" id="<?php echo $row["status"] === "Active" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Active" ? "Hidden On Page" : "Showing On Page"; ?></button>
+                                    <button type="button" id="<?php echo $row["status"] === "Active" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Active" ? "Hidden On Page" : "Showing On Page"; ?></button>
                                     <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
                                     <br><br>
                                 </div>
@@ -780,9 +780,6 @@
                                     });
                                     $(document).on("click", "#active_button", function() {
                                         $("#active_button").load("callback.php?showing_dorm=" + "<?php echo $row["dormID"]; ?>");
-                                        document.getElementById("active_button").setAttribute("id", "disabled_button");
-                                        alert("Your Dormitory Information be Shown on Dormitory Page");
-
                                     });
 
 

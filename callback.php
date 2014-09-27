@@ -159,10 +159,26 @@ if (isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])) {
 
 // Showing and Not Showing Dormitory
 
+function checkingRoom($dormID){
+    
+    require 'connection.php';
+    $query = "select * from rooms where dormID = $dormID";
+    $result = mysqli_query($con, $query);
+    if(mysqli_num_rows($result) !== 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 function showing_dorm($dormID, $status) {
 
     require 'connection.php';
-
+    if($status === "Active"){
+        if(!checkingRoom($dormID)){
+           return false;
+        }
+    }
     $query = "update Dormitories set status = '$status' where dormID = $dormID ";
     if (mysqli_query($con, $query)) {
         return true;
@@ -173,7 +189,9 @@ function showing_dorm($dormID, $status) {
 
 if (isset($_GET["showing_dorm"]) && is_numeric($_GET["showing_dorm"])) {
     if (showing_dorm($_GET["showing_dorm"], 'Active')) {
-        echo 'Hidden On Page';
+        echo 'Hidden On Page<script>alert("Your Dormitory is now showing on page."); document.getElementById("active_button").setAttribute("id", "disabled_button");</script>';
+    }else{
+        echo 'Showing On Page<script>alert("Empty room type. Please add room before showing on page.");</script>';
     }
 }
 if (isset($_GET["disabled_dorm"]) && is_numeric($_GET["disabled_dorm"])) {
@@ -424,6 +442,36 @@ if (isset($_GET["dormbook_page"]) && isset($_GET["showpage_dormID"])) {
 
 //SPLIT PAGE METHOD ..
 
+function displayCommentPage($cur_page, $query, $href) {
+
+    require 'connection.php';
+
+    $result = mysqli_query($con, $query);
+
+    if (mysqli_num_rows($result) !== 0) {
+        $total_page = ceil(mysqli_num_rows($result) / 4);
+    } else {
+        $total_page = 1;
+    }
+    if ($cur_page == 1) {
+        $prev_page = 1;
+    } else {
+        $prev_page = $cur_page - 1;
+    }
+    if ($cur_page == $total_page) {
+        $next_page = $cur_page;
+    } else {
+        $next_page = $cur_page + 1;
+    }
+
+    echo '<li><a value=' . $prev_page . ' href="' . $href . $prev_page . '">&laquo;</a></li>';
+    for ($i = 1; $i <= $total_page; $i++) {
+        $class = ($cur_page == $i ? "class = 'active'" : "");
+        echo '<li ' . $class . '><a value=' . $i . ' href="' . $href . $i . '">' . $i . '</a></li>';
+    }
+    echo '<li><a value=' . $next_page . ' href="' . $href . $next_page . '">&raquo;</a></li>';
+}
+
 function displayPage($cur_page, $query, $href) {
 
     require 'connection.php';
@@ -623,6 +671,11 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
     $dorm_id = $_GET["dormbook_id"];
     if ($_GET["booking_searching"] !== "") {
         if (isset($_GET["search_only"])) {
+            $page = 1;
+            if (isset($_GET["search_date_page"])) {
+                $page = $_GET["search_date_page"];
+            }
+            $limit_start = ((8 * $page) - 8);
             $type = "like";
             if ($_GET["search_only"] === "bookingID") {
                 $type = "=";
@@ -631,7 +684,7 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
                 $search_value = "%" . $search_value . "%";
             }
             $booksearch_only = $_GET["search_only"];
-            $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dorm_id and $booksearch_only $type '$search_value' order by date desc limit 0 , 8";
+            $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dorm_id and $booksearch_only $type '$search_value' order by date desc limit $limit_start , 8";
             searchingBook($query);
         } else {
             $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dorm_id and (bookingID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%' or firstName like '%$search_value%' or lastName like '%$search_value%') order by date desc limit 0 , 8 ";
@@ -640,6 +693,38 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
     } else {
         getBookingDorm(1, "date desc", $dorm_id);
     }
+}
+
+if (isset($_GET["dormbookID"]) && is_numeric($_GET["dormbookID"]) && isset($_GET["search_by_status"])) {
+
+    $dormID = $_GET["dormbookID"];
+    $status = $_GET["search_by_status"];
+    $page = 1;
+    if (isset($_GET["search_status_page"])) {
+        $page = $_GET["search_status_page"];
+    }
+    $limit_start = ((8 * $page) - 8);
+    $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID and booking_status='$status' order by date desc limit $limit_start , 8";
+    searchingBook($query);
+}
+
+if (isset($_GET["search_status_page"]) && is_numeric($_GET["search_status_page"]) && isset($_GET["search_by_status"]) && isset($_GET["dormID"])) {
+    $dormID = $_GET["dormID"];
+    $status = $_GET["search_by_status"];
+    $cur_page = $_GET["search_status_page"];
+    $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID and booking_status = '$status'";
+    $href = 'callback.php?search_status_page=';
+    displayPage($cur_page, $query, $href);
+}
+
+if (isset($_GET["dormbook_id"]) && isset($_GET["search_date"]) && isset($_GET["search_date_page"])) {
+
+    $dormID = $_GET["dormbook_id"];
+    $search_date = $_GET["search_date"];
+    $cur_page = $_GET["search_date_page"];
+    $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID and date like '%$search_date%'";
+    $href = "callback.php?search_date_page=";
+    displayPage($cur_page, $query, $href);
 }
 
 //Incoming Display Member Booking Page
@@ -1145,29 +1230,7 @@ if (isset($_GET["comment_value"]) && isset($_GET["comment_dormID"]) && isset($_G
         $dormID = $_GET["comment_dormID"];
         $rate = $_GET["comment_rate"];
         if (commentDorm($dormID, $memberID, $detail, $rate)) {
-            require 'connection.php';
-            $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID";
-            $result = mysqli_query($con, $query);
-            while ($row = mysqli_fetch_array($result)) {
-                $star = "";
-                $date = substr(date("r", strtotime($row["date"])), 0, 25);
-
-                for ($i = 1; $i <= $row["rating"]; $i++) {
-                    $star = $star . "&#9733;";
-                }
-                for ($i = 1; $i <= 5 - $row["rating"]; $i++) {
-                    $star = $star . "&#9734;";
-                }
-
-                echo '<tr>';
-                echo '<td colspan="2">';
-                echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
-                echo '<p class="pull-left">' . $date . '</p>';
-                echo '<p class="pull-left" style="color:gold">' . $star . '</p>';
-                echo '</td>';
-                echo '<td colspan="10" style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
-                echo '</tr>';
-            }
+            getComment($dormID, 1);
         } else {
             echo '<script>alert("Cannot Comment This");</script>';
         }
@@ -1253,7 +1316,7 @@ function getAllNotification($cur_page, $order_by) {
     if ($order_by === "date") {
         $order_by = "date desc";
     }
-    if ($order_by === "booking_status"){
+    if ($order_by === "booking_status") {
         $order_by = "booking_status = 'Checking' desc";
     }
     $limit_start = ((8 * $cur_page) - 8);
@@ -1320,7 +1383,6 @@ function getAllNotification($cur_page, $order_by) {
 if (isset($_GET["ownernoti_orderby"]) && isset($_GET["ownernoti_curpage"])) {
     $order_by = filter_var($_GET["ownernoti_orderby"]);
     getAllNotification($_GET["ownernoti_curpage"], $order_by);
-    
 }
 
 if (isset($_GET["owner_noti_curpage"]) && is_numeric($_GET["owner_noti_curpage"])) {
@@ -1332,39 +1394,136 @@ if (isset($_GET["owner_noti_curpage"]) && is_numeric($_GET["owner_noti_curpage"]
 }
 
 // Change Password AJAX
-function change_password($oldpass,$newpass){
-    
+function change_password($oldpass, $newpass) {
+
     require 'connection.php';
     $change_pass = false;
     $memberID = $_SESSION["memberID"];
     $query = "select password from members where memberID = $memberID";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
-    if($row !== NULL && $row[0] === md5($oldpass)){
+    if ($row !== NULL && $row[0] === md5($oldpass)) {
         $newpass = md5($newpass);
         $update_query = "update members set password = '$newpass' where memberID = $memberID";
-        if(mysqli_query($con, $update_query)){
+        if (mysqli_query($con, $update_query)) {
             $change_pass = true;
         }
     }
     return $change_pass;
 }
 
-if(isset($_POST["change_pass"]) && isset($_POST["oldpass"]) && isset($_POST["newpass"]) && isset($_POST["confirm_newpass"])){
-    
-    $oldpass = filter_var($_POST["oldpass"],FILTER_SANITIZE_STRING);
-    $newpass = filter_var($_POST["newpass"],FILTER_SANITIZE_STRING);
-    $confirm_newpass = filter_var($_POST["confirm_newpass"],FILTER_SANITIZE_STRING);
-    
-    if($confirm_newpass === $newpass){
-        if(change_password($oldpass, $newpass)){
+if (isset($_POST["change_pass"]) && isset($_POST["oldpass"]) && isset($_POST["newpass"]) && isset($_POST["confirm_newpass"])) {
+
+    $oldpass = filter_var($_POST["oldpass"], FILTER_SANITIZE_STRING);
+    $newpass = filter_var($_POST["newpass"], FILTER_SANITIZE_STRING);
+    $confirm_newpass = filter_var($_POST["confirm_newpass"], FILTER_SANITIZE_STRING);
+
+    if ($confirm_newpass === $newpass) {
+        if (change_password($oldpass, $newpass)) {
             echo 'Change Password Success';
-        }else{
+        } else {
             echo 'Change Password Failed';
         }
     }
-    
-    
+}
+
+//Get Comment Page
+
+function getComment($dormID, $page) {
+    require 'connection.php';
+
+    $limit_start = ((4 * $page ) - 4);
+    $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID order by date desc limit $limit_start , 4";
+    $result = mysqli_query($con, $query);
+    while ($row = mysqli_fetch_array($result)) {
+        $star = "";
+        $date = substr(date("r", strtotime($row["date"])), 0, 25);
+
+        for ($i = 1; $i <= $row["rating"]; $i++) {
+            $star = $star . "&#9733;";
+        }
+        for ($i = 1; $i <= 5 - $row["rating"]; $i++) {
+            $star = $star . "&#9734;";
+        }
+
+        echo '<tr>';
+        echo '<td style="width:300px">';
+        echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
+        echo '<p class="pull-left">' . $date . '<br>Give Rate :<span class="pull-right" style="color:gold">' . $star . '</span></p>';
+        echo '';
+        echo '</td>';
+        echo '<td style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
+        echo '</tr>';
+    }
+    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 4) {
+        for ($i = mysqli_num_rows($result); $i < 4; $i++) {
+            echo '<tr>';
+            echo '<td colspan="2" style="height:121px"></td>';
+            echo '</tr>';
+        }
+    }
+    if (mysqli_num_rows($result) === 0) {
+        echo '<tr>';
+        echo '<td colspan="2" style="height:121px"> No Comment</td>';
+        echo '</tr>';
+        for ($i = 1; $i < 4; $i++) {
+            echo '<tr>';
+            echo '<td colspan="2" style="height:121px"></td>';
+            echo '</tr>';
+        }
+    }
+}
+
+function getRating($dormID) {
+
+    require 'connection.php';
+    $query = "select rating from comment where dormID = $dormID";
+    $result = mysqli_query($con, $query);
+    $allcomment = mysqli_num_rows($result);
+    $allrate = 0;
+    $rating = 0;
+    while ($row = mysqli_fetch_array($result)) {
+        $allrate = $allrate + $row[0];
+    }
+    if($allcomment !==0){
+    $rating = $allrate / $allcomment;
+    }
+    return $rate = array($rating, $allcomment);
+}
+
+function calStar($number) {
+    $star = "";
+    $number = ceil($number);
+    for ($i = 1; $i <= $number; $i++) {
+        $star = $star . "&#9733;";
+    }
+    for ($i = 1; $i <= 5 - $number; $i++) {
+        $star = $star . "&#9734;";
+    }
+    return $star;
+}
+
+if (isset($_GET["comment_page"]) && isset($_GET["comment_dormID"])) {
+    if (is_numeric($_GET["comment_page"]) && is_numeric($_GET["comment_dormID"])) {
+        $dormID = $_GET["comment_dormID"];
+        $page = $_GET["comment_page"];
+        getComment($dormID, $page);
+    }
+}
+
+if (isset($_GET["request_comment_page"]) && is_numeric($_GET["request_comment_page"]) && isset($_GET["request_comment_dormID"]) && is_numeric($_GET["request_comment_dormID"])) {
+    $dormID = $_GET["request_comment_dormID"];
+    $page_query = "select * from comment where dormID = $dormID";
+    $cur_page = $_GET["request_comment_page"];
+    $page_href = "callback.php?comment_page=";
+    displayCommentPage($cur_page, $page_query, $page_href);
+}
+
+if (isset($_GET["comment_rating"]) && is_numeric($_GET["comment_rating"])) {
+    $dormID = $_GET["comment_rating"];
+    $rate = getRating($dormID);
+    $star = calStar($rate[0]);
+    echo '<h4 style="font-style:italic">Review Rate : <span style="color:gold">' . $star . ' </span><br><small class="pull-right">from ' . $rate[1] . ' Reviews</small></h4>';
 }
 ?>
 
