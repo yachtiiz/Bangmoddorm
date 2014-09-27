@@ -1,235 +1,6 @@
 
 
-<script>
-
-    $(function() {
-        $("#select_dorm").live("change", function(event) {
-            event.preventDefault();
-            $("#sort_chosendate").removeAttr("value");
-            url = "callback.php?showbook_dormID=" + $(this).val() + "&dormbook_order=" + $("#book_order").val() + "&dormbook_showpage=1";
-            show_page = "callback.php?showpage_dormID=" + $(this).val() + "&dormbook_page=1";
-            if ($(this).val() === "default") {
-                $("#show_result").html("<tr><td colspan='8' style='text-align: center'> No Result </td></tr>");
-                for (i = 1; i < 8; i++) {
-                    $("#show_result").append("<tr style='height: 51px'><td colspan='8'></td></tr>");
-                }
-                $("#show_book_page").html("");
-            }
-            else {
-                document.getElementById("status_default").setAttribute("selected", " ");
-                document.getElementById("sort_default").setAttribute("selected", " ");
-                $("#show_status_page").html("");
-                $("#show_sort_page").html("");
-                $("#show_result").animate({
-                    opacity: 0
-                }, 100, function() {
-                    $("#show_result").load(url, function() {
-                        $("#show_result").animate({
-                            opacity: 1
-                        }, 200);
-                    });
-                });
-                $("#show_book_page").animate({
-                    opacity: 0
-                }, 100, function() {
-                    $("#show_book_page").load(show_page, function() {
-                        $("#show_book_page").animate({
-                            opacity: 1
-                        }, 200);
-                    });
-                });
-            }
-            return false;
-        });
-    });
-
-    $(function() {
-        $(".page_book li a").live("click", function() {
-            event.preventDefault();
-            url = $(this).attr("href") + "&showbook_dormID=" + $("#select_dorm").val() + "&dormbook_order=" + $("#book_order").val();
-            cur_page = "callback.php?dormbook_page=" + $(this).attr("value") + "&showpage_dormID=" + $("#select_dorm").val();
-            $("#show_book_page").load(cur_page);
-            $("#show_result").animate({
-                opacity: 0
-            }, 100, function() {
-                $("#show_result").load(url, function() {
-                    $("#show_result").animate({
-                        opacity: 1
-                    }, 200);
-                });
-            });
-        });
-    });
-
-    $(function() {
-        $("#book_order").live("change", function() {
-            if ($("#select_dorm").val() !== "default") {
-                url = "callback.php?showbook_dormID=" + $("#select_dorm").val() + "&dormbook_order=" + $(this).val() + "&dormbook_showpage=1";
-                cur_page = "callback.php?showpage_dormID=" + $("#select_dorm").val() + "&dormbook_page=1";
-                $("#show_status_page").html("");
-                $("#show_sort_page").html("");
-                $("#sort_chosendate").removeAttr("value");
-                document.getElementById("status_default").setAttribute("selected", " ");
-                $("#show_result").animate({
-                    opacity: 0
-                }, 100, function() {
-                    $("#show_result").load(url, function() {
-                        $("#show_result").animate({
-                            opacity: 1
-                        }, 200);
-                    });
-                });
-                $("#show_book_page").animate({
-                    opacity: 0
-                }, 100, function() {
-                    $("#show_book_page").load(cur_page, function() {
-                        $("#show_book_page").animate({
-                            opacity: 1
-                        }, 200);
-                    });
-                });
-            }
-        });
-    });
-
-
-    $(function() {
-
-        $("#searching").live("keyup", function() {
-            if ($("#select_dorm").val() !== "default") {
-                event.preventDefault();
-                $("#show_book_page").html("");
-                $("#show_sort_page").html("");
-                $("#show_status_page").html("");
-                $("#sort_chosendate").removeAttr("value");
-                document.getElementById("status_default").setAttribute("selected", " ");
-                document.getElementById("sort_default").setAttribute("selected", " ");
-                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $(this).val().replace(/ /g, "+");
-                if ($("#only_bookid").attr("checked")) {
-                    special_url = url + "&search_only=bookingID";
-                    $("#show_result").load(special_url);
-                } else
-                if ($("#only_date").attr("checked")) {
-                    special_url = url + "&search_only=expire_date";
-                    $("#show_result").load(special_url);
-                } else
-                if ($("#only_status").attr("checked")) {
-                    special_url = url + "&search_only=booking_status";
-                    $("#show_result").load(special_url);
-                } else {
-                    $("#show_result").load(url);
-                }
-                if ($("#searching").val() === "") {
-                    $("#show_book_page").load("callback.php?dormbook_page=1&showpage_dormID=" + $("#select_dorm").val());
-                }
-            }
-        });
-        $("#only_bookid").click(function() {
-            if ($("#select_dorm").val() !== "default") {
-                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=bookingID";
-                $("#show_result").load(url);
-            }
-        });
-        $("#only_date").click(function() {
-            if ($("#select_dorm").val() !== "default") {
-                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=date";
-                $("#show_result").load(url);
-            }
-        });
-        $("#only_status").click(function() {
-            if ($("#select_dorm").val() !== "default") {
-                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=booking_status";
-                $("#show_result").load(url);
-            }
-        });
-        $("#all_type").click(function() {
-            if ($("#select_dorm").val() !== "default") {
-                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+");
-                $("#show_result").load(url);
-            }
-        });
-
-        $("#sort_chosendate").live("change", function() {
-            if ($("#select_dorm").val() !== "default") {
-                $("#show_book_page").html("");
-                $("#show_status_page").html("");
-                document.getElementById("sort_default").setAttribute("selected", " ");
-                document.getElementById("status_default").setAttribute("selected", " ");
-                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $(this).val() + "&search_only=date";
-                cur_page = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&search_date=" + $(this).val() + "&search_date_page=1";
-                $("#show_result").load(url);
-                $("#show_sort_page").load(cur_page);
-            }
-        });
-
-        $(".page_sort_date li a").live("click", function() {
-            event.preventDefault();
-            url = $(this).attr("href") + "&dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#sort_chosendate").val() + "&search_only=date";
-            cur_page = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&search_date=" + $("#sort_chosendate").val() + "&search_date_page=" + $(this).attr("value");
-            $("#show_sort_page").load(cur_page);
-            $("#show_result").animate({
-                opacity: 0
-            }, 100, function() {
-                $("#show_result").load(url, function() {
-                    $("#show_result").animate({
-                        opacity: 1
-                    }, 200);
-                });
-            });
-        });
-
-        $("#search_status").on("change", function() {
-            if ($('#select_dorm').val() !== "default") {
-                if ($("#search_status").val() !== "default") {
-                    status = $("#search_status").val();
-                    url = "callback.php?dormbookID=" + $("#select_dorm").val() + "&search_by_status=" + $(this).val();
-                    searchpage = "callback.php?search_by_status=" + $(this).val() + "&search_status_page=1" + "&dormID=" + $("#select_dorm").val();
-                    $("#show_book_page").html("");
-                    $("#show_sort_page").html("");
-                    $("#sort_chosendate").removeAttr("value");
-                    document.getElementById("sort_default").setAttribute("selected", " ");
-                    $("#show_result").animate({
-                        opacity: 0
-                    }, 100, function() {
-                        $("#show_result").load(url, function() {
-                            $("#show_result").animate({
-                                opacity: 1
-                            }, 200);
-                        });
-                    });
-                    $("#show_status_page").animate({
-                        opacity: 0
-                    }, 100, function() {
-                        $("#show_status_page").load(searchpage, function() {
-                            $("#show_status_page").animate({
-                                opacity: 1
-                            }, 200);
-                        });
-                    });
-                }
-            }
-        });
-
-        $(".page_status li a").live("click", function() {
-            event.preventDefault();
-            url = $(this).attr("href") + "&dormbookID=" + $("#select_dorm").val() + "&search_by_status=" + $("#search_status").val();
-            cur_page = "callback.php?search_by_status=" + $("#search_status").val() + "&search_status_page=" + $(this).attr("value") + "&dormID=" + $("#select_dorm").val();
-            $("#show_status_page").load(cur_page);
-            $("#show_result").animate({
-                opacity: 0
-            }, 100, function() {
-                $("#show_result").load(url, function() {
-                    $("#show_result").animate({
-                        opacity: 1
-                    }, 200);
-                });
-            });
-        });
-
-
-    });
-
-</script>
+<script type="text/javascript" src="js/checkBooking.js"></script>
 
 
 <div class="row booking_summary">
@@ -312,7 +83,7 @@
                                     <th style="width: 170px">Booking Date</th>
                                     <th style="width: 170px">Expire Date</th>
                                     <th style="width: 100px">Status</th>
-                                    <th style="width: 100px"></th>
+                                    <th style="width: 100px"><button id="refresh_result" class="btn1 btn1-default">Refresh Booking</button></th>
                                     <tbody id="show_result">
                                         <tr>
                                             <td colspan="7" style="text-align: center;height: 51px"> No Result</td>
@@ -362,7 +133,9 @@
 
                         $(document).on("click", ".viewdetail", function() {
                             $(".modal-body-booking #bookid").html($(this).data('bookid'));
-                            document.getElementById("submitbutton").setAttribute("value", $(this).data('bookid'));
+                            document.getElementById("approvebutton").setAttribute("value", $(this).data('bookid'));
+                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
+                            document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
                             $(".modal-body-booking #name").html($(this).data('name'));
                             $(".modal-body-booking #date").html($(this).data('date'));
                             $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -372,20 +145,21 @@
                                 document.getElementById("slip").setAttribute("src", "/images/picture_slip/" + $(this).data('slip'));
                             }
                             if ($(this).data('status') === "Approve") {
-                                document.getElementById("approve").setAttribute("selected", "");
+                                document.getElementById("status").setAttribute("style", "color:#00cc33");
                             }
                             if ($(this).data('status') === "Checking") {
-                                document.getElementById("checking").setAttribute("selected", "");
+                                document.getElementById("status").setAttribute("style", "color:#0480be");
                             }
                             if ($(this).data('status') === "Canceled") {
-                                document.getElementById("cancel").setAttribute("selected", "");
+                                document.getElementById("status").setAttribute("style", "color:red");
                             }
                             if ($(this).data('status') === "Reject") {
-                                document.getElementById("reject").setAttribute("selected", "");
+                                document.getElementById("status").setAttribute("style", "color:red");
                             }
                             if ($(this).data('status') === "Waiting") {
-                                document.getElementById("waiting").setAttribute("selected", "");
+                                document.getElementById("status").setAttribute("style", "color:black");
                             }
+                            $(".modal-body-booking #status").html($(this).data('status'));
                             $(".modal-body-booking #dormname").html($(this).data('dormname'));
                             $(".modal-body-booking #room").html($(this).data('room'));
                             $(".modal-body-booking #totalprice").html($(this).data('totalprice'));
@@ -450,25 +224,26 @@
                                                 <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>
                                                 <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right">Myplace 2</span></h5>
                                                 <h5 style="text-align: left">Room Type : <span id="room" class="pull-right">Superior</span></h5>
-                                                <h5 style="text-align: left">Booking Status :<select class="form-control pull-right" id="book_status" style="width: 20%;height: 26px"><option id="approve">Approve</option><option id="checking">Checking</option><option id="waiting">Waiting</option><option id="cancel">Canceled</option><option id="reject">Reject</option></select></h5>
+                                                <h5 style="text-align: left">Booking Status :<span id="status" class="pull-right">Checking</span></h5>
                                                 <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right">2014-09-08 22:50:43</span></h5>
                                                 <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right">2014-09-08 22:50:43</span></h5>
                                                 <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Bath</span></h5>
                                                 <legend style="font-style: italic;text-align: right">Money Transfer Evidence</legend>
                                                 <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername">นาย ยอช เอง</span></h5>
                                                 <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
+                                                <br>
+                                                <legend style="font-style: italic;text-align: left">Change Status</legend>
+                                                <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
+                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled</button>
+                                                <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
+                                                <br><br>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width: 20%">Close</button>
-                                        <button id="submitbutton" type="button" name="confirm" class="btn1 btn1-success" style="width: 20%">Change Status</button>
+                                    <div class="modal-footer" style="text-align: center">
+                                        <span id="ajaxscript"></span>
+                                        <button id="close_modal" type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width: 20%">Close</button>
                                     </div>
-                                    <script>
-
-
-
-                                    </script>
                                 </form>
                             </div>
                         </div>

@@ -36,7 +36,7 @@
                 zipcode: {
                     required: true,
                     checkSpecial: true,
-                    number:true
+                    number: true
                 },
                 latitude: {
                     required: true,
@@ -56,19 +56,19 @@
                 },
                 tel: {
                     checkSpecial: true,
-                    required:true
+                    required: true
                 },
                 branch: {
                     checkSpecial: true,
-                    required:true
+                    required: true
                 },
                 bankkaccname: {
                     checkSpecial: true,
-                    required:true
+                    required: true
                 },
                 bankkaccid: {
                     checkSpecial: true,
-                    required:true
+                    required: true
                 }
             }
 
@@ -539,14 +539,27 @@
 
                             </span>
                             <button type="button" id="moreBank" class="btn btn-default pull-right">More Bank Account</button>
+                            <button type="button" id="Remove_moreBank" class="btn btn-default pull-right" style="margin-right:20px">Remove More Bank Account</button>
                             <br />
 
                             <script>
 
+                                var morebank = 0;
+
                                 $(document).on("click", "#moreBank", function() {
                                     $("#inputMore").append("<div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Name</span><select class='form-control' name='new_bank_name[]'><option value='Bangkok Bank'>Bangkok Bank</option><option value='Krung Sri Bank'>Krung Sri Bank</option><option value='Krung Thai Bank (KTB)'>Krung Thai Bank (KTB)</option><option value='Kasikorn Thai Bank (KBANK)'>Kasikorn Thai Bank (KBANK)</option><option value='Kaitnakin Bank'>Kaitnakin Bank</option><option value='CIMB Thai Bank'>CIMB Thai Bank</option><option value='Thai Military Bank (TMB)'>Thai Military Bank (TMB)</option><option value='Tisco Bank'>Tisco Bank</option><option value='Thai Credit Bank (TCR)'>Thai Credit Bank (TCR)</option><option value='Thanachart Bank'>Thanachart Bank</option><option value='Unitied Overseas Bank (UOB)'>Unitied Overseas Bank (UOB)</option><option value='Land and House Retail Bank (LHBANK)'>Land and House Retail Bank (LHBANK)</option><option value='Standard Chartered'>Standard Chartered</option><option value='SME Bank (SME)'>SME Bank</option><option value='EXIM Thailand (EXIM)'>EXIM Thailand Bank</option><option value='Goverment Saving Bank (GSB)'>Government Saving Bank (GSB)</option><option value='Islamic Bank of Thailand'>Islamic Bank of Thailand</option></select></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Branch</span><input class='form-control' type='text' name='new_bank_branch[]' value='' /></div></div></div><br><div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account Name</span><input class='form-control' type='text' name='new_bank_acc_name[]' value=''/></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account ID</span><input class='form-control' type='text' name='new_bank_acc_id[]' value='' /></div></div></div><br>");
+                                    morebank = morebank + 1;
                                 });
 
+                                $(document).on("click", "#Remove_moreBank", function() {
+                                    
+                                    $("#inputMore").html("");
+                                    for (i = 1; i < morebank; i++) {
+                                        $("#inputMore").append("<div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Name</span><select class='form-control' name='new_bank_name[]'><option value='Bangkok Bank'>Bangkok Bank</option><option value='Krung Sri Bank'>Krung Sri Bank</option><option value='Krung Thai Bank (KTB)'>Krung Thai Bank (KTB)</option><option value='Kasikorn Thai Bank (KBANK)'>Kasikorn Thai Bank (KBANK)</option><option value='Kaitnakin Bank'>Kaitnakin Bank</option><option value='CIMB Thai Bank'>CIMB Thai Bank</option><option value='Thai Military Bank (TMB)'>Thai Military Bank (TMB)</option><option value='Tisco Bank'>Tisco Bank</option><option value='Thai Credit Bank (TCR)'>Thai Credit Bank (TCR)</option><option value='Thanachart Bank'>Thanachart Bank</option><option value='Unitied Overseas Bank (UOB)'>Unitied Overseas Bank (UOB)</option><option value='Land and House Retail Bank (LHBANK)'>Land and House Retail Bank (LHBANK)</option><option value='Standard Chartered'>Standard Chartered</option><option value='SME Bank (SME)'>SME Bank</option><option value='EXIM Thailand (EXIM)'>EXIM Thailand Bank</option><option value='Goverment Saving Bank (GSB)'>Government Saving Bank (GSB)</option><option value='Islamic Bank of Thailand'>Islamic Bank of Thailand</option></select></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Branch</span><input class='form-control' type='text' name='new_bank_branch[]' value='' /></div></div></div><br><div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account Name</span><input class='form-control' type='text' name='new_bank_acc_name[]' value=''/></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account ID</span><input class='form-control' type='text' name='new_bank_acc_id[]' value='' /></div></div></div><br>");
+                                    }
+                                    morebank = morebank - 1;
+
+                                });
 
 
                             </script>
@@ -722,7 +735,7 @@
                                         </div>
 
                                         <div class="span8 center">
-                                            <img style="width:405px;height: 250px" src="images/dormitory_picture/<?php echo $row["dorm_pictures"]; ?>">
+                                            <img style="width:405px;height: 250px" class="img-thumbnail" src="images/dormitory_picture/<?php echo $row["dorm_pictures"]; ?>">
                                         </div>
                                     <?php } else { ?>
                                         <label>Main Picture : &nbsp;&nbsp;&nbsp;
