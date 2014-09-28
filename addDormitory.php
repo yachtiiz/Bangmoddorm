@@ -81,7 +81,7 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
             ?>
             <div class="row">
                 <div class="span9">
-                    <form id="form" action="" method="post" enctype="multipart/form-data">
+                    <form id="form" action="" method="POST" enctype="multipart/form-data">
                         <h1><center>Add Dormitory				<br /><small>Owner send request to Admin for add your dormitory.
                                 </small></center></h1><br />
                         <div class="row">

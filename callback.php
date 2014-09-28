@@ -1306,17 +1306,21 @@ if (isset($_GET["removeblacklist"]) && is_numeric($_GET["removeblacklist"])) {
 }
 
 //Get Owner Notification
-function getAllNotification($cur_page, $order_by) {
+function getAllNotification($cur_page, $order_by, $status_value) {
     require 'connection.php';
     if ($order_by === "date") {
         $order_by = "date desc";
     }
     if ($order_by === "booking_status") {
-        $order_by = "booking_status = 'Checking' desc";
+        $order_by = "booking_status";
     }
     $limit_start = ((8 * $cur_page) - 8);
     $memberID = $_SESSION["memberID"];
-    $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by $order_by limit $limit_start,8";
+    if ($status_value === "") {
+        $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by $order_by limit $limit_start,8";
+    } else {
+        $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) and booking_status = '$status_value' limit $limit_start,8";
+    }
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
@@ -1376,8 +1380,12 @@ function getAllNotification($cur_page, $order_by) {
 }
 
 if (isset($_GET["ownernoti_orderby"]) && isset($_GET["ownernoti_curpage"])) {
-    $order_by = filter_var($_GET["ownernoti_orderby"]);
-    getAllNotification($_GET["ownernoti_curpage"], $order_by);
+    $status_value = "";
+    if (isset($_GET["search_ownernoti"])) {
+        $status_value = $_GET["search_ownernoti"];
+    }
+    $order_by = filter_var($_GET["ownernoti_orderby"], FILTER_SANITIZE_STRING);
+    getAllNotification($_GET["ownernoti_curpage"], $order_by, $status_value);
 }
 
 if (isset($_GET["owner_noti_curpage"]) && is_numeric($_GET["owner_noti_curpage"])) {
@@ -1519,6 +1527,85 @@ if (isset($_GET["comment_rating"]) && is_numeric($_GET["comment_rating"])) {
     $rate = getRating($dormID);
     $star = calStar($rate[0]);
     echo '<h4 style="font-style:italic">Review Rate : <span style="color:gold">' . $star . ' </span><br><small class="pull-right">from ' . $rate[1] . ' Reviews</small></h4>';
+}
+
+//Function Advance Search Dormitories
+
+function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road) {
+
+    require 'connection.php';
+    
+    if($type === "all"){
+        $type = "";
+    }else{
+        $type = "d.type = ".$type." and";
+    }
+    if($disFromUni === 'all'){
+        $disFromUni = "";
+    }else{
+        $disFromUni = "d.DisFromUni ".$disFromUni. " and";
+    }
+    if($start_price === ""){
+        $start_price = "0";
+    }
+    if($end_price === ""){
+        $end_price = "1000000";
+    }
+    if($rate === "all"){
+        $rate = "";
+    }else{
+        $rate = "and d.dormitory_rate = ".$rate;
+    }
+    if($road === "all"){
+        $road = "";
+    }else{
+        $road = "and d.road like '%".$road."%'";
+    }
+    
+    
+    
+    
+    $query = "select * from dormitories d join rooms r where d.dormID = r.dormID and $type $disFromUni ( r.price >=$start_price and r.price <= $end_price ) $rate $road group by d.dormID";
+        
+    $result = mysqli_query($con, $query);
+    if (mysqli_num_rows($result) !== 0) {
+        while ($row = mysqli_fetch_array($result)) {
+            $star = '';
+            for ($i = 1; $i <= $row["dormitory_rate"]; $i++) {
+                $star = $star . '&#9733;';
+            } for ($i = $row["dormitory_rate"]; $i < 5; $i++) {
+                $star = $star . '&#9734;';
+            }
+            echo '<div class = "thumbnail" style = "border:solid 1px black;height: 250px;padding:20px;padding-left:0px;background-color: #eee">';
+            echo '<div class = "col-md-6">';
+            echo '<img class = "img-rounded" src = "images/dormitory_picture/' . $row["dorm_pictures"] . '" style = "width:350px;height: 200px;" alt = "...">';
+            echo '</div>';
+            echo '<div class = "col-md-6">';
+            echo '<legend><h3 style = "margin-top:0px"><span>' . $row["dormName"] . '<span class = "pull-right" style = "color: gold">' . $star . '</span></span></h2></legend>';
+            echo '<p style = "text-align:center">';
+            echo 'DORMITORY TYPE : ' . $row["type"] . '<br>';
+            echo 'DISTANCE FROM UNIVERSITY : ' . $row["disFromUni"] . ' Kilometers<br>';
+            echo 'PRICE RATE : 2000 - 5000 BATH/MONTH<br>';
+            echo '<a style = "margin-top:20px;" class = "btn1 btn1-primary" href = "index.php?chose_page=dormdetail&dormID=' . $row["dormName"] . '">View Details</a>';
+            echo '</p>';
+            echo '</div>';
+            echo '</div>';
+        }
+    } else {
+        echo '<h2 style="text-align:center"> No Result </h2>';
+    }
+}
+
+if(isset($_GET["search_dorm"]) && $_GET["search_dorm"] === "true"){
+   
+    $disFromUni = $_GET["disFromUni"];
+    $type = $_GET["search_dorm_type"];
+    $rate = $_GET["search_dorm_rate"];
+    $road = $_GET["search_dorm_road"];
+    $start_price = $_GET["search_dorm_stprice"];
+    $end_price = $_GET["search_dorm_enprice"];
+        
+    filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road);    
 }
 ?>
 

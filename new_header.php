@@ -65,17 +65,7 @@ function getUserType() {
             <div class="navbar">
                 <div class="container">
                     <div class="nav-collapse">
-                        <?php
-
-                        function getNotification() {
-                            require 'connection.php';
-                            $memberID = $_SESSION["memberID"];
-                            $query = "select * from booking where memberID = $memberID and member_noti = 1";
-                            $result = mysqli_query($con, $query);
-                            $noti = mysqli_num_rows($result);
-                            return $noti;
-                        }
-                        ?>
+                        
                         <ul class="nav nav-pills" style="padding-left: 0px;padding-right:100px;width:100%;height: 10%;">
                             <li style="margin-left: -3%;"><img src="images/logo3.png" style="width: 70% ; margin-top: -9%"></li>
                             <li style="margin-top: 1%;margin-left: -3%"><a href="index.php"><h5>Home</h5></a></li>

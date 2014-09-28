@@ -10,9 +10,15 @@
                                 <legend>
                                     <span>Notification</span> System
                                 </legend>
-                                <select id="noti_orderby" class="form-control" style="width: 30%">
+                                <select id="noti_orderby" class="form-control" style="width: 25%">
                                     <option value="date">Sort By Date</option>
                                     <option value="booking_status">Sort By Status</option>
+                                </select>
+                                <select id="search_status" class="form-control" style="margin-left: 5%;width:25%">
+                                    <option id="status_default" value="default">Search By Status</option>
+                                    <option value="Approve">Approve</option>
+                                    <option value="Checking">Checking</option>
+                                    <option value="Canceled">Canceled</option>
                                 </select>
                             </div>
                             <br><br><br><br><br><br>
@@ -229,7 +235,7 @@
                                                             $("#linkbutton").on("click", function() {
                                                                 window.location = "index.php?chose_page=checkDormBooking&memberID=<?php echo $_SESSION["memberID"]; ?>";
                                                             });
-                                                                                                                        
+
                                                             $("#approvebutton").on("click", function() {
                                                                 if (confirm("Confirm to Change Status ?")) {
                                                                     change_url = "callback.php?change_booking_status=Approve&change_booking_id=" + $(this).val();
@@ -261,8 +267,28 @@
                                                                 }
                                                             });
 
+                                                            $("#search_status").on("change", function() {
+                                                                url = "callback.php?ownernoti_curpage=1&ownernoti_orderby=&search_ownernoti=" + $(this).val();
+                                                                if ($(this).val() === "default") {
+                                                                    url = "callback.php?ownernoti_curpage=1" + "&ownernoti_orderby=" + $("#noti_orderby").val();
+                                                                }
+                                                                $(".owner_pagi").load("callback.php?owner_noti_curpage=1");
+                                                                $("#noti_result").animate({
+                                                                    opacity: 0
+                                                                }, 100, function() {
+                                                                    $("#noti_result").load(url, function() {
+                                                                        $("#noti_result").animate({
+                                                                            opacity: 1
+                                                                        }, 200);
+                                                                    });
+                                                                });
+
+
+                                                            })
+
                                                             $("#noti_orderby").on("change", function() {
                                                                 url = "callback.php?ownernoti_curpage=1" + "&ownernoti_orderby=" + $(this).val();
+                                                                document.getElementById("status_default").setAttribute("selected", "");
                                                                 $(".owner_pagi").load("callback.php?owner_noti_curpage=1");
                                                                 $("#noti_result").animate({
                                                                     opacity: 0
@@ -277,7 +303,7 @@
 
                                                             $(".owner_pagi li a").live("click", function() {
                                                                 event.preventDefault();
-                                                                url = "callback.php?ownernoti_curpage=" + $(this).attr("value") + "&ownernoti_orderby=" + $("#noti_orderby").val();
+                                                                url = "callback.php?ownernoti_curpage=" + $(this).attr("value") + "&ownernoti_orderby=" + $("#noti_orderby").val() + $("#search_status").val() === "default" ? "" : ("&search_ownernoti=" + $("#search_status").val());
                                                                 cur_page = $(this).attr("href");
                                                                 $(".owner_pagi").load(cur_page);
                                                                 $("#noti_result").animate({
