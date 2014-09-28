@@ -67,7 +67,7 @@ function getAllBlacklist($page, $order_by) {
             echo '<td>' . $row["lastName"] . '</td>';
             echo '<td style="color:'. $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["status_reason"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo&memberID='. $row["memberID"] .'"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID='. $row["memberID"] .'"><button type="button" class="btn1 btn1-primary pull-right" style="width:80%"> View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -105,7 +105,7 @@ function getAllBlacklist($page, $order_by) {
                     <div class="row">
                         <div class="span12">
                             <legend>
-                                <span>Member Blacklist</span> Information System
+                                <span>Blacklist</span> Information
                             </legend>
                             Search Member : 
                             <input type="text" placeholder="" class="form-control" style="width: 30%">
@@ -123,7 +123,7 @@ function getAllBlacklist($page, $order_by) {
                                 <th>Username</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
-                                <th>status</th>
+                                <th>Status</th>
                                 <th>Reason</th>
                                 <th></th>
                                 <tbody id="show_blacklist">
@@ -143,7 +143,7 @@ function getAllBlacklist($page, $order_by) {
                             </ul>
                         </div>
                     </div>
-                    <a href="adminsystem.php" class="btn btn-primary btn-large book-now pull-left">Back</a>
+                    <a href="index.php?chose_page=adminsystem" class="btn1 btn1-danger" style="margin-left: 50%;width: 30%">Back</a>
                 </fieldset>
                 </form>
             </div>

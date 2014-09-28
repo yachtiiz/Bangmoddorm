@@ -18,7 +18,6 @@
                     maxlength: 256
                 },
                 special_request: {
-                    checkSpecial: true,
                     required: true,
                 }
             }
@@ -185,15 +184,15 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
                             </div>			
                         </div>
                     <?php } ?>
-                    <div class="row" style="margin-top: 40px">
+                    <div class="row" style="margin-top: 40px;">
                         <div class="span9">
                             <legend><span>Send</span> Request Complete &nbsp;&nbsp; <span class="glyphicon glyphicon-ok"></span></legend>
                         </div>			
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-bottom: 20%">
                         <div class="span9">
                             <br />
-                            <a href="index.php" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Go to INDEX</a>
+                            <a href="index.php" class="btn1 btn1-primary pull-right" style="width: 30%">Go To INDEX</a>
                             <br />
                             <br />
                         </div>
