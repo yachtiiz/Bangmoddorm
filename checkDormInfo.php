@@ -118,9 +118,9 @@ $result = mysqli_query($con, $query);
                             <div class="span12">
                                 <table class="table table-striped table-hover" style="border: solid 1px #cccccc">
                                     <th style="width:120px">Dormitory ID</th>
-                                    <th style="width:150px">Dormitory Name</th>
-                                    <th style="width:200px">Owner Name</th>
-                                    <th style="width:150px">Dormitory Type</th>
+                                    <th style="width:170px">Dormitory Name</th>
+                                    <th style="width:250px">Owner Name</th>
+                                    <th style="width:170px">Dormitory Type</th>
                                     <th >Status</th>
                                     <th></th>
                                     <tbody id="show_dorm_info">
@@ -138,7 +138,7 @@ $result = mysqli_query($con, $query);
                                                 <td><?php echo $row["firstName"] . " " . $row["lastName"]; ?></td>
                                                 <td><?php echo $row["type"]; ?></td>
                                                 <td style="color:<?php echo $color ?>"><?php echo $row["status"]; ?></td>
-                                                <td><a href="index.php?chose_page=checkDormDetail&dormID=<?php echo $row["dormID"] ?>"><button type="button" class="btn btn-success book-now">Detail</button></a></td>
+                                                <td><a href="index.php?chose_page=checkDormDetail&dormID=<?php echo $row["dormID"] ?>"><button type="button" class="btn1 btn1-primary pull-right " style="width:100%">View Detail</button></a></td>
                                             </tr>
                                             <?php
                                         }
@@ -154,7 +154,7 @@ $result = mysqli_query($con, $query);
 
                             </div>
                         </div>
-                        <a href="index.php?chose_page=adminsystem" class="btn btn-primary btn-large book-now" style="margin-left:50%">Back</a>
+                        <a href="index.php?chose_page=adminsystem" class="btn1 btn1-danger" style="margin-left:50%;width: 30%">Back</a>
                     </fieldset>
                 </form>
 

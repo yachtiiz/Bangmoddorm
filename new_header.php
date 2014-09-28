@@ -144,7 +144,7 @@ function getUserType() {
                                     }
                                 } else {
                                     ?>
-                                    <a href="" style="margin-left:50px" data-toggle="modal" data-target="#LoginModal"><h5 style="color:#b81007"> Sign In </h5></a>
+                                        <a href="" class="pull-right" style="margin-left:50px; margin-top: 1.5% " data-toggle="modal" data-target="#LoginModal"><h5 style="color:#b81007;"> Sign In </h5></a>
                                     <div class="modal fade" id="LoginModal">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -165,7 +165,7 @@ function getUserType() {
                                                         <div id="show_error" style="text-align:center;margin-bottom: 10px">
 
                                                         </div>
-                                                        <button id="submit" type="submit" style='width:20%;margin-left:25px; margin-top: 40px'class="btn1 btn1-success">Sign In</button>
+                                                        <button id="submit" type="submit" style='width:20%;margin-left:28%; margin-top: 40px'class="btn1 btn1-success">Sign In</button>
                                                         <a href="index.php?chose_page=register"><button type="button" style='width:20%;margin-left:20px; margin-top: 40px' class="btn1 btn1-warning">Register</button></a>
                                                         <br>
                                                     </form>
@@ -174,6 +174,8 @@ function getUserType() {
                                         </div><!-- /.modal-dialog -->
                                     </div><!-- /.modal -->
                                 <?php } ?>
+                            </li>
+                        </ul>
                             </li>
                         </ul>
                     </div>                

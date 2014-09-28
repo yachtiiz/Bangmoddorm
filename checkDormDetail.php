@@ -24,7 +24,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
 
     
         <legend><h3 style="text-align: center"><span>Dormitory </span>Information</h3></legend>
-        <div class="col-lg-6 pull-left" >
+        <div class="col-md-6 pull-left" >
             <table style=" width: 90%;">
                 <tbody>
                     <tr style=" border-bottom: #cccccc solid 1px"> 

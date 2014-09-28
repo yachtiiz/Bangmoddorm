@@ -67,7 +67,7 @@ function getAllMember($page, $order_by) {
             echo '<td style="color:'. $color . '">' . $row["type"] . '</td>';
             echo '<td style="color:'. $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["tel"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo&memberID='. $row["memberID"] .'"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID='. $row["memberID"] .'"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -158,7 +158,7 @@ function getAllMember($page, $order_by) {
                         <div class="row">
                             <div class="span12">
                                 <legend>
-                                    <span>Member</span> Information System
+                                    <span>Member</span> Information
                                 </legend>
                                 Search Member : 
                                 <input id="searching_member" type="text" style="width:40%" placeholder="" class="form-control">
@@ -191,7 +191,7 @@ function getAllMember($page, $order_by) {
                                 </ul>
                             </div>
                         </div>
-                        <a href="index.php?chose_page=adminsystem" class="btn btn-primary btn-large book-now " style="margin-left: 50%">Back</a>
+                        <a href="index.php?chose_page=adminsystem" class="btn1 btn1-danger" style="margin-left: 50%; width: 30%">Back</a>
                     </fieldset>
                 </form>
 

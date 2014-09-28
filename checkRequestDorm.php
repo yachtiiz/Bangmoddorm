@@ -23,7 +23,7 @@ function getRequest($page, $order_by) {
         } else {
             echo '<td style="color: green">' . $row["approval"] . '</td>';
         }
-        echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '">View</a></td>';
+        echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
         echo '</tr>';
     }
     if (mysqli_num_rows($result) !== 10) {
@@ -187,22 +187,22 @@ function displayPage($cur_page) {
 
                                 <div class="col-md-2 radio">
                                     <label>
-                                        <input id="only_confirm" name="search_only" type="radio"> Only Confirm ID
+                                        <input id="only_confirm" name="search_only" type="radio"> By Confirm ID
                                     </label>
                                 </div>
                                 <div class="col-md-3 radio">
                                     <label>
-                                        <input id="only_dormname" name="search_only" type="radio"> Only Dormitory Name
+                                        <input id="only_dormname" name="search_only" type="radio"> By Dormitory Name
                                     </label>
                                 </div>
                                 <div class="col-md-2 radio">
                                     <label>
-                                        <input id="only_license" name="search_only" type="radio"> Only License ID
+                                        <input id="only_license" name="search_only" type="radio"> By License ID
                                     </label>
                                 </div>
                                 <div class="col-md-2 radio">
                                     <label>
-                                        <input id="all_type" name="search_only" type="radio" checked> All Type
+                                        <input id="all_type" name="search_only" type="radio" checked> All
                                     </label>
                                 </div>
                             </div>
@@ -241,7 +241,7 @@ function displayPage($cur_page) {
                                     ?>
                                 </ul>
                             </div>
-                            <a href="index.php?chose_page=adminsystem" style="margin-top:0px;margin-left:50%" class="btn btn-primary btn-large book-now">Back</a>
+                            <a href="index.php?chose_page=adminsystem" style="margin-top:5%;margin-left:50%;width: 30%" class="btn1 btn1-danger">Back</a>
 
 
                         </div>
