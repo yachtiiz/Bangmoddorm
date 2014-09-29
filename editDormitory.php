@@ -419,6 +419,35 @@
                                             <input id="zipcode" class="form-control" type="text" name="zip_code" value='<?php echo $row["zip"] ?>'>
                                         </div>
                                     </div>
+                                    <div class='col-lg-3'>
+                                        <div class="input-group">
+                                            <button type="button" class="btn1 btn1-default" style="width:100%"><a target="blank_" href="https://www.google.com/maps/@13.6513616,100.4959106,17z?hl=en">Search Latitude,Longitude</a></button>
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-3'>
+                                        <div class="input-group">
+                                            <button type="button" data-target="#searchModal" data-toggle="modal" class="btn1 btn1-default" style="width:100%">How to search</button>
+                                        </div>
+                                        <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    
+                                                    <div class="modal-body">
+                                                        <legend><h4>How to search</h4></legend>
+                                                        <h5 style="text-align:left">1. Click <a href="https://www.google.com/maps/@13.6513616,100.4959106,17z?hl=en" target="blank_">Search Latitude , Longitude </a> Link.
+                                                        <br>2. Searching your dormitory place.
+                                                        <br>3. Right click to your dormitory place and chose Direction to here.
+                                                        <br>4. Right click red point and chose What's here.
+                                                        <br>5. Look at left top of page you will see Latitude and Longitude number.
+                                                        <br>Example 13.651327,100.499111 <br> Latitude = 13.651327 <br> Longitude = 100.499111 </h5>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <br>
                                 <div class='row'>
