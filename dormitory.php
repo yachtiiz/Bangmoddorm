@@ -15,10 +15,17 @@ $dorm_result = mysqli_query($con, $query);
             <iframe width="905" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.co.th/maps/ms?msa=0&amp;msid=202827098492161551372.0004f9988870873ff3abe&amp;hl=en&amp;ie=UTF8&amp;ll=13.651582,100.494049&amp;spn=0.009673,0.01368&amp;t=m&amp;output=embed"></iframe><br /><small>View <a href="https://www.google.co.th/maps/ms?msa=0&amp;msid=202827098492161551372.0004f9988870873ff3abe&amp;hl=en&amp;ie=UTF8&amp;ll=13.651582,100.494049&amp;spn=0.009673,0.01368&amp;t=m&amp;source=embed" style="color:#0000FF;text-align:left">Map Project</a> in a larger map</small>
         </div>
         <div class="col-md-12" style="padding: 0">
-        <legend><h1 style="text-align: center; margin-top: 50px;">Dormitory</h1></legend>  
+            <legend><h1 style="text-align: center; margin-top: 50px;">Dormitory</h1></legend>  
         </div>
-            <?php while ($dorm_row = mysqli_fetch_array($dorm_result)) { ?>
-        <div class="col-md-12 thumbnail" style="border:solid 1px black;height: 250px;padding:20px;padding-left:0px;background-color: #eee">        
+        <?php
+        while ($dorm_row = mysqli_fetch_array($dorm_result)) {
+
+            $dormID = $dorm_row["dormID"];
+            $room_query = "select min(price) as minprice , max(price) as maxprice from rooms where dormID = $dormID";
+            $room_result = mysqli_query($con, $room_query);
+            $room_row = mysqli_fetch_array($room_result);
+            ?>
+            <div class="col-md-12 thumbnail" style="border:solid 1px black;height: 250px;padding:20px;padding-left:0px;background-color: #eee">        
                 <div class="col-md-6">
                     <img class="img-rounded" src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" style="width:350px;height: 200px;" alt="...">
                 </div>
@@ -35,7 +42,7 @@ $dorm_result = mysqli_query($con, $query);
 
                         DORMITORY TYPE : <?php echo $dorm_row["type"]; ?><br>
                         DISTANCE FROM UNIVERSITY : <?php echo $dorm_row["disFromUni"]; ?> Kilometers<br>
-                        PRICE RATE : 2000 - 5000 BATH/MONTH<br>
+                        <?php if($room_row["minprice"] === $room_row["maxprice"]) { ?>PRICE RATE : <?php echo $room_row["maxprice"] ?> BATH/MONTH<br> <?php } else { ?>PRICE RATE : <?php echo $room_row["minprice"] ?> - <?php echo $room_row["maxprice"] ?> BATH/MONTH<br> <?php } ?>
 
                         <!--                       <h4 style="text-align:center">Dormitory Facilities</h4>
                                            <ul class="pagination" style="margin-left:30px;margin-top:0px">
@@ -103,4 +110,3 @@ $dorm_result = mysqli_query($con, $query);
                 <a style="margin-left:70px;width: 50%" class="btn book-now2" href="index.php?chose_page=dormdetail&dormID=<?php echo $dorm_row["dormID"]; ?>">View Details</a>
 
             </div>		-->
-        

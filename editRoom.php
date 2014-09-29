@@ -169,6 +169,17 @@ function edit_room($roomID) {
             }
         }
     }
+    
+    if (isset($_FILES["change_room_pic"]) && isset($_POST["change_room_pic_id"])) {
+        for ($i = 0; $i <= count($_FILES["change_room_pic"]); $i++) {
+            if (isset($_FILES["change_room_pic"]["tmp_name"][$i]) && $_FILES["change_room_pic"]["name"][$i] !== "") {
+                $pic_id = $_POST["change_room_pic_id"][$i];
+                $msg = upPicture("change_room_pic", $i, $roomID);
+                $pic_query = "update RoomPic set roomPicPath = '$msg' where roomPicID = $pic_id";
+                mysqli_query($con, $pic_query);
+            }
+        }
+    }
 
 
     $pic_main_path_query = $main_room_path === NULL ? "" : ", main_pic = '$main_room_path'";
@@ -192,6 +203,8 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
 
         require 'connection.php';
         $roomID = $_GET["roomID"];
+        $dormID = $_GET["dormID"];
+        $dormName = $_GET["dormName"];
         $query = "select * from Rooms where roomID = $roomID";
         $result = mysqli_query($con, $query);
         $room_row = mysqli_fetch_array($result);
@@ -205,7 +218,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
         if (isset($_POST["roomID"]) && is_numeric($_POST["roomID"]) && $_POST["roomID"] !== "") {
             if (edit_room($_POST["roomID"])) {
                 echo '<script>alert("Edit Room Success");</script>';
-                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+                echo '<script>window.location = "index.php?chose_page=editroom&dormID='. $dormID .'&dormName='. $dormName .'&roomID='. $roomID .'"</script>';
             } else {
                 echo '<script>alert("Edit Room Failed");</script>';
                 echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
@@ -477,9 +490,11 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     for ($i = 0; $i < mysqli_num_rows($pic_result); $i++) {
                                         $pic_row = mysqli_fetch_array($pic_result);
                                         ?>
-                                        <div class="col-md-4" style="width:250px;height: 250px;margin-left:10px">
-                                            <label>Picture <?php echo $i + 1; ?>
+                                        <div class="col-md-4" style="width:250px;height: 280px;margin-left:10px">
+                                            <label>Picture <?php echo $i + 1; ?> (Click for change picture) 
                                                 <?php if ($pic_row["roomPicPath"] !== "") { ?>
+                                                    <input type="file" class="form-control" name="change_room_pic[]">
+                                                    <input type="hidden" class="form-control" value="<?php echo $pic_row["roomPicID"] ?>" name="change_room_pic_id[]">
                                                     <img class="img-thumbnail" style="width:250px;height: 224px" style="" src="images/room_pictures/<?php echo $pic_row["roomPicPath"]; ?>">
                                                 <?php } else { ?>
                                                     <input class="form-control" name="room_pic[]" type="file" placeholder=""/>
@@ -489,7 +504,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     <?php } ?>
                                     <?php for ($i = mysqli_num_rows($pic_result); $i < 6; $i++) {
                                         ?>
-                                        <div class="col-md-4" style="width:250px;height: 250px;margin-left:10px">
+                                        <div class="col-md-4" style="width:250px;height: 280px;margin-left:10px">
                                             <label>Picture <?php echo $i + 1 ?>
                                                 <input class="form-control" name="room_pic[]" type="file" />
                                             </label>
@@ -500,7 +515,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     ?>
                                     <?php for ($i = 1; $i <= 6; $i++) {
                                         ?>
-                                        <div class="col-md-4" style="width:250px;height: 250px;margin-left:20px">
+                                        <div class="col-md-4" style="width:250px;height: 280px;margin-left:20px">
                                             <label>Picture <?php echo $i ?>
                                                 <input class="form-control" name="room_pic[]" type="file" />
                                             </label>

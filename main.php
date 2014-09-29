@@ -20,7 +20,7 @@
             <p>Type</p>
             <select id="type_dorm" class="form-control" style="width:100%;">
                 <option value="all">All Type</option>
-                <option value="Male & Female">Male & Female</option>
+                <option value="FemaleMale">Female & Male</option>
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
             </select>
@@ -30,7 +30,7 @@
             <select id="dorm_road" class="form-control">
                 <option value="all">All Road</option>
                 <option value="Prachauthit">Prachauthit</option>
-                <option value="Phuthabucha">Phuthabucha</option>
+                <option value="Budhabucha">Budhabucha</option>
             </select>
         </div>
         <div class="col-md-5" style="margin-top:2%">
@@ -79,11 +79,8 @@
                 rate_dorm = $("#rate_dorm").val();
                 start_price = $("#start_price").val();
                 end_price = $("#end_price").val();
-                
                 url = "callback.php?search_dorm=true&disFromUni=" + disFromUni + "&search_dorm_type=" + type + "&search_dorm_road=" + road + "&search_dorm_rate=" + rate_dorm + "&search_dorm_stprice=" + start_price + "&search_dorm_enprice=" + end_price ;
-                alert(url);
                 $("#search_modal").load(url);
-                
             })
         
         
