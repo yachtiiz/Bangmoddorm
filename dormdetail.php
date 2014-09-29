@@ -107,7 +107,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                 <tbody>
                     <tr style=" border-bottom: #cccccc solid 1px"> 
                         <td>
-                            <h4><span>Sub Distinct : </span></h4>
+                            <h4><span>Sub District : </span></h4>
                         </td>
                         <td>
                             <?php echo $dorm_row["subDistinct"] ?>
@@ -115,7 +115,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     </tr>
                     <tr style=" border-bottom: #cccccc solid 1px"> 
                         <td>
-                            <h4><span>Distinct : </span></h4>
+                            <h4><span>District : </span></h4>
                         </td>
                         <td>
                             <?php echo $dorm_row["dorm_distinct"] ?>

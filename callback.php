@@ -526,7 +526,7 @@ function getRequestDorm($page, $order_by) {
         } else {
             echo '<td style="color: green">' . $row["approval"] . '</td>';
         }
-        echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '">View</a></td>';
+        echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
         echo '</tr>';
     }
     if (mysqli_num_rows($result) !== 8) {
@@ -573,12 +573,13 @@ function searchingRequest($query) {
             echo '<td>' . $row["date"] . '</td>';
             if ($row["approval"] == "Rejected") {
                 echo '<td style="color: red" >' . $row["approval"] . '</td>';
+                
             } else if ($row["approval"] == "Waiting") {
                 echo '<td style="color: black">' . $row["approval"] . '</td>';
             } else {
                 echo '<td style="color: green">' . $row["approval"] . '</td>';
             }
-            echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '">View</a></td>';
+            echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -964,7 +965,7 @@ function getAllDorm($page, $order_by) {
             echo '<td>' . $row["firstName"] . $row["lastName"] . '</td>';
             echo '<td>' . $row["type"] . '</td>';
             echo '<td style="color:' . $color . '">' . $row["status"] . '</td>';
-            echo '<td><a href="index.php?chose_page=checkDormDetail&getdorm=' . $row["dormID"] . '"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=checkDormDetail&getdorm=' . $row["dormID"] . '"><button type="button" class="btn1 btn1-primary pull-right " style="width:100%">View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -1091,7 +1092,7 @@ function getAllMember($page, $order_by) {
             echo '<td style="color:' . $color . '">' . $row["type"] . '</td>';
             echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["tel"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {

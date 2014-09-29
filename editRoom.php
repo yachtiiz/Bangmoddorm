@@ -491,7 +491,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         $pic_row = mysqli_fetch_array($pic_result);
                                         ?>
                                         <div class="col-md-4" style="width:250px;height: 280px;margin-left:10px">
-                                            <label>Picture <?php echo $i + 1; ?> (Click for change picture) 
+                                            <label>Picture <?php echo $i + 1; ?> (Click to Change) 
                                                 <?php if ($pic_row["roomPicPath"] !== "") { ?>
                                                     <input type="file" class="form-control" name="change_room_pic[]">
                                                     <input type="hidden" class="form-control" value="<?php echo $pic_row["roomPicID"] ?>" name="change_room_pic_id[]">

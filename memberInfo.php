@@ -276,7 +276,9 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
                         $("#addBlacklist").on("click", function() {
                             if (confirm("Add this member to Blacklist ?")) {
                                 reason = $("#blacklist_reason").val().replace(/ /g, "+");
-                                $("#addBlacklist").load("callback.php?addblacklist=<?php echo $row["memberID"] ?>&blacklist_reason=" + reason);
+                                url = "callback.php?addblacklist=<?php echo $row["memberID"] ?>&blacklist_reason=" + reason ;
+                                alert(url);
+                                $("#addBlacklist").load(url);
                             } else {
                                 event.preventDefault();
                             }

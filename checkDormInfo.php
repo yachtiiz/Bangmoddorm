@@ -164,4 +164,4 @@ $result = mysqli_query($con, $query);
 </div>
 </div> <!-- /container -->
 <br><br><br><br><br>
-<?php include 'footer.php' ?>
+
