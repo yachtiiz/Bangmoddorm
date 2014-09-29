@@ -1458,22 +1458,12 @@ function getComment($dormID, $page) {
         echo '<td style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
         echo '</tr>';
     }
-    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 4) {
-        for ($i = mysqli_num_rows($result); $i < 4; $i++) {
-            echo '<tr>';
-            echo '<td colspan="2" style="height:121px"></td>';
-            echo '</tr>';
-        }
-    }
+    
     if (mysqli_num_rows($result) === 0) {
         echo '<tr>';
         echo '<td colspan="2" style="height:121px"> No Comment</td>';
         echo '</tr>';
-        for ($i = 1; $i < 4; $i++) {
-            echo '<tr>';
-            echo '<td colspan="2" style="height:121px"></td>';
-            echo '</tr>';
-        }
+        
     }
 }
 
@@ -1538,7 +1528,7 @@ function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road)
     if($type === "all"){
         $type = "";
     }else{
-        $type = "d.type = ".$type." and";
+        $type = "d.type = '".$type."' and";
     }
     if($disFromUni === 'all'){
         $disFromUni = "";
@@ -1565,11 +1555,14 @@ function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road)
     
     
     
-    $query = "select * from dormitories d join rooms r where d.dormID = r.dormID and $type $disFromUni ( r.price >=$start_price and r.price <= $end_price ) $rate $road group by d.dormID";
-        
+    $query = "select * from dormitories d join rooms r where d.dormID = r.dormID and d.status = 'Active' and $type $disFromUni ( r.price >=$start_price and r.price <= $end_price ) $rate $road group by d.dormID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
-        while ($row = mysqli_fetch_array($result)) {
+        while ($row = mysqli_fetch_array($result)) {            
+            $dormID = $row["dormID"];
+            $room_query = "select min(price) as minprice , max(price) as maxprice from rooms where dormID = $dormID";
+            $room_result = mysqli_query($con, $room_query);
+            $room_row = mysqli_fetch_array($room_result);
             $star = '';
             for ($i = 1; $i <= $row["dormitory_rate"]; $i++) {
                 $star = $star . '&#9733;';
@@ -1585,8 +1578,12 @@ function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road)
             echo '<p style = "text-align:center">';
             echo 'DORMITORY TYPE : ' . $row["type"] . '<br>';
             echo 'DISTANCE FROM UNIVERSITY : ' . $row["disFromUni"] . ' Kilometers<br>';
-            echo 'PRICE RATE : 2000 - 5000 BATH/MONTH<br>';
-            echo '<a style = "margin-top:20px;" class = "btn1 btn1-primary" href = "index.php?chose_page=dormdetail&dormID=' . $row["dormName"] . '">View Details</a>';
+            if($room_row["minprice"] === $room_row["maxprice"]){
+            echo 'PRICE RATE : '. $room_row["maxprice"] .' BATH/MONTH<br>';
+            }else{
+            echo 'PRICE RATE : '. $room_row["minprice"] .' - '. $room_row["maxprice"] . ' BATH/MONTH<br>';
+            }
+            echo '<a style = "margin-top:20px;" class = "btn1 btn1-primary" href = "index.php?chose_page=dormdetail&dormID=' . $row["dormID"] . '">View Details</a>';
             echo '</p>';
             echo '</div>';
             echo '</div>';
@@ -1600,12 +1597,45 @@ if(isset($_GET["search_dorm"]) && $_GET["search_dorm"] === "true"){
    
     $disFromUni = $_GET["disFromUni"];
     $type = $_GET["search_dorm_type"];
+    if($type ==="FemaleMale"){
+        $type = "Female&Male";
+    }
     $rate = $_GET["search_dorm_rate"];
     $road = $_GET["search_dorm_road"];
     $start_price = $_GET["search_dorm_stprice"];
     $end_price = $_GET["search_dorm_enprice"];
         
     filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road);    
+}
+
+
+// Change Bank Account Status
+function change_bank_status($bankID,$status){
+    require 'connection.php';
+    $query = "update BankAccount set bank_status = '$status' where bankID = $bankID";
+    if(mysqli_query($con, $query)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+if(isset($_GET["bank_show_status"]) && isset($_GET["bank_id"])){
+    
+    $bankID = $_GET["bank_id"];
+    $status = $_GET["bank_show_status"];
+    $revert_status = "";
+    if($status === "Showing"){
+        $revert_status = "Hiding";
+    }else if($status === "Hiding"){
+        $revert_status = "Showing";
+    }
+    if(change_bank_status($bankID, $status) && ($status === "Showing" | $status === "Hiding")){
+        echo 'Now '. $status .' on page ( Click for '. $revert_status .' )<script>alert("Now '. $status .' on page")</script>';
+    }else{
+        echo '<script>alert("change status failed")</script>';
+    }
+    
 }
 ?>
 

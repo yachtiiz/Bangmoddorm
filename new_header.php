@@ -65,10 +65,10 @@ function getUserType() {
             <div class="navbar">
                 <div class="container">
                     <div class="nav-collapse">
-                        
+
                         <ul class="nav nav-pills" style="padding-left: 0px;padding-right:100px;width:100%;height: 10%;">
                             <li style="margin-left: -3%;"><img src="images/logo3.png" style="width: 70% ; margin-top: -9%"></li>
-                            <li style="margin-top: 1%;margin-left: -3%"><a href="index.php"><h5>Home</h5></a></li>
+                            <li style="margin-top: 1%;margin-left: 2%"><a href="index.php"><h5>Home</h5></a></li>
                             <li style="margin-top: 1%;"><a href="index.php?chose_page=dormitory"><h5>Dormitory</h5></a></li>
                             <!--<li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>-->
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){      ?>
@@ -79,25 +79,24 @@ function getUserType() {
                             <!--<li class=""><a href="index.php?chose_page=membersystem"><h5 >Member System</h5></a></li>-->
                             <?php //}     ?>
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
-                            <li style="margin-top: 1%;"><a href="index.php?chose_page=adminsystem"><h5 >Admin System</h5></a></li>
+<!--                            <li style="margin-top: 1%;"><a href="index.php?chose_page=adminsystem"><h5 >Admin System</h5></a></li>-->
                             <?php //}     ?>
                             <!--                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>-->
-                                <?php
-                                if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) {
-                                    $row = getUserType();
-                                    if ($row["type"] === "Member") {
+                            <?php
+                            if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) {
+                                $row = getUserType();
+                                if ($row["type"] === "Member") {
 
-                                        function getNotification() {
-                                            require 'connection.php';
-                                            $memberID = $_SESSION["memberID"];
-                                            $query = "select * from booking where memberID = $memberID and member_noti = 1";
-                                            $result = mysqli_query($con, $query);
-                                            $noti = mysqli_num_rows($result);
-                                            return $noti;
-                                        }
-                                        ?>
-                                        <li style="margin-top: 1%;"><a href="index.php?chose_page=membernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span> </h5></a></li>
-                                        <li class="pull-right" style="margin-top: 1%;">
+                                    function getNotification() {
+                                        require 'connection.php';
+                                        $memberID = $_SESSION["memberID"];
+                                        $query = "select * from booking where memberID = $memberID and member_noti = 1";
+                                        $result = mysqli_query($con, $query);
+                                        $noti = mysqli_num_rows($result);
+                                        return $noti;
+                                    }
+                                    ?>
+                                    <li class="pull-right" style="margin-top: 1%;">
                                         <div class="dropdown dropdownuser">
                                             <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span><?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
                                             <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -109,22 +108,22 @@ function getUserType() {
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
                                             </ul>
                                         </div>
-                                        </li>
-                                    <?php } ?>
-                                    <?php
-                                    if ($row["type"] === "Owner") {
+                                    </li>
+                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=membernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span> </h5></a></li>
+                                <?php } ?>
+                                <?php
+                                if ($row["type"] === "Owner") {
 
-                                        function getOwnerNotification() {
-                                            require 'connection.php';
-                                            $memberID = $_SESSION["memberID"];
-                                            $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and owner_noti = 1";
-                                            $result = mysqli_query($con, $query);
-                                            $noti = mysqli_num_rows($result);
-                                            return $noti;
-                                        }
-                                        ?>
-                                        <li style="margin-top: 1%;"><a href="index.php?chose_page=ownernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span> </h5></a></li>
-                                        <li class="pull-right" style="margin-top: 1%;">
+                                    function getOwnerNotification() {
+                                        require 'connection.php';
+                                        $memberID = $_SESSION["memberID"];
+                                        $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and owner_noti = 1";
+                                        $result = mysqli_query($con, $query);
+                                        $noti = mysqli_num_rows($result);
+                                        return $noti;
+                                    }
+                                    ?>
+                                    <li class="pull-right" style="margin-top: 1%;">
                                         <div class="dropdown dropdownuser">
                                             <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
                                             <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -139,12 +138,49 @@ function getUserType() {
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
                                             </ul>
                                         </div>
-                                        </li>
-                                        <?php
+                                    </li>
+                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=ownernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span> </h5></a></li>
+                                <?php }
+                                ?>
+
+                                <?php
+                                if ($row["type"] === "Admin") {
+
+                                    function getAdminNotification() {
+                                        require 'connection.php';
+                                        $memberID = $_SESSION["memberID"];
+//                                        $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and owner_noti = 1";
+//                                        $result = mysqli_query($con, $query);
+//                                        $noti = mysqli_num_rows($result);
+//                                        return $noti;
+                                        return 0;
                                     }
-                                } else {
                                     ?>
-                                        <a href="" class="pull-right" style="margin-left:50px; margin-top: 1.5% " data-toggle="modal" data-target="#LoginModal"><h5 style="color:#b81007;"> Sign In </h5></a>
+                                    <li class="pull-right" style="margin-top: 1%;">
+                                        <div class="dropdown dropdownuser">
+                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getAdminNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
+                                            <ul style="width: 230px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                <li><h5>Admin</h5></li>
+                                                <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
+                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span></a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=adminsystem">Admin Page</a></li>
+                                                <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
+                                                <li role="presentation"><a href="index.php?chose_page=checkRequestDorm">Check Request Dormitory</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=checkDormitory">Check Dormitory Information</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=checkMemberInfo">Check Member Info</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=checkblacklist">Check Member Blacklist</a></li>
+                                                <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=adminnotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span> </h5></a></li>
+
+
+                                <?php } ?>
+
+                            <?php } else {
+                                ?>
+                                <li style="margin-top: 1%;" class="pull-right"><a href="" data-toggle="modal" data-target="#LoginModal"><h5 style="color:#b81007;"> Sign In </h5></a>
                                     <div class="modal fade" id="LoginModal">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -162,11 +198,11 @@ function getUserType() {
                                                             <span class="input-group-addon">Password</span>
                                                             <input id="password" name="password" type="password" class="form-control" required>
                                                         </div>
-                                                        <div id="show_error" style="text-align:center;margin-bottom: 10px">
+                                                        <div id="show_error" style="text-align:center;">
 
                                                         </div>
-                                                        <button id="submit" type="submit" style='width:20%;margin-left:28%; margin-top: 40px'class="btn1 btn1-success">Sign In</button>
-                                                        <a href="index.php?chose_page=register"><button type="button" style='width:20%;margin-left:20px; margin-top: 40px' class="btn1 btn1-warning">Register</button></a>
+                                                        <button id="submit" type="submit" style='width:20%;margin-left:5%; margin-top: 3%'class="btn1 btn1-success">Sign In</button>
+                                                        <a href="index.php?chose_page=register"><button type="button" style='width:20%;margin-left:20px; margin-top: 3%' class="btn1 btn1-warning">Register</button></a>
                                                         <br>
                                                     </form>
                                                 </div>
@@ -176,7 +212,7 @@ function getUserType() {
                                 <?php } ?>
                             </li>
                         </ul>
-                            </li>
+                        </li>
                         </ul>
                     </div>                
                     <!-- /.nav-collapse -->                

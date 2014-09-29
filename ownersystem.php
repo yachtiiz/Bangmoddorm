@@ -1,7 +1,6 @@
 
 
 <?php
-
 ?>
 
 <div class="row booking_summary">
@@ -29,7 +28,14 @@
 
                     $result = mysqli_query($con, $query);
                     while ($row = mysqli_fetch_array($result)) {
-                        echo '<a href="index.php?chose_page=editroom&dormID=' . $dormID . '&dormName=' . $dormName . '&roomID=' . $row["roomID"] . '"><button style="width: 70%" type="button" class="btn btn-primary btn-lg btn-block book-now2">' . $row["roomType"] . '</button></a><br><br>';
+//                        echo '<tr>';
+                        echo '<a href="index.php?chose_page=editroom&dormID=' . $dormID . '&dormName=' . $dormName . '&roomID=' . $row["roomID"] . '">' . $row["roomType"] . '</a>';
+//                        echo '</tr>';
+                        
+                    }
+                    if (mysqli_num_rows($result) === 0) {
+                        echo '<tr>';
+                        echo '</tr>';
                     }
                 }
 
@@ -42,18 +48,35 @@
                     <?php if (mysqli_num_rows($result) !== 0) { ?>
                         <legend><span style="margin-left:37%">Edit Your</span> Dormitory</legend>
                     <?php } ?>
+
                     <?php while ($row = mysqli_fetch_array($result)) { ?>
-                        <div class="span4" style="margin-left:15%">
-                            <a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>"><button type="button" class="btn btn-primary btn-block book-now2"><?php echo $row["dormName"] ?></button></a><br><br>
-                        </div>
-                        <div class="span5">
-                            <?php show_room($row["dormID"], $row["dormName"]); ?>
-                            <a href="index.php?chose_page=editroom&dormID=<?php echo $row["dormID"]; ?>&dormName=<?php echo $row["dormName"] ?>"><button type="button" style="width: 70%" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add Room</button><br><br></a>
+                        <div class='col-md-12'>
+                            <table class='table table-striped table-hover' style="border: solid 1px #cccccc;width:100%;margin-left: auto;margin-right: auto" >
+                                <tbody>
+                                    <tr>
+                                        <td><h4 style="text-align: center"><?php echo $row["dormName"] ?></h4></td>
+                                    </tr>
+                                    <tr>
+                                        <!--                            <div class="span4" style="margin-left:15%">-->
+                                        <td style="text-align: center"><a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>">Edit Dormitory</a></td>
+                                        <!--                            </div>-->
+                                        <!--                            <div class="span5">-->
+                                    </tr>
+                                    <tr>
+                                        <td><h4 style="text-align: center">Rooms</h4></td>
+                                    </tr>
+                                       <td> <?php show_room($row["dormID"], $row["dormName"]); ?> </td>
+                                    <tr>
+                                        <td><a href="index.php?chose_page=editroom&dormID=<?php echo $row["dormID"]; ?>&dormName=<?php echo $row["dormName"] ?>"><button type="button" class="btn1 btn1-success" style="width:20%"> Add Room Type +</button></a></td>
+                                        <!--                            </div>-->
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     <?php } ?>
                 </div>
             </fieldset>
         </form>
     </div>
-</div> <!-- /container -->
+</div></div> <!-- /container -->
 <br><br><br><br><br><br><br>

@@ -52,7 +52,7 @@
                 },
                 email: {
                     required: true,
-                    email:true
+                    email: true
                 },
                 tel: {
                     checkSpecial: true,
@@ -83,6 +83,21 @@
         <div class="row">
             <div class="span10">
                 <?php
+
+                function checkPermission($dormID) {
+                    require 'connection.php';
+
+                    $query = 'select memberID from dormitories where dormID = ' . $dormID;
+
+                    $result = mysqli_query($con, $query);
+                    $row = mysqli_fetch_array($result);
+                    $memberID = $_SESSION["memberID"];
+                    if ($memberID === $row[0]) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
 
                 function upPicture($file, $i, $dormID) {
 
@@ -177,7 +192,7 @@
                             $new_acc_name = filter_var($_POST["new_bank_acc_name"][$i], FILTER_SANITIZE_STRING);
                             $new_bank_branch = filter_var($_POST["new_bank_branch"][$i], FILTER_SANITIZE_STRING);
 
-                            $query = "INSERT INTO `BankAccount` (`dormID`, `bankAccountID`, `bankAccountName`, `bankName`, `branch`)VALUES($dormID, '$new_acc_id', '$new_acc_name', '$new_bank_name', '$new_bank_branch');";
+                            $query = "INSERT INTO `BankAccount` (`dormID`, `bankAccountID`, `bankAccountName`, `bankName`, `branch` , bank_status)VALUES($dormID, '$new_acc_id', '$new_acc_name', '$new_bank_name', '$new_bank_branch' , 'Hiding');";
                             if (mysqli_query($con, $query)) {
                                 $new_number += 1;
                             } else {
@@ -185,8 +200,12 @@
                             }
                         }
                     }
-                    if (isset($_POST["bank_acc_id"]) ? $number === count($_POST["bank_acc_id"]) : true && isset($_POST["new_bank_acc_id"]) ? $new_number === count($_POST["new_bank_acc_id"]) : true) {
-                        return true;
+                    if (isset($_POST["bank_acc_id"]) ? $number === count($_POST["bank_acc_id"]) : true) {
+                        if (isset($_POST["new_bank_acc_id"]) ? $new_number === count($_POST["new_bank_acc_id"]) : true) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
                         return false;
                     }
@@ -198,7 +217,7 @@
 
                     $dormID = filter_var($_POST["dormID"], FILTER_SANITIZE_STRING);
                     $type = filter_var($_POST["type"], FILTER_SANITIZE_STRING);
-                    $distance = filter_var($_POST["distance"], FILTER_SANITIZE_NUMBER_FLOAT);
+                    $distance = $_POST["distance"];
                     $addressNO = filter_var($_POST["addressNo"], FILTER_SANITIZE_STRING);
                     $soi = filter_var($_POST["soi"], FILTER_SANITIZE_STRING);
                     $road = filter_var($_POST["road"], FILTER_SANITIZE_STRING);
@@ -242,13 +261,24 @@
                         }
                     }
 
+                    if (isset($_FILES["change_dorm_pic"]) && isset($_POST["change_dorm_pic_id"])) {
+                        for ($i = 0; $i <= count($_FILES["change_dorm_pic"]); $i++) {
+                            if (isset($_FILES["change_dorm_pic"]["tmp_name"][$i]) && $_FILES["change_dorm_pic"]["name"][$i] !== "") {
+                                $pic_id = $_POST["change_dorm_pic_id"][$i];
+                                $msg = upPicture("change_dorm_pic", $i, $dormID);
+                                $pic_query = "update DormPic set dormPicPath = '$msg' where dormPicID = $pic_id ";
+                                mysqli_query($con, $pic_query);
+                            }
+                        }
+                    }
+
                     $pic_main_path_query = $main_dorm_path === NULL ? "" : ", dorm_pictures = '$main_dorm_path'";
 
                     $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel'" . $pic_main_path_query . " where dormID = $dormID ";
 
                     if (mysqli_query($con, $query) && update_fac($dormID) && edit_bank($dormID)) {
                         echo '<script>alert("Edit Dormitory Success ");</script>';
-                        echo '<script>window.location = "index.php?chose_page=ownersystem";</script>';
+                        echo '<script>window.location = "index.php?chose_page=editDormitory&dormID=' . $dormID . '";</script>';
                     } else {
                         echo '<script>alert("Edit Dormitory Failed (Some Information Wrong)");</script>';
                     }
@@ -273,223 +303,181 @@
                 }
 
                 if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
-                    require 'connection.php';
-                    if (isset($_POST["edit_dorm_submit"])) {
-                        if (filterPic($_FILES["dorm_pic"])) {
-                            edit_dorm();
+                    if (checkPermission($_GET["dormID"])) {
+
+
+
+                        require 'connection.php';
+                        if (isset($_POST["edit_dorm_submit"])) {
+                            if (filterPic($_FILES["dorm_pic"])) {
+                                edit_dorm();
+                            }
                         }
-                    }
 
 
-                    $query = "select * from dormitories where dormID=" . $_GET["dormID"];
-                    $result = mysqli_query($con, $query);
-                    $row = mysqli_fetch_array($result);
+                        $query = "select * from dormitories where dormID=" . $_GET["dormID"];
+                        $result = mysqli_query($con, $query);
+                        $row = mysqli_fetch_array($result);
 
-                    $fac_query = "select * from FacilitiesInDorm where dormID=" . $_GET["dormID"];
-                    $fac_result = mysqli_query($con, $fac_query);
-                    $fac_row = mysqli_fetch_array($fac_result);
+                        $fac_query = "select * from FacilitiesInDorm where dormID=" . $_GET["dormID"];
+                        $fac_result = mysqli_query($con, $fac_query);
+                        $fac_row = mysqli_fetch_array($fac_result);
 
-                    $pic_query = "select * from DormPic where dormID=" . $_GET["dormID"];
-                    $pic_result = mysqli_query($con, $pic_query);
-                    ?>
-                    <form id="form" action="" method="post" class="form-horizontal" enctype="multipart/form-data">
-                        <fieldset>
-                            <br />
-                            <h1>Edit Your Dormitory<br /><small>You can edit your dormitory information.
-                                </small></h1><br />
-                            <div class="row">
-                                <div class="span10">
-                                    <legend><span>Dormitory </span>Information</legend>
-                                </div>
-                            </div>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Dormitory Name</span>
-                                        <input disabled type="text" class="form-control" value='<?php echo $row["dormName"] ?>'>                                        
-                                    </div>
-                                    <input name="dormID" type="hidden" value="<?php echo $row["dormID"] ?>" />
-                                </div>
-                                <div class='col-lg-4 pull-right'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Type</span>
-                                        <select class="form-control" name="type"><option value="Female" <?php echo $row["type"] === 'Female' ? "selected" : "" ?> />Female Only<option <?php echo $row["type"] === 'Male' ? "selected" : "" ?> value="Male" />Male Only<option <?php echo $row["type"] === 'Female&Male' ? "selected" : "" ?> value="Female&Male" />Female & Male</select>
-                                    </div>
-                                </div>                               
-                            </div>		
-                            <br>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Distance From University</span>
-                                        <input id="distance" class="form-control" name="distance" type="text" placeholder="Insert only Number unit is KM." value='<?php echo $row["disFromUni"] ?>' >
-                                        <span class="input-group-addon">Km.</span>
+                        $pic_query = "select * from DormPic where dormID=" . $_GET["dormID"];
+                        $pic_result = mysqli_query($con, $pic_query);
+                        ?>
+                        <form id="form" action="" method="post" class="form-horizontal" enctype="multipart/form-data">
+                            <fieldset>
+                                <br />
+                                <h1>Edit Your Dormitory<br /><small>You can edit your dormitory information.
+                                    </small></h1><br />
+                                <div class="row">
+                                    <div class="span10">
+                                        <legend><span>Dormitory </span>Information</legend>
                                     </div>
                                 </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="span10">
-                                    <legend><span>Dormitory</span> address</legend>
-                                </div>
-                            </div>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Address No.</span>
-                                        <input id="address" class="form-control" type="text" name="addressNo" value='<?php echo $row["addressNo"] ?>'>
-                                    </div>
-                                </div>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Soi</span>
-                                        <input id="soi" class="form-control" type="text" name="soi" value='<?php echo $row["soi"] ?>' />
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Road</span>
-                                        <input id="road" class="form-control" type="text" name="road" value='<?php echo $row["road"] ?>' />
-                                    </div>
-                                </div>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Sub Distinct</span>
-                                        <input id="subdistinct" class="form-control" type="text" name="sub_distinct" value='<?php echo $row["subDistinct"] ?>' >
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Distinct</span>
-                                        <input id="distinct" class="form-control" type="text" name="distinct" value='<?php echo $row["dorm_distinct"] ?>' >
-                                    </div>
-                                </div>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Province</span>
-                                        <input id="province" class="form-control" type="text" name="province" value='<?php echo $row["province"] ?>' />
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Zip Code</span>
-                                        <input id="zipcode" class="form-control" type="text" name="zip_code" value='<?php echo $row["zip"] ?>'>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Latitude</span>
-                                        <input id="latitude" class="form-control" type="text" name="latitude" value='<?php echo $row["latitude"] ?>'/>
-                                    </div>
-                                </div>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Longitude</span>
-                                        <input id="longitude" class="form-control" type="text" name="longtitude" value='<?php echo $row["longtitude"] ?>' />
-                                    </div>
-                                </div>
-                            </div>
-                            <br>                              
-                            <div class="row">
-                                <div class="span10">
-                                    <legend><span>Dormitory</span> Contact</legend>
-                                </div>
-                            </div>
-                            <div class='row'>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Email</span>
-                                        <input id="email" class="form-control" type="text" name="email" value='<?php echo $row["email"] ?>'/>
-                                    </div>
-                                </div>
-                                <div class='col-lg-6'>
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Telephone</span>
-                                        <input id="tel" class="form-control" type="text" name="tel" value='<?php echo $row["tel"] ?>' />
-                                    </div>
-                                </div>
-                            </div><br>
-
-
-                            <div class="row">
-                                <div class="span10">
-                                    <legend><span>Dormitory</span> Bank Account </legend>
-                                </div>
-                            </div>
-
-                            <?php
-                            $dorm_id = $_GET["dormID"];
-                            $bank_query = "select * from BankAccount where dormID = $dorm_id";
-                            $bank_result = mysqli_query($con, $bank_query);
-
-                            if (mysqli_num_rows($bank_result) === 0) {
-                                ?>
-                                <div class='row'> 
-                                    <div class='col-lg-6'>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">Bank Name</span>
-                                            <select class="form-control" name="new_bank_name[]">
-                                                <option value="Bangkok Bank">Bangkok Bank</option>
-                                                <option value="Krung Sri Bank">Krung Sri Bank</option>
-                                                <option value="Krung Thai Bank (KTB)">Krung Thai Bank (KTB)</option>
-                                                <option value="Kasikorn Thai Bank (KBANK)">Kasikorn Thai Bank (KBANK)</option>
-                                                <option value="Kaitnakin Bank">Kaitnakin Bank</option>
-                                                <option value="CIMB Thai Bank">CIMB Thai Bank</option>
-                                                <option value="Thai Military Bank (TMB)">Thai Military Bank (TMB)</option>
-                                                <option value="Tisco Bank">Tisco Bank</option>
-                                                <option value="Thai Credit Bank (TCR)">Thai Credit Bank (TCR)</option>
-                                                <option value="Thanachart Bank">Thanachart Bank</option>
-                                                <option value="Unitied Overseas Bank (UOB)">Unitied Overseas Bank (UOB)</option>
-                                                <option value="Land and House Retail Bank (LHBANK)">Land and House Retail Bank (LHBANK)</option>
-                                                <option value="Standard Chartered">Standard Chartered</option>
-                                                <option value="SME Bank (SME)">SME Bank</option>
-                                                <option value="EXIM Thailand (EXIM)">EXIM Thailand Bank</option>
-                                                <option value="Goverment Saving Bank (GSB)">Government Saving Bank (GSB)</option>
-                                                <option value="Islamic Bank of Thailand">Islamic Bank of Thailand</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class='col-lg-6'>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">Branch</span>
-                                            <input id="branch" class="form-control" type="text" name="new_bank_branch[]" value='' />
-                                        </div>
-                                    </div>
-                                </div><br>
                                 <div class='row'>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">Bank Account Name</span>
-                                            <input id="bankaccname" class="form-control" type="text" name="new_bank_acc_name[]" value=''/>
+                                            <span class="input-group-addon">Dormitory Name</span>
+                                            <input disabled type="text" class="form-control" value='<?php echo $row["dormName"] ?>'>                                        
+                                        </div>
+                                        <input name="dormID" type="hidden" value="<?php echo $row["dormID"] ?>" />
+                                    </div>
+                                    <div class='col-lg-4 pull-right'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Type</span>
+                                            <select class="form-control" name="type"><option value="Female" <?php echo $row["type"] === 'Female' ? "selected" : "" ?> />Female Only<option <?php echo $row["type"] === 'Male' ? "selected" : "" ?> value="Male" />Male Only<option <?php echo $row["type"] === 'Female&Male' ? "selected" : "" ?> value="Female&Male" />Female & Male</select>
+                                        </div>
+                                    </div>                               
+                                </div>		
+                                <br>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Distance From University</span>
+                                            <input id="distance" class="form-control" name="distance" type="text" placeholder="Insert only Number unit is KM." value='<?php echo $row["disFromUni"] ?>' >
+                                            <span class="input-group-addon">Km.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="span10">
+                                        <legend><span>Dormitory</span> address</legend>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Address No.</span>
+                                            <input id="address" class="form-control" type="text" name="addressNo" value='<?php echo $row["addressNo"] ?>'>
                                         </div>
                                     </div>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">Bank Account ID</span>
-                                            <input id="bankaccid" class="form-control" type="text" name="new_bank_acc_id[]" value='' />
+                                            <span class="input-group-addon">Soi</span>
+                                            <input id="soi" class="form-control" type="text" name="soi" value='<?php echo $row["soi"] ?>' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Road</span>
+                                            <input id="road" class="form-control" type="text" name="road" value='<?php echo $row["road"] ?>' />
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Sub Distinct</span>
+                                            <input id="subdistinct" class="form-control" type="text" name="sub_distinct" value='<?php echo $row["subDistinct"] ?>' >
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Distinct</span>
+                                            <input id="distinct" class="form-control" type="text" name="distinct" value='<?php echo $row["dorm_distinct"] ?>' >
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Province</span>
+                                            <input id="province" class="form-control" type="text" name="province" value='<?php echo $row["province"] ?>' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Zip Code</span>
+                                            <input id="zipcode" class="form-control" type="text" name="zip_code" value='<?php echo $row["zip"] ?>'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Latitude</span>
+                                            <input id="latitude" class="form-control" type="text" name="latitude" value='<?php echo $row["latitude"] ?>'/>
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Longitude</span>
+                                            <input id="longitude" class="form-control" type="text" name="longtitude" value='<?php echo $row["longtitude"] ?>' />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>                              
+                                <div class="row">
+                                    <div class="span10">
+                                        <legend><span>Dormitory</span> Contact</legend>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Email</span>
+                                            <input id="email" class="form-control" type="text" name="email" value='<?php echo $row["email"] ?>'/>
+                                        </div>
+                                    </div>
+                                    <div class='col-lg-6'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Telephone</span>
+                                            <input id="tel" class="form-control" type="text" name="tel" value='<?php echo $row["tel"] ?>' />
                                         </div>
                                     </div>
                                 </div><br>
-                            <?php } else { ?>
-                                <?php while ($bank_row = mysqli_fetch_array($bank_result)) { ?>
-                                    <div class='row'> 
+
+
+                                <div class="row">
+                                    <div class="span10">
+                                        <legend><span>Dormitory</span> Bank Account </legend>
+                                    </div>
+                                </div>
+
+                                <?php
+                                $dorm_id = $_GET["dormID"];
+                                $bank_query = "select * from BankAccount where dormID = $dorm_id";
+                                $bank_result = mysqli_query($con, $bank_query);
+
+                                if (mysqli_num_rows($bank_result) === 0) {
+                                    ?>
+                                    <div class='row'>
+
+                                        <div class='col-lg-12' style='margin-bottom:2%;'><p style='color:red'> * Default Status When Add Bank Account is Hiding. You can change status after bank account have been added</p></div>
+
                                         <div class='col-lg-6'>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Bank Name</span>
-                                                <input type="hidden" name="bank_id[]" value="<?php echo $bank_row["bankID"] ?>" >
-                                                <select class="form-control" name="bank_name[]">
+                                                <select class="form-control" name="new_bank_name[]">
                                                     <option value="Bangkok Bank">Bangkok Bank</option>
                                                     <option value="Krung Sri Bank">Krung Sri Bank</option>
                                                     <option value="Krung Thai Bank (KTB)">Krung Thai Bank (KTB)</option>
@@ -513,7 +501,7 @@
                                         <div class='col-lg-6'>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Branch</span>
-                                                <input id="branch" class="form-control" type="text" name="bank_branch[]" value='<?php echo $bank_row["branch"] ?>' />
+                                                <input id="branch" class="form-control" type="text" name="new_bank_branch[]" value='' />
                                             </div>
                                         </div>
                                     </div><br>
@@ -521,283 +509,369 @@
                                         <div class='col-lg-6'>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Bank Account Name</span>
-                                                <input id="bankaccname" class="form-control" type="text" name="bank_acc_name[]" value='<?php echo $bank_row["bankAccountName"] ?>'/>
+                                                <input id="bankaccname" class="form-control" type="text" name="new_bank_acc_name[]" value=''/>
                                             </div>
                                         </div>
                                         <div class='col-lg-6'>
                                             <div class="input-group">
                                                 <span class="input-group-addon">Bank Account ID</span>
-                                                <input id="bankaccid" class="form-control" type="text" name="bank_acc_id[]" value='<?php echo $bank_row["bankAccountID"] ?>' />
+                                                <input id="bankaccid" class="form-control" type="text" name="new_bank_acc_id[]" value='' />
                                             </div>
                                         </div>
                                     </div><br>
-                                    <?php
-                                }
-                            }
-                            ?>
-                            <span id="inputMore">
-
-                            </span>
-                            <button type="button" id="moreBank" class="btn btn-default pull-right">More Bank Account</button>
-                            <button type="button" id="Remove_moreBank" class="btn btn-default pull-right" style="margin-right:20px">Remove More Bank Account</button>
-                            <br />
-
-                            <script>
-
-                                var morebank = 0;
-
-                                $(document).on("click", "#moreBank", function() {
-                                    $("#inputMore").append("<div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Name</span><select class='form-control' name='new_bank_name[]'><option value='Bangkok Bank'>Bangkok Bank</option><option value='Krung Sri Bank'>Krung Sri Bank</option><option value='Krung Thai Bank (KTB)'>Krung Thai Bank (KTB)</option><option value='Kasikorn Thai Bank (KBANK)'>Kasikorn Thai Bank (KBANK)</option><option value='Kaitnakin Bank'>Kaitnakin Bank</option><option value='CIMB Thai Bank'>CIMB Thai Bank</option><option value='Thai Military Bank (TMB)'>Thai Military Bank (TMB)</option><option value='Tisco Bank'>Tisco Bank</option><option value='Thai Credit Bank (TCR)'>Thai Credit Bank (TCR)</option><option value='Thanachart Bank'>Thanachart Bank</option><option value='Unitied Overseas Bank (UOB)'>Unitied Overseas Bank (UOB)</option><option value='Land and House Retail Bank (LHBANK)'>Land and House Retail Bank (LHBANK)</option><option value='Standard Chartered'>Standard Chartered</option><option value='SME Bank (SME)'>SME Bank</option><option value='EXIM Thailand (EXIM)'>EXIM Thailand Bank</option><option value='Goverment Saving Bank (GSB)'>Government Saving Bank (GSB)</option><option value='Islamic Bank of Thailand'>Islamic Bank of Thailand</option></select></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Branch</span><input class='form-control' type='text' name='new_bank_branch[]' value='' /></div></div></div><br><div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account Name</span><input class='form-control' type='text' name='new_bank_acc_name[]' value=''/></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account ID</span><input class='form-control' type='text' name='new_bank_acc_id[]' value='' /></div></div></div><br>");
-                                    morebank = morebank + 1;
-                                });
-
-                                $(document).on("click", "#Remove_moreBank", function() {
-                                    
-                                    $("#inputMore").html("");
-                                    for (i = 1; i < morebank; i++) {
-                                        $("#inputMore").append("<div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Name</span><select class='form-control' name='new_bank_name[]'><option value='Bangkok Bank'>Bangkok Bank</option><option value='Krung Sri Bank'>Krung Sri Bank</option><option value='Krung Thai Bank (KTB)'>Krung Thai Bank (KTB)</option><option value='Kasikorn Thai Bank (KBANK)'>Kasikorn Thai Bank (KBANK)</option><option value='Kaitnakin Bank'>Kaitnakin Bank</option><option value='CIMB Thai Bank'>CIMB Thai Bank</option><option value='Thai Military Bank (TMB)'>Thai Military Bank (TMB)</option><option value='Tisco Bank'>Tisco Bank</option><option value='Thai Credit Bank (TCR)'>Thai Credit Bank (TCR)</option><option value='Thanachart Bank'>Thanachart Bank</option><option value='Unitied Overseas Bank (UOB)'>Unitied Overseas Bank (UOB)</option><option value='Land and House Retail Bank (LHBANK)'>Land and House Retail Bank (LHBANK)</option><option value='Standard Chartered'>Standard Chartered</option><option value='SME Bank (SME)'>SME Bank</option><option value='EXIM Thailand (EXIM)'>EXIM Thailand Bank</option><option value='Goverment Saving Bank (GSB)'>Government Saving Bank (GSB)</option><option value='Islamic Bank of Thailand'>Islamic Bank of Thailand</option></select></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Branch</span><input class='form-control' type='text' name='new_bank_branch[]' value='' /></div></div></div><br><div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account Name</span><input class='form-control' type='text' name='new_bank_acc_name[]' value=''/></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account ID</span><input class='form-control' type='text' name='new_bank_acc_id[]' value='' /></div></div></div><br>");
-                                    }
-                                    morebank = morebank - 1;
-
-                                });
-
-
-                            </script>
-
-                            <div class="row">
-
-                                <div class="span10">
-                                    <legend><span>Dormitories </span>Facilities</legend>
-                                </div>		
-
-                                <div class="span5">
-
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            WiFi
-                                        </span>
-                                        <input type="text" name='wifi_detail' placeholder='Detail' class="form-control" value="<?php echo $fac_row["wifiDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name='wifi' <?php echo $fac_row["wifi"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Room Clean Service
-                                        </span>
-                                        <input type="text" name='room_clean_detail' placeholder='Detail' class="form-control" value="<?php echo $fac_row["roomCleanDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name='room_clean_service' <?php echo $fac_row["roomCleanService"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Wahsing Service
-                                        </span>
-                                        <input type="text" name="washing_service_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["washingDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name='washing_service' <?php echo $fac_row["washingService"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Vending Machine
-                                        </span>
-                                        <input type="text" name="vending_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["vendingDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="vending_machine" <?php echo $fac_row["vendingMachine"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Restaurant
-                                        </span>
-                                        <input type="text" name="restaurant_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["restaurantDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="restaurant" <?php echo $fac_row["restaurant"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Swimming Pool
-                                        </span>
-                                        <input type="text" name="pool_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["poolDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="swimming_pool" <?php echo $fac_row["pool"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Car Parking
-                                        </span>
-                                        <input type="number" name="parking_detail" placeholder='Number of car parking' class="form-control" value="<?php echo $fac_row["parkingDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="parking" <?php echo $fac_row["parking"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                </div>
-
-                                <div class="span5">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            Lan
-                                        </span>
-                                        <input type="text" name="lan_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["lanDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="lan" <?php echo $fac_row["lan"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Air Clean Service
-                                        </span>
-                                        <input type="text" name="air_clean_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["airCleanDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="air_clean_service" <?php echo $fac_row["airCleanService"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Laundry
-                                        </span>
-                                        <input type="text" name="laundry_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["laundryDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="laundry" <?php echo $fac_row["laundry"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Bus Service
-                                        </span>
-                                        <input type="text" name="bus_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["busDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="bus_service" <?php echo $fac_row["busService"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Fitness
-                                        </span>
-                                        <input type="text" name="fitness_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["fitnessDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="fitness" <?php echo $fac_row["fitness"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            CCTV
-                                        </span>
-                                        <input type="text" name="cctv_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["cctvDetails"] ?>">
-                                        <span class="input-group-addon">
-                                            <input type="checkbox" name="cctv" <?php echo $fac_row["cctv"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                    <div class="input-group ">
-                                        <span class="input-group-addon">
-                                            Elevator
-                                        </span>
-                                        <input type="text" name="elevator_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["elevatorDetails"] ?>">
-                                        <span class="input-group-addon" >
-                                            <input type="checkbox" name="elevator" <?php echo $fac_row["elevator"] == 1 ? "checked" : ""; ?>>
-                                        </span>
-                                    </div>
-                                    <br>
-                                </div>
-                            </div>
-                            <br/>
-
-
-                            <br/>
-                            <div class="row">
-                                <div class="span12">
-                                    <legend><span>Dormitory</span> Picture</legend>
-                                </div>
-                                <div class="span12">
-                                    <?php if (isset($row["dorm_pictures"]) && $row["dorm_pictures"] !== "") { ?>
-                                        <div class="span3">
-                                            <h4>Main Picture :</h4><br>
-                                            <p>Change Main Picture</p>
-                                            <input style='width:100%' class="form-control" name="change_main_dorm_pic" type="file" placeholder="" multipart/>
-                                        </div>
-
-                                        <div class="span8 center">
-                                            <img style="width:405px;height: 250px" class="img-thumbnail" src="images/dormitory_picture/<?php echo $row["dorm_pictures"]; ?>">
-                                        </div>
-                                    <?php } else { ?>
-                                        <label>Main Picture : &nbsp;&nbsp;&nbsp;
-                                            <input style='width:50%' class="form-control" name="main_dorm_pic" type="file" placeholder="" required/>
-                                        </label>
-                                    <?php } ?>
-                                </div>
-                            </div><br><br>
-                            <div class='row'>
-                                <div class="col-md-12">
-                                    <div class="col-md-12">
-                                        <legend><span> Screen</span> Shot</legend>
-                                    </div>
-                                    <?php
-                                    for ($i = 0; $i < mysqli_num_rows($pic_result); $i++) {
-                                        $pic_row = mysqli_fetch_array($pic_result);
-                                        ?>
-                                        <div class="col-md-4" style="width:250px;height: 250px">
-                                            <label>Picture <?php echo $i + 1; ?>
-                                                <?php if ($pic_row["dormPicPath"] !== "") { ?>
-                                                    <img class="img-thumbnail" style="width:250px;height: 224px" style="" src="images/dormitory_picture/<?php echo $pic_row["dormPicPath"]; ?>">
+                                <?php } else { ?>
+                                    <?php while ($bank_row = mysqli_fetch_array($bank_result)) { ?>
+                                        <div class='row'>
+                                            <div class="col-lg-12" style="margin-bottom:2%;">
+                                                <?php if ($bank_row["bank_status"] === "Showing") { ?>
+                                                    <button type="button" class="btn1 btn1-success" id="hiding_click<?php echo $bank_row["bankID"] ?>">Now Showing on page ( Click for Hiding )</button>
                                                 <?php } else { ?>
-                                                    <input class="form-control" name="dorm_pic[]" type="file" placeholder=""/>
+                                                    <button type="button" class="btn1 btn1-danger" id="showing_click<?php echo $bank_row["bankID"] ?>">Now Hiding on page ( Click for Showing )</button>
                                                 <?php } ?>
-                                            </label>
-                                        </div>
-                                    <?php } ?>
-                                    <?php for ($i = mysqli_num_rows($pic_result); $i < 6; $i++) {
-                                        ?>
-                                        <div class="col-md-4" style="width:250px;height: 250px">
-                                            <label>Picture <?php echo $i + 1 ?>
-                                                <input class="form-control" name="dorm_pic[]" type="file" />
-                                            </label>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="span10">
-                                    <br>
-                                    <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
-                                    <button type="button" id="<?php echo $row["status"] === "Active" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Active" ? "Hidden On Page" : "Showing On Page"; ?></button>
-                                    <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
-                                    <br><br>
-                                </div>
+                                            </div>
+                                            <script>
+
+                                                $(document).on("click", "#hiding_click<?php echo $bank_row["bankID"] ?>", function() {
+
+                                                    url = "callback.php?bank_show_status=Hiding&bank_id=<?php echo $bank_row["bankID"] ?>";
+                                                    $("#hiding_click<?php echo $bank_row["bankID"] ?>").load(url);
+                                                    document.getElementById("hiding_click<?php echo $bank_row["bankID"] ?>").setAttribute("class", "btn1 btn1-danger");
+                                                    document.getElementById("hiding_click<?php echo $bank_row["bankID"] ?>").setAttribute("id", "showing_click<?php echo $bank_row["bankID"] ?>");
+                                                    $("#showing_click<?php echo $bank_row["bankID"] ?>").html("Now Hiding on page ( Click for Showing )");
+                                                });
+
+                                                $(document).on("click", "#showing_click<?php echo $bank_row["bankID"] ?>", function() {
+
+                                                    url = "callback.php?bank_show_status=Showing&bank_id=<?php echo $bank_row["bankID"] ?>";
+                                                    $("#showing_click<?php echo $bank_row["bankID"] ?>").load(url);
+                                                    document.getElementById("showing_click<?php echo $bank_row["bankID"] ?>").setAttribute("class", "btn1 btn1-success");
+                                                    document.getElementById("showing_click<?php echo $bank_row["bankID"] ?>").setAttribute("id", "hiding_click<?php echo $bank_row["bankID"] ?>");
+                                                    $("#hiding_click<?php echo $bank_row["bankID"] ?>").html("Now Showing on page ( Click for Hiding )");
+                                                });
+
+
+                                            </script>
+                                            <div class='col-lg-6'>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Bank Name</span>
+                                                    <input type="hidden" name="bank_id[]" value="<?php echo $bank_row["bankID"] ?>" >
+                                                    <select class="form-control" name="bank_name[]">
+                                                        <option value="Bangkok Bank" <?php echo $bank_row["bankName"] === "Bangkok Bank" ? "selected" : ""; ?>>Bangkok Bank</option>
+                                                        <option value="Krung Sri Bank" <?php echo $bank_row["bankName"] === "Krung Sri Bank" ? "selected" : ""; ?>>Krung Sri Bank</option>
+                                                        <option value="Krung Thai Bank (KTB)" <?php echo $bank_row["bankName"] === "Krung Thai Bank (KTB)" ? "selected" : ""; ?>>Krung Thai Bank (KTB)</option>
+                                                        <option value="Kasikorn Thai Bank (KBANK)" <?php echo $bank_row["bankName"] === "Kasikorn Thai Bank (KBANK)" ? "selected" : ""; ?>>Kasikorn Thai Bank (KBANK)</option>
+                                                        <option value="Kaitnakin Bank" <?php echo $bank_row["bankName"] === "Kaitnakin Bank" ? "selected" : ""; ?>>Kaitnakin Bank</option>
+                                                        <option value="CIMB Thai Bank" <?php echo $bank_row["bankName"] === "CIMB Thai Bank" ? "selected" : ""; ?>>CIMB Thai Bank</option>
+                                                        <option value="Thai Military Bank (TMB)" <?php echo $bank_row["bankName"] === "Thai Military Bank (TMB)" ? "selected" : ""; ?>>Thai Military Bank (TMB)</option>
+                                                        <option value="Tisco Bank" <?php echo $bank_row["bankName"] === "Tisco Bank" ? "selected" : ""; ?>>Tisco Bank</option>
+                                                        <option value="Thai Credit Bank (TCR)" <?php echo $bank_row["bankName"] === "Thai Credit Bank (TCR)" ? "selected" : ""; ?>>Thai Credit Bank (TCR)</option>
+                                                        <option value="Thanachart Bank" <?php echo $bank_row["bankName"] === "Thanachart Bank" ? "selected" : ""; ?>>Thanachart Bank</option>
+                                                        <option value="Unitied Overseas Bank (UOB)" <?php echo $bank_row["bankName"] === "Unitied Overseas Bank (UOB)" ? "selected" : ""; ?>>Unitied Overseas Bank (UOB)</option>
+                                                        <option value="Land and House Retail Bank (LHBANK)" <?php echo $bank_row["bankName"] === "Land and House Retail Bank (LHBANK)" ? "selected" : ""; ?>>Land and House Retail Bank (LHBANK)</option>
+                                                        <option value="Standard Chartered" <?php echo $bank_row["bankName"] === "Standard Chartered" ? "selected" : ""; ?>>Standard Chartered</option>
+                                                        <option value="SME Bank (SME)" <?php echo $bank_row["bankName"] === "SME Bank (SME)" ? "selected" : ""; ?>>SME Bank</option>
+                                                        <option value="EXIM Thailand (EXIM)" <?php echo $bank_row["bankName"] === "EXIM Thailand (EXIM)" ? "selected" : ""; ?>>EXIM Thailand Bank</option>
+                                                        <option value="Goverment Saving Bank (GSB)" <?php echo $bank_row["bankName"] === "Goverment Saving Bank (GSB)" ? "selected" : ""; ?>>Government Saving Bank (GSB)</option>
+                                                        <option value="Islamic Bank of Thailand" <?php echo $bank_row["bankName"] === "Islamic Bank of Thailand" ? "selected" : ""; ?>>Islamic Bank of Thailand</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class='col-lg-6'>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Branch</span>
+                                                    <input id="branch" class="form-control" type="text" name="bank_branch[]" value='<?php echo $bank_row["branch"] ?>' />
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <div class='row'>
+                                            <div class='col-lg-6'>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Bank Account Name</span>
+                                                    <input id="bankaccname" class="form-control" type="text" name="bank_acc_name[]" value='<?php echo $bank_row["bankAccountName"] ?>'/>
+                                                </div>
+                                            </div>
+                                            <div class='col-lg-6'>
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">Bank Account ID</span>
+                                                    <input id="bankaccid" class="form-control" type="text" name="bank_acc_id[]" value='<?php echo $bank_row["bankAccountID"] ?>' />
+                                                </div>
+                                            </div>
+                                        </div><br>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                                <span id="inputMore">
+
+                                </span>
+                                <button type="button" id="moreBank" class="btn btn-default pull-right">More Bank Account</button>
+                                <button type="button" id="Remove_moreBank" class="btn btn-default pull-right" style="margin-right:20px">Remove More Bank Account</button>
+                                <br />
+
                                 <script>
 
-                                    $(document).on("click", "#disabled_button", function() {
-                                        $("#disabled_button").load("callback.php?disabled_dorm=" + "<?php echo $row["dormID"]; ?>");
-                                        document.getElementById("disabled_button").setAttribute("id", "active_button");
-                                        alert("Your Dormitory Information be Hidden on Dormitory Page");
+                                    var morebank = 0;
+
+                                    $(document).on("click", "#moreBank", function() {
+                                        $("#inputMore").append("<div class='row'><div class='col-lg-12' style='margin-bottom:2%;'><p style='color:red'> * Default Status When Add Bank Account is Hiding. You can change status after bank account have been added</p></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Name</span><select class='form-control' name='new_bank_name[]'><option value='Bangkok Bank'>Bangkok Bank</option><option value='Krung Sri Bank'>Krung Sri Bank</option><option value='Krung Thai Bank (KTB)'>Krung Thai Bank (KTB)</option><option value='Kasikorn Thai Bank (KBANK)'>Kasikorn Thai Bank (KBANK)</option><option value='Kaitnakin Bank'>Kaitnakin Bank</option><option value='CIMB Thai Bank'>CIMB Thai Bank</option><option value='Thai Military Bank (TMB)'>Thai Military Bank (TMB)</option><option value='Tisco Bank'>Tisco Bank</option><option value='Thai Credit Bank (TCR)'>Thai Credit Bank (TCR)</option><option value='Thanachart Bank'>Thanachart Bank</option><option value='Unitied Overseas Bank (UOB)'>Unitied Overseas Bank (UOB)</option><option value='Land and House Retail Bank (LHBANK)'>Land and House Retail Bank (LHBANK)</option><option value='Standard Chartered'>Standard Chartered</option><option value='SME Bank (SME)'>SME Bank</option><option value='EXIM Thailand (EXIM)'>EXIM Thailand Bank</option><option value='Goverment Saving Bank (GSB)'>Government Saving Bank (GSB)</option><option value='Islamic Bank of Thailand'>Islamic Bank of Thailand</option></select></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Branch</span><input class='form-control' type='text' name='new_bank_branch[]' value='' /></div></div></div><br><div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account Name</span><input class='form-control' type='text' name='new_bank_acc_name[]' value=''/></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account ID</span><input class='form-control' type='text' name='new_bank_acc_id[]' value='' /></div></div></div><br>");
+                                        morebank = morebank + 1;
                                     });
-                                    $(document).on("click", "#active_button", function() {
-                                        $("#active_button").load("callback.php?showing_dorm=" + "<?php echo $row["dormID"]; ?>");
+
+                                    $(document).on("click", "#Remove_moreBank", function() {
+
+                                        $("#inputMore").html("");
+                                        for (i = 1; i < morebank; i++) {
+                                            $("#inputMore").append("<div class='row'><div class='col-lg-12' style='margin-bottom:2%;'><p style='color:red'> * Default Status When Add Bank Account is Hiding. You can change status after bank account have been added</p></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Name</span><select class='form-control' name='new_bank_name[]'><option value='Bangkok Bank'>Bangkok Bank</option><option value='Krung Sri Bank'>Krung Sri Bank</option><option value='Krung Thai Bank (KTB)'>Krung Thai Bank (KTB)</option><option value='Kasikorn Thai Bank (KBANK)'>Kasikorn Thai Bank (KBANK)</option><option value='Kaitnakin Bank'>Kaitnakin Bank</option><option value='CIMB Thai Bank'>CIMB Thai Bank</option><option value='Thai Military Bank (TMB)'>Thai Military Bank (TMB)</option><option value='Tisco Bank'>Tisco Bank</option><option value='Thai Credit Bank (TCR)'>Thai Credit Bank (TCR)</option><option value='Thanachart Bank'>Thanachart Bank</option><option value='Unitied Overseas Bank (UOB)'>Unitied Overseas Bank (UOB)</option><option value='Land and House Retail Bank (LHBANK)'>Land and House Retail Bank (LHBANK)</option><option value='Standard Chartered'>Standard Chartered</option><option value='SME Bank (SME)'>SME Bank</option><option value='EXIM Thailand (EXIM)'>EXIM Thailand Bank</option><option value='Goverment Saving Bank (GSB)'>Government Saving Bank (GSB)</option><option value='Islamic Bank of Thailand'>Islamic Bank of Thailand</option></select></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Branch</span><input class='form-control' type='text' name='new_bank_branch[]' value='' /></div></div></div><br><div class='row'><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account Name</span><input class='form-control' type='text' name='new_bank_acc_name[]' value=''/></div></div><div class='col-lg-6'><div class='input-group'><span class='input-group-addon'>Bank Account ID</span><input class='form-control' type='text' name='new_bank_acc_id[]' value='' /></div></div></div><br>");
+                                        }
+                                        morebank = morebank - 1;
+
                                     });
 
 
                                 </script>
-                            </div>
-                        </fieldset>
-                    </form>
-                <?php } else { ?>
+
+                                <div class="row">
+
+                                    <div class="span10">
+                                        <legend><span>Dormitories </span>Facilities</legend>
+                                    </div>		
+
+                                    <div class="span5">
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                WiFi
+                                            </span>
+                                            <input type="text" name='wifi_detail' placeholder='Detail' class="form-control" value="<?php echo $fac_row["wifiDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name='wifi' <?php echo $fac_row["wifi"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Room Clean Service
+                                            </span>
+                                            <input type="text" name='room_clean_detail' placeholder='Detail' class="form-control" value="<?php echo $fac_row["roomCleanDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name='room_clean_service' <?php echo $fac_row["roomCleanService"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Wahsing Service
+                                            </span>
+                                            <input type="text" name="washing_service_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["washingDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name='washing_service' <?php echo $fac_row["washingService"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Vending Machine
+                                            </span>
+                                            <input type="text" name="vending_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["vendingDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="vending_machine" <?php echo $fac_row["vendingMachine"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Restaurant
+                                            </span>
+                                            <input type="text" name="restaurant_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["restaurantDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="restaurant" <?php echo $fac_row["restaurant"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Swimming Pool
+                                            </span>
+                                            <input type="text" name="pool_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["poolDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="swimming_pool" <?php echo $fac_row["pool"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Car Parking
+                                            </span>
+                                            <input type="number" name="parking_detail" placeholder='Number of car parking' class="form-control" value="<?php echo $fac_row["parkingDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="parking" <?php echo $fac_row["parking"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                    </div>
+
+                                    <div class="span5">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                Lan
+                                            </span>
+                                            <input type="text" name="lan_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["lanDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="lan" <?php echo $fac_row["lan"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Air Clean Service
+                                            </span>
+                                            <input type="text" name="air_clean_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["airCleanDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="air_clean_service" <?php echo $fac_row["airCleanService"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Laundry
+                                            </span>
+                                            <input type="text" name="laundry_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["laundryDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="laundry" <?php echo $fac_row["laundry"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Bus Service
+                                            </span>
+                                            <input type="text" name="bus_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["busDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="bus_service" <?php echo $fac_row["busService"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Fitness
+                                            </span>
+                                            <input type="text" name="fitness_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["fitnessDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="fitness" <?php echo $fac_row["fitness"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                CCTV
+                                            </span>
+                                            <input type="text" name="cctv_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["cctvDetails"] ?>">
+                                            <span class="input-group-addon">
+                                                <input type="checkbox" name="cctv" <?php echo $fac_row["cctv"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                        <div class="input-group ">
+                                            <span class="input-group-addon">
+                                                Elevator
+                                            </span>
+                                            <input type="text" name="elevator_detail" placeholder='Detail' class="form-control" value="<?php echo $fac_row["elevatorDetails"] ?>">
+                                            <span class="input-group-addon" >
+                                                <input type="checkbox" name="elevator" <?php echo $fac_row["elevator"] == 1 ? "checked" : ""; ?>>
+                                            </span>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                                <br/>
+
+
+                                <br/>
+                                <div class="row">
+                                    <div class="span12">
+                                        <legend><span>Dormitory</span> Picture</legend>
+                                    </div>
+                                    <div class="span12">
+                                        <?php if (isset($row["dorm_pictures"]) && $row["dorm_pictures"] !== "") { ?>
+                                            <div class="span3">
+                                                <h4>Main Picture :</h4><br>
+                                                <p>Change Main Picture</p>
+                                                <input style='width:100%' class="form-control" name="change_main_dorm_pic" type="file" placeholder="" multipart/>
+                                            </div>
+
+                                            <div class="span8 center">
+                                                <img style="width:405px;height: 250px" class="img-thumbnail" src="images/dormitory_picture/<?php echo $row["dorm_pictures"]; ?>">
+                                            </div>
+                                        <?php } else { ?>
+                                            <label>Main Picture : &nbsp;&nbsp;&nbsp;
+                                                <input style='width:50%' class="form-control" name="main_dorm_pic" type="file" placeholder="" required/>
+                                            </label>
+                                        <?php } ?>
+                                    </div>
+                                </div><br><br>
+                                <div class='row'>
+                                    <div class="col-md-12">
+                                        <div class="col-md-12">
+                                            <legend><span> Screen</span> Shot</legend>
+                                        </div>
+                                        <?php
+                                        for ($i = 0; $i < mysqli_num_rows($pic_result); $i++) {
+                                            $pic_row = mysqli_fetch_array($pic_result);
+                                            ?>
+                                            <div class="col-md-4" style="width:250px;height: 280px">
+                                                <label>Picture <?php echo $i + 1; ?> ( change picture )
+                                                    <input type="file" class="form-control" name="change_dorm_pic[]">
+                                                    <input type="hidden" name="change_dorm_pic_id[]" value="<?php echo $pic_row["dormPicID"]; ?>">
+                                                    <?php if ($pic_row["dormPicPath"] !== "") { ?>
+                                                        <img class="img-thumbnail" style="width:250px;height: 224px" style="" src="images/dormitory_picture/<?php echo $pic_row["dormPicPath"]; ?>">
+                                                    <?php } else { ?>
+                                                        <input class="form-control" name="dorm_pic[]" type="file" placeholder=""/>
+                                                    <?php } ?>
+                                                </label>
+                                            </div>
+                                        <?php } ?>
+                                        <?php for ($i = mysqli_num_rows($pic_result); $i < 6; $i++) {
+                                            ?>
+                                            <div class="col-md-4" style="width:250px;height: 280px">
+                                                <label>Picture <?php echo $i + 1 ?>
+                                                    <input class="form-control" name="dorm_pic[]" type="file" />
+                                                </label>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="span10">
+                                        <br>
+                                        <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
+                                        <button type="button" id="<?php echo $row["status"] === "Active" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Active" ? "Hidden On Page" : "Showing On Page"; ?></button>
+                                        <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
+                                        <br><br>
+                                    </div>
+                                    <script>
+
+                                        $(document).on("click", "#disabled_button", function() {
+                                            $("#disabled_button").load("callback.php?disabled_dorm=" + "<?php echo $row["dormID"]; ?>");
+                                            document.getElementById("disabled_button").setAttribute("id", "active_button");
+                                            alert("Your Dormitory Information be Hidden on Dormitory Page");
+                                        });
+                                        $(document).on("click", "#active_button", function() {
+                                            $("#active_button").load("callback.php?showing_dorm=" + "<?php echo $row["dormID"]; ?>");
+                                        });
+
+
+                                    </script>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <?php
+                    } else {
+                        echo '<script> alert("Permission Denied");</script>';
+                        echo '<script> window.location = "index.php?chose_page=ownersystem"</script>';
+                    }
+                } else {
+                    ?>
                 </div>
                 <h1>Something Error</h1>
             <?php } ?>

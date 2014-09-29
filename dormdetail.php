@@ -155,7 +155,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     </tr>
                 </tbody>
             </table>
-        <br><br><br>
+            <br><br><br>
         </div>
     </div>
 
@@ -181,18 +181,18 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             </tr>
             <tr>
                 <td>
-                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["airCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; AIRCLEANSERVICE</h4>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["airCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; AIR CLEAN SERVICE</h4>
                 </td>
                 <td>
-                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["roomCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ROOMCLEANSERVICE</h4> 
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["roomCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ROOM CLEAN SERVICE</h4> 
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["washingService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WASHINGSERVICE</h4>
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["washingService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WASHING SERVICE</h4>
                 </td>
                 <td>
-                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["busService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; BUSSERVICE</h4> 
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["busService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; BUS SERVICE</h4> 
                 </td>
             </tr>
             <tr>
@@ -208,7 +208,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["restaurant"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; RESTAURANT </h4>
                 </td>
                 <td>
-                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["vendingMachine"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; VENDINGMACHINE</h4> 
+                    <h4 style="margin-left:40px"> <?php echo $fac_dorm_row["vendingMachine"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; VENDING MACHINE</h4> 
                 </td>
             </tr>
             <tr>
@@ -293,23 +293,36 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         <button class="btn1 btn1-primary" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: -10px; margin-top: 40px; width: 40% ">
                             Detail
                         </button>
-                        <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button><br><br>
+                        <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) { ?>
+                            <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
+                            <script>
+                                $(document).on("click", "#booking<?php echo $dorm_room_row["roomType"] ?>", function() {
+                                    event.preventDefault;
+                                    $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                                });
+                            </script>
+                        <?php } else { ?>
+                            <button id="booking_not_sign_in<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
+                            <script>
 
-                                                                                                                                <!--<button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now"style="margin-left: 50px; ">Booking</button><br><br>
-                                                                                                                                <button class="btn btn-primary btn-lg book-now" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: 50px; ">
-                                                                                                                                    Detail
-                                                                                                                                </button>-->
+                                $(function() {
+
+                                    $("#booking_not_sign_in<?php echo $dorm_room_row["roomType"] ?>").on("click", function() {
+                                        alert("Please Sign in before booking.");
+                                    });
+
+
+
+                                });
+
+                            </script>
+                        <?php } ?>
+
+                        <br><br>
                         <br><br>
 
 
-                        <script>
 
-                            $(document).on("click", "#booking<?php echo $dorm_room_row["roomType"] ?>", function() {
-                                event.preventDefault;
-                                $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
-                            });
-
-                        </script>
                         <!-- Modal -->
                         <div class="modal fade" id="room<?php echo $dorm_room_row["roomID"]; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -405,16 +418,30 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width:30%">Close</button>
-                                            <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width:30%">Booking</button>
+                                            <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) { ?>
+                                                <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width:30%">Booking</button>                                            
+                                                <script>
+                                                    $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomType"] ?>", function() {
+                                                        event.preventDefault;
+                                                        $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                                                    });
+                                                </script>
+                                            <?php } else { ?>
+                                                <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width: 30% ">Booking</button>
+                                                <script>
 
-                                            <!--<button type="button" class="btn btn-default book-now" data-dismiss="modal">Close</button>
-                                            <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn book-now">Booking</button>-->
-                                            <script>
-                                                $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomType"] ?>", function() {
-                                                    event.preventDefault;
-                                                    $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
-                                                });
-                                            </script>
+                                                    $(function() {
+
+                                                        $("#modal_booking<?php echo $dorm_room_row["roomType"] ?>").on("click", function() {
+                                                            alert("Please Sign in before booking.");
+                                                        });
+
+
+
+                                                    });
+
+                                                </script>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -497,22 +524,11 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         echo '<td style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
                         echo '</tr>';
                     }
-                    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 4) {
-                        for ($i = mysqli_num_rows($result); $i < 4; $i++) {
-                            echo '<tr>';
-                            echo '<td colspan="2" style="height:121px"></td>';
-                            echo '</tr>';
-                        }
-                    }
+
                     if (mysqli_num_rows($result) === 0) {
                         echo '<tr>';
                         echo '<td colspan="2" style="height:121px"><h3 style="text-align:center"> No Comment Yet</h3></td>';
                         echo '</tr>';
-                        for ($i = 1; $i < 4; $i++) {
-                            echo '<tr>';
-                            echo '<td colspan="2" style="height:121px"></td>';
-                            echo '</tr>';
-                        }
                     }
                 }
 
@@ -581,7 +597,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         <span id="show" style="width:5%"></span>
                         <br>
                         <button id="comment_submit" class="btn1 btn1-success" style="margin-top:20px;width: 30%;"> Comment</button>
-                        <button class="btn1 btn1-danger" style="margin-top:20px;width: 30%;margin-left: 5%"> Clear</button>
+                        <button class="btn1 btn1-danger" id='clear_comment' style="margin-top:20px;width: 30%;margin-left: 5%"> Clear</button>
 
                         <!--                <button id="comment_submit" class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 12%"> Comment</button>
                                             <button class="btn btn-default book-now" style="margin-top:20px;width: 30%;margin-left: 5%"> Clear</button>-->
@@ -596,7 +612,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     $("#comment_submit").on("click", function() {
                         if ($("#comment_value").val() !== "") {
                             if ($("#comment_rate").val() !== "default") {
-                                url = "callback.php?comment_value=" + $("#comment_value").val().replace(/ /g, "+") + "&comment_dormID=<?php echo $_GET["dormID"]; ?>&comment_memberID=<?php echo $_SESSION["memberID"]; ?>&comment_rate=" + $("#comment_rate").val();
+                                url = "callback.php?comment_value=" + $("#comment_value").val().replace(/ /g, "+") + "&comment_dormID=<?php echo $_GET["dormID"]; ?>&comment_memberID=<?php echo isset($_SESSION["auth"]) ? $_SESSION["auth"] === true ? $_SESSION["memberID"] : ""  : "" ?>&comment_rate=" + $("#comment_rate").val();
                                 $("#show").append('<img style="height:20px" src="images/loading.gif" />');
                                 var timer = setTimeout(function() {
                                     clearTimeout(timer);
@@ -641,6 +657,13 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         }
                     });
 
+                    $("#clear_comment").on("click", function() {
+
+                        $("#comment_value").removeAttr("value");
+                        document.getElementById("rate_default").setAttribute("selected", " ");
+
+                    });
+
                     $("#comment_rate").on("change", function() {
 
                         if ($("#comment_rate").val() !== "default") {
@@ -664,6 +687,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         }
                     });
 
+
                     $(function() {
                         $(".comment_page li a").live("click", function() {
                             event.preventDefault();
@@ -681,6 +705,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                             });
                         });
                     });
+
 
                 });
 

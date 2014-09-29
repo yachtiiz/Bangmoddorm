@@ -62,7 +62,7 @@ if (isset($_GET["dormID"]) && isset($_GET["roomID"]) && is_numeric($_GET["dormID
     $room_result = mysqli_query($con, $room_query);
     $room_row = mysqli_fetch_array($room_result);
 
-    $bank_query = "select * from BankAccount where dormID = $dormID";
+    $bank_query = "select * from BankAccount where dormID = $dormID and bank_status = 'Showing'";
     $bank_result = mysqli_query($con, $bank_query);
 
     if (isset($_POST["submit_book"])) {
