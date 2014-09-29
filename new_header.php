@@ -74,7 +74,7 @@ function getUserType() {
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){      ?>
                             <?php if (!isset($_SESSION["auth"])) { ?><li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >Register</h5></a></li> <?php } ?>
                             <?php //}     ?>
-                            <li style="margin-top: 1%;"><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>
+<!--                            <li style="margin-top: 1%;"><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>-->
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){      ?>
                             <!--<li class=""><a href="index.php?chose_page=membersystem"><h5 >Member System</h5></a></li>-->
                             <?php //}     ?>
