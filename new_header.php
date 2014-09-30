@@ -149,11 +149,10 @@ function getUserType() {
                                     function getAdminNotification() {
                                         require 'connection.php';
                                         $memberID = $_SESSION["memberID"];
-//                                        $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and owner_noti = 1";
-//                                        $result = mysqli_query($con, $query);
-//                                        $noti = mysqli_num_rows($result);
-//                                        return $noti;
-                                        return 0;
+                                        $query = "select * from ConfirmationDorm where noti_status = 0";
+                                        $result = mysqli_query($con, $query);
+                                        $noti = mysqli_num_rows($result);
+                                        return $noti;
                                     }
                                     ?>
                                     <li class="pull-right" style="margin-top: 1%;">
@@ -162,7 +161,7 @@ function getUserType() {
                                             <ul style="width: 230px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Admin</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span></a></li>
+<!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=adminsystem">Admin Page</a></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkRequestDorm">Check Request Dormitory</a></li>
@@ -173,9 +172,7 @@ function getUserType() {
                                             </ul>
                                         </div>
                                     </li>
-                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=adminnotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span> </h5></a></li>
-
-
+                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=checkRequestDorm"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span> </h5></a></li>
                                 <?php } ?>
 
                             <?php } else {

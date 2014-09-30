@@ -190,6 +190,20 @@
                                         <input type="file" name="display_pic" class="form-control">
                                     </label>
                                 </div>
+                                <?php 
+                                $color = "";
+                                
+                                switch ($_SESSION["status"]){
+                                    case "Normal" : $color = "green";
+                                        break;
+                                    case "Blacklist" : $color = "red";
+                                        break;
+                                } ?>
+                                <div class="span3">
+                                    <label><br>
+                                        <h4>Status =  <span style="color: <?php echo $color ?>"><?php echo $_SESSION["status"] ?></span></h4>
+                                    </label>
+                                </div>
                             </div>
                             <div class="row">
 

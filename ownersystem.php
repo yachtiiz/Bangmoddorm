@@ -61,7 +61,7 @@
                                         <td><h4 style="text-align: center"><?php echo $row["dormName"] ?></h4></td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: center"><a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>">Edit Dormitory</a></td>
+                                        <td style="text-align: center"><a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>"><button class="btn1 btn1-primary" type="button">Edit Dormitory</button></a></td>
                                     </tr>
                                     <tr>
                                         <td><h4 style="text-align: center">Rooms</h4></td>

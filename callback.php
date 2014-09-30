@@ -17,6 +17,7 @@ function login($login, $password) {
         $memberID = $row["memberID"];
         $lastname = $row["lastName"];
         $type = $row["type"];
+        $status = $row["status"];
     } else {
         $canLogin = false;
     }
@@ -29,6 +30,7 @@ function login($login, $password) {
         $_SESSION["firstname"] = $firstname;
         $_SESSION["lastname"] = $lastname;
         $_SESSION["type"] = $type;
+        $_SESSION["status"] = $status;
         return true;
     } else {
         return false;
@@ -106,7 +108,7 @@ function approve_dormitory($confirmID, $dorm_rate) {
 
 function reject_dormitory($confirmID) {
     require 'connection.php';
-    $query = "update ConfirmationDorm set approval = 'Reject' where confirmID = $confirmID ";
+    $query = "update ConfirmationDorm set approval = 'Reject' , noti_status = 1 where confirmID = $confirmID ";
 
     if (mysqli_query($con, $query)) {
         return true;

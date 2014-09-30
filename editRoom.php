@@ -26,8 +26,7 @@ function filterPic(&$arr_pic) {
         if ($arr_pic["name"][$i] != "") {
             if ($arr_pic["type"][$i] == "image/jpg" || $arr_pic["type"][$i] == "image/png" || $arr_pic["type"][$i] == "image/x-png" || $arr_pic["type"][$i] == "image/jpeg" || $arr_pic["type"][$i] == "image/gif" || $arr_pic["type"][$i] == "image/pjpeg") {
                 $value += 0;
-            }
-            else
+            } else
                 $value += 1;
         }
     }
@@ -169,7 +168,7 @@ function edit_room($roomID) {
             }
         }
     }
-    
+
     if (isset($_FILES["change_room_pic"]) && isset($_POST["change_room_pic_id"])) {
         for ($i = 0; $i <= count($_FILES["change_room_pic"]); $i++) {
             if (isset($_FILES["change_room_pic"]["tmp_name"][$i]) && $_FILES["change_room_pic"]["name"][$i] !== "") {
@@ -215,23 +214,28 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
     }
 
     if (isset($_POST["edit_submit"])) {
-        if (isset($_POST["roomID"]) && is_numeric($_POST["roomID"]) && $_POST["roomID"] !== "") {
-            if (edit_room($_POST["roomID"])) {
-                echo '<script>alert("Edit Room Success");</script>';
-                echo '<script>window.location = "index.php?chose_page=editroom&dormID='. $dormID .'&dormName='. $dormName .'&roomID='. $roomID .'"</script>';
+        if ($_POST["room_available"] <= $_POST["number_of_room"]) {
+            if (isset($_POST["roomID"]) && is_numeric($_POST["roomID"]) && $_POST["roomID"] !== "") {
+                if (edit_room($_POST["roomID"])) {
+                    echo '<script>alert("Edit Room Success");</script>';
+                    echo '<script>window.location = "index.php?chose_page=editroom&dormID=' . $dormID . '&dormName=' . $dormName . '&roomID=' . $roomID . '"</script>';
+                } else {
+                    echo '<script>alert("Edit Room Failed");</script>';
+                    echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+                }
             } else {
-                echo '<script>alert("Edit Room Failed");</script>';
-                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+                $msg = add_room($_POST["dormID"]);
+                if ($msg == "Add Complete") {
+                    echo '<script>alert("Add Room Complete");</script>';
+                    echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+                } else {
+                    echo '<script>alert("' . $msg . '");</script>';
+                    echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+                }
             }
-        } else {
-            $msg = add_room($_POST["dormID"]);
-            if ($msg == "Add Complete") {
-                echo '<script>alert("Add Room Complete");</script>';
-                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
-            } else {
-                echo '<script>alert("' . $msg . '");</script>';
-                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
-            }
+        }else{
+            echo '<script>alert("Room available cannot more than Number of room")</script>';
+            echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
         }
     }
     ?>

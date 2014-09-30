@@ -293,22 +293,52 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         <button class="btn1 btn1-primary" data-toggle="modal" data-target="#room<?php echo $dorm_room_row["roomID"]; ?>" style="margin-left: -10px; margin-top: 40px; width: 40% ">
                             Detail
                         </button>
-                        <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) { ?>
-                            <button id="booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
+                        <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member" && $_SESSION["status"] !== "Blacklist") { ?>
+                            <button id="booking<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
                             <script>
-                                $(document).on("click", "#booking<?php echo $dorm_room_row["roomType"] ?>", function() {
+                                $(document).on("click", "#booking<?php echo $dorm_room_row["roomID"] ?>", function() {
                                     event.preventDefault;
-                                    $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                                    $("#booking<?php echo $dorm_room_row["roomID"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
                                 });
                             </script>
-                        <?php } else { ?>
-                            <button id="booking_not_sign_in<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
+                        <?php } else if($_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["type"] === "Owner") { ?>
+                            <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
                             <script>
 
                                 $(function() {
 
-                                    $("#booking_not_sign_in<?php echo $dorm_room_row["roomType"] ?>").on("click", function() {
-                                        alert("Please Sign in before booking.");
+                                    $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
+                                        alert("Only Member can be booking.");
+                                    });
+
+
+
+                                });
+
+                            </script>
+                        <?php } else if($_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["status"] === "Blacklist") { ?>
+                            <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
+                            <script>
+
+                                $(function() {
+
+                                    $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
+                                        alert("Cannot booking. You are Blacklist.");
+                                    });
+
+
+
+                                });
+
+                            </script>
+                        <?php } else { ?>
+                            <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
+                            <script>
+
+                                $(function() {
+
+                                    $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
+                                        alert("Please sign in before booking.");
                                     });
 
 
@@ -317,7 +347,6 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
 
                             </script>
                         <?php } ?>
-
                         <br><br>
                         <br><br>
 
@@ -418,26 +447,47 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width:30%">Close</button>
-                                            <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true) { ?>
-                                                <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width:30%">Booking</button>                                            
+                                            <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member" && $_SESSION["status"] !== "Blacklist" ) { ?>
+                                                <button id="modal_booking<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="width:30%">Booking</button>                                            
                                                 <script>
-                                                    $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomType"] ?>", function() {
-                                                        event.preventDefault;
-                                                        $("#booking<?php echo $dorm_room_row["roomType"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
+                                                    $(document).on("click", "#modal_booking<?php echo $dorm_room_row["roomID"] ?>", function() {
+                                                        $("#modal_booking<?php echo $dorm_room_row["roomID"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
                                                     });
                                                 </script>
-                                            <?php } else { ?>
-                                                <button id="modal_booking<?php echo $dorm_room_row["roomType"] ?>" type="button" class="btn1 btn1-success"style="width: 30% ">Booking</button>
+                                            <?php } else if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Owner") { ?>
+                                                <button id="modal_booking<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="width: 30% ">Booking</button>
                                                 <script>
 
                                                     $(function() {
 
-                                                        $("#modal_booking<?php echo $dorm_room_row["roomType"] ?>").on("click", function() {
+                                                        $("#modal_booking<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
+                                                            alert("Only Member can be booking.");
+                                                        });
+                                                    });
+
+                                                </script>
+                                            <?php } else if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["status"] == "Blacklist") { ?>
+                                                <button id="modal_booking<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="width: 30% ">Booking</button>
+                                                <script>
+
+                                                    $(function() {
+
+                                                        $("#modal_booking<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
+                                                            alert("Cannot Booking. You are Blacklist");
+                                                        });
+                                                    });
+
+                                                </script>
+                                                
+                                            <?php } else { ?>
+                                                <button id="modal_booking<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="width: 30% ">Booking</button>
+                                                <script>
+
+                                                    $(function() {
+
+                                                        $("#modal_booking<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
                                                             alert("Please Sign in before booking.");
                                                         });
-
-
-
                                                     });
 
                                                 </script>
@@ -580,7 +630,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     </td>
                 </tr>
             </tbody>
-            <?php if (isset($_SESSION["auth"])) { ?>
+            <?php if (isset($_SESSION["auth"]) && $_SESSION["type"] === "Member" && $_SESSION["status"] !== "Blacklist") { ?>
                 <tr>
                     <td style="width:300px"><h3><?php echo $_SESSION["firstname"] . " " . substr($_SESSION["lastname"], 0, 1) . '.'; ?> </h3><br>Solo travelers</td>
                     <td>
