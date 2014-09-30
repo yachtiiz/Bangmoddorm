@@ -301,7 +301,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                     $("#booking<?php echo $dorm_room_row["roomID"] ?>").load("callback.php?memberID=<?php echo $_SESSION["memberID"]; ?>&dormID=<?php echo $dorm_row["dormID"]; ?>&roomID=<?php echo $dorm_room_row["roomID"]; ?>");
                                 });
                             </script>
-                        <?php } else if($_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["type"] === "Owner") { ?>
+                        <?php } else if(isset($_SESSION["auth"]) && $_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["type"] === "Owner") { ?>
                             <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
                             <script>
 
@@ -316,7 +316,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                 });
 
                             </script>
-                        <?php } else if($_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["status"] === "Blacklist") { ?>
+                        <?php } else if(isset($_SESSION["auth"]) && $_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["status"] === "Blacklist") { ?>
                             <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="margin-left: 30px; margin-top: 40px; width: 40% ">Booking</button>
                             <script>
 
