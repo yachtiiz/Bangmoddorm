@@ -262,7 +262,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                         Price :  
                                     </td>
                                     <td>
-                                        <?php echo $dorm_room_row["price"]; ?> BATH/MONTH 
+                                        <?php echo $dorm_room_row["price"]; ?> BAHT/MONTH 
                                     </td>
                                 </tr>
                                 <tr>
@@ -437,7 +437,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                                 <div class="col-md-6" style="padding-left:0px;margin-top:30px">
                                                     <div class="pull-left strong" style="color:green">Number Room Available : <?php echo $dorm_room_row["roomAvailable"]; ?></div>
                                                 </div>
-                                                <div class="pull-right"><h3>Price <?php echo $dorm_room_row["price"] ?> Bath/Month</h3></div>
+                                                <div class="pull-right"><h3>Price <?php echo $dorm_room_row["price"] ?> Baht/Month</h3></div>
 
 
 

@@ -123,7 +123,7 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
                     </tr>
                     <tr style=" border-bottom: #cccccc solid 1px"> 
                         <td>
-                            <h4><span>Distinct : </span></h4>
+                            <h4><span>District : </span></h4>
                         </td>
                         <td>
                             <?php echo $row["province"]; ?>

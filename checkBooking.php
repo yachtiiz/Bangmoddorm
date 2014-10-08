@@ -234,15 +234,15 @@
                                                 <br>
                                                 <legend style="font-style: italic;text-align: left">Change Status</legend>
                                                 <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
-                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled</button>
                                                 <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
+                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled By Member</button>
                                                 <br><br>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer" style="text-align: center">
+                                    <div class="modal-footer" style="">
                                         <span id="ajaxscript"></span>
-                                        <button id="close_modal" type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width: 20%">Close</button>
+                                        <button id="close_modal" type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width: 10%">Close</button>
                                     </div>
                                 </form>
                             </div>

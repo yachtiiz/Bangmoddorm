@@ -391,7 +391,7 @@
                                     </div>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">Sub Distinct</span>
+                                            <span class="input-group-addon">Sub District</span>
                                             <input id="subdistinct" class="form-control" type="text" name="sub_distinct" value='<?php echo $row["subDistinct"] ?>' >
                                         </div>
                                     </div>
@@ -400,7 +400,7 @@
                                 <div class='row'>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">Distinct</span>
+                                            <span class="input-group-addon">District</span>
                                             <input id="distinct" class="form-control" type="text" name="distinct" value='<?php echo $row["dorm_distinct"] ?>' >
                                         </div>
                                     </div>
