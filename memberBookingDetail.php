@@ -10,12 +10,13 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
         $book_row = mysqli_fetch_array($result);
         $roomID = $book_row["roomID"];
         $memberID = $book_row["memberID"];
+        $floorNo = $book_row["floor_no"];
 
         $member_query = "select * from members where memberID = $memberID";
         $member_result = mysqli_query($con, $member_query);
         $member_row = mysqli_fetch_array($member_result);
 
-        $room_query = "select * from rooms where roomID = $roomID";
+        $room_query = "select * from rooms r join roomperfloor rpf join floor f where r.roomID = rpf.roomID and rpf.floorID = f.floorID and r.roomID = $roomID and f.floorNo = $floorNo";
         $room_result = mysqli_query($con, $room_query);
         $room_row = mysqli_fetch_array($room_result);
 
@@ -49,8 +50,6 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                         <div class="row">
                             <div class="span8">
                                 <?php
-                                                                
-                                
                                 if ($book_row["booking_status"] === "Waiting") {
                                     if (isset($_POST["confirm_evidence"])) {
 
@@ -126,6 +125,17 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                 <?php } ?>
                                 <h3><span>Detail</span></h3>			
                                 <?php
+                                $th_number = "th";
+
+                                switch ($book_row["floor_no"]) {
+                                    case "1": $th_number = "st";
+                                        break;
+                                    case "2": $th_number = "nd";
+                                        break;
+                                    case "3": $th_number = "rd";
+                                        break;
+                                }
+
                                 $color = "black";
 
                                 switch ($book_row["booking_status"]) {
@@ -146,6 +156,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                 <div class="pull-left strong">Your Name</div><div class="pull-right "><?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?></div><br />
                                 <div class="pull-left strong">Dormitory</div><div class="pull-right "><?php echo $dorm_row["dormName"]; ?></div><br />
                                 <div class="pull-left strong">Room type</div><div class="pull-right"><?php echo $room_row["roomType"]; ?></div><br />
+                                <div class="pull-left strong">Floor</div><div class="pull-right"><?php echo $room_row["floorNo"] . " " . $th_number ?> </div><br />
                                 <div class="pull-left strong">Booking ID</div><div class="pull-right"><?php echo $book_row["bookingID"] ?></div><br>
                                 <div class="pull-left strong">Booking Status</div><div class="pull-right" style="color:<?php echo $color; ?>"><?php echo $book_row["booking_status"] ?></div><br>
                                 <div class="pull-left strong">Booking Date</div><div class="pull-right"><?php echo $book_row["date"] ?></div><br />
@@ -164,7 +175,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                     <br>
                                 <?php } ?>
 
-                                <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Baht</h3></div><br />
+                                <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Bath</h3></div><br />
                                 <br>
 
 
@@ -173,8 +184,8 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                             <div class="pull-right strong" style="width: 40%"><input name="telephone" class="form-control" type="text" required></div><br>-->
 
                                 <?php if ($book_row["booking_status"] === "Waiting") { ?>
-                                <button id="cancel_booking" type="button" name="submit_book" style="margin-top: 30px;margin-left:440px;width: 30%" class="btn1 btn1-danger">Cancel This Booking</button>
-<!--                                <button id="cancel_booking" type="button" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancle This Booking</button> -->
+                                    <button id="cancel_booking" type="button" name="submit_book" style="margin-top: 30px;margin-left:440px;width: 30%" class="btn1 btn1-danger">Cancel This Booking</button>
+                                    <!--                                <button id="cancel_booking" type="button" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancle This Booking</button> -->
                                 <?php } ?>
                                 <br />
                                 <br />
@@ -190,12 +201,12 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                 <br>
                                 <h3 style="font-style: italic;text-align: center">Price Detail</h3><hr>
                                 <p>Room Price</p>
-                                <span class="price"><?php echo $room_row["price"]; ?> Baht</span>
+                                <span class="price"><?php echo $room_row["price"]; ?> Bath</span>
                                 <hr>
                                 <p>Room Deposit For <?php echo $room_row["roomDeposit"]; ?> Month</p>
-                                <span class="price"><?php echo $room_row["price"] * $room_row["roomDeposit"]; ?> Baht</span><hr style="color:red">
+                                <span class="price"><?php echo $room_row["price"] * $room_row["roomDeposit"]; ?> Bath</span><hr style="color:red">
                                 <h3 style="color: #00cc33;font-style:italic;text-align: center">Total Price</h3>
-                                <span class="price" style="color:#00cc33"><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Baht</span>
+                                <span class="price" style="color:#00cc33"><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Bath</span>
                                 <br><br><br>
                             </div>		
                         </div>

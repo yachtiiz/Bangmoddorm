@@ -88,6 +88,9 @@ switch ($page) {
     case "myprofile":
         require_once("profile.php");
         break;
+    case "setfloor":
+        require_once("setFloor.php");
+        break;
     
     default:
         require_once("main.php");

@@ -20,13 +20,24 @@ function upPicture($file, $i, $roomID) {
     }
 }
 
-function filterPic(&$arr_pic) {
+function getNumber_of_room($dormID, $roomID) {
+
+    require 'connection.php';
+    $query = "select r.roomType,sum(roomPerFloor) as numofroom from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and r.roomID = $roomID group by rpf.roomID";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_array($result);
+    $numofroom = $row["numofroom"];
+    return $numofroom;
+}
+
+function filterPic($arr_pic) {
     $value = 0;
     for ($i = 0; $i < count($arr_pic["name"]); $i++) {
         if ($arr_pic["name"][$i] != "") {
             if ($arr_pic["type"][$i] == "image/jpg" || $arr_pic["type"][$i] == "image/png" || $arr_pic["type"][$i] == "image/x-png" || $arr_pic["type"][$i] == "image/jpeg" || $arr_pic["type"][$i] == "image/gif" || $arr_pic["type"][$i] == "image/pjpeg") {
                 $value += 0;
-            } else
+            }
+            else
                 $value += 1;
         }
     }
@@ -141,6 +152,7 @@ function edit_room($roomID) {
     $number_of_room = filter_var($_POST["number_of_room"], FILTER_SANITIZE_STRING);
     $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
     $room_deposit = filter_var($_POST["room_deposit"], FILTER_SANITIZE_NUMBER_INT);
+    $room_detail = filter_var($_POST["room_detail"], FILTER_SANITIZE_STRING);
     $main_room_path = NULL;
 
     if (isset($_FILES["change_main_room_pic"])) {
@@ -151,10 +163,10 @@ function edit_room($roomID) {
         }
     }
 
-    if (isset($_FILES["main_room_pic"])) {
-        if ($_FILES["main_room_pic"]["name"] !== "") {
-            if (move_uploaded_file($_FILES["main_room_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"])) {
-                $main_room_path = "main_pic_" . $roomID . "_" . $_FILES["main_room_pic"]["name"];
+    if (isset($_FILES["room_main_pic"])) {
+        if ($_FILES["room_main_pic"]["name"] !== "") {
+            if (move_uploaded_file($_FILES["room_main_pic"]["tmp_name"], "images/room_pictures/main_pic_" . $roomID . "_" . $_FILES["room_main_pic"]["name"])) {
+                $main_room_path = "main_pic_" . $roomID . "_" . $_FILES["room_main_pic"]["name"];
             }
         }
     }
@@ -182,7 +194,7 @@ function edit_room($roomID) {
 
 
     $pic_main_path_query = $main_room_path === NULL ? "" : ", main_pic = '$main_room_path'";
-    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , roomDeposit = $room_deposit " . $pic_main_path_query . " where roomID = $roomID;";
+    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , status = 'Complete' , roomDetail = '$room_detail' , roomDeposit = $room_deposit " . $pic_main_path_query . " where roomID = $roomID;";
 
 
 
@@ -233,7 +245,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                     echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
                 }
             }
-        }else{
+        } else {
             echo '<script>alert("Room available cannot more than Number of room")</script>';
             echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
         }
@@ -312,7 +324,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <input class="form-control" type="text" name="room_type" value='<?php echo isset($room_row["roomType"]) ? $room_row["roomType"] : "" ?>'>
                                     </label>
                                     <label>Number Of Room
-                                        <input type="text" class="form-control" name="number_of_room" value='<?php echo isset($room_row["numOfRoom"]) ? $room_row["numOfRoom"] : "" ?>'>
+                                        <input type="text" class="form-control" name="number_of_room" value='<?php echo getNumber_of_room($_GET["dormID"], $_GET["roomID"]) ?>' >
                                     </label>
                                 </div>				
 
@@ -321,7 +333,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         <input type="text" class="form-control" name="areas" value='<?php echo isset($room_row["areas"]) ? $room_row["areas"] : "" ?>' />
                                     </label>
                                     <label>Room Avaliable
-                                        <input type="text" class="form-control" name="room_available" value='<?php echo isset($room_row["roomAvailable"]) ? $room_row["roomAvailable"] : "" ?>'/>
+                                        <input type="text" class="form-control" name="room_available" value='<?php echo getNumber_of_room($_GET["dormID"], $_GET["roomID"]) ?>'/>
                                     </label>
                                 </div>
 
@@ -342,6 +354,12 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                         </select>
                                     </label>
                                 </div>
+                                <div class="span9">
+                                    <label>Room Detail
+                                    <textarea class="form-control" rows="4" name="room_detail"><?php echo isset($room_row["roomDetail"]) ? $room_row["roomDetail"] : "" ?></textarea>
+                                    </label>
+                                </div>
+                                
 
                             </div>  
                             <br />
@@ -532,7 +550,6 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                 <div class="span10">
                                     <br />
                                     <button type='submit' name='edit_submit' class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
-                                    <a href="callback.php?disabled_room=<?php echo $_GET["roomID"]; ?>" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Delete Room</a>
                                     <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
                                     <br><br>
                                     <br />
@@ -542,7 +559,6 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                         </fieldset>
                     </form>
                 </div>
-
             </div>
 
         </div></div> <!-- /container -->

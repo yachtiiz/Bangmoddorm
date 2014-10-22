@@ -2,7 +2,7 @@
 <?php
 require 'connection.php';
 
-$query = "select * from Dormitories where status = 'Active'";
+$query = "select * from Dormitories where status = 'Showing'";
 
 $dorm_result = mysqli_query($con, $query);
 ?>
@@ -21,7 +21,7 @@ $dorm_result = mysqli_query($con, $query);
         while ($dorm_row = mysqli_fetch_array($dorm_result)) {
 
             $dormID = $dorm_row["dormID"];
-            $room_query = "select min(price) as minprice , max(price) as maxprice from rooms where dormID = $dormID";
+            $room_query = "select min(price) as minprice , max(price) as maxprice from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and r.status = 'Showing' and f.dormID = $dormID";
             $room_result = mysqli_query($con, $room_query);
             $room_row = mysqli_fetch_array($room_result);
             ?>

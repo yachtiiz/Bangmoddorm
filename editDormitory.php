@@ -211,6 +211,205 @@
                     }
                 }
 
+                function add_floor() {
+
+                    require 'connection.php';
+
+                    $total_floor = filter_var($_POST["total_floor"], FILTER_SANITIZE_STRING);
+                    $dormID = filter_var($_POST["dormID"], FILTER_SANITIZE_STRING);
+                    $query = "select total_floor from Dormitories where dormID = $dormID";
+                    $result = mysqli_query($con, $query);
+                    $total_floor_row = mysqli_fetch_array($result);
+                    $i = 1;
+                    if ($total_floor_row[0] !== NULL) {
+                        $i = $total_floor_row[0] + 1;
+                    }
+
+                    for ($i; $i <= $total_floor; $i++) {
+                        $query = "INSERT INTO `Floor` (`dormID`, `floorNo`) VALUES('$dormID','$i');";
+                        if (!mysqli_query($con, $query)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+                function add_room_per_floor() {
+
+                    require 'connection.php';
+                    $dormID = filter_var($_POST["dormID"], FILTER_SANITIZE_STRING);
+                    if (!isset($_POST["change_data"])) {
+                        $query = "select * from floor where dormID = $dormID order by floorNo";
+                        $result = mysqli_query($con, $query);
+                        $total_roomID = array();
+                        while ($row = mysqli_fetch_array($result)) {
+                            if ($row["floorNo"] === "1") {
+                                for ($i = 0; $i < count($_POST["roomtype_name"]); $i++) {
+                                    $room_type = $_POST["roomtype_name"][$i];
+                                    $query = "INSERT INTO `Rooms` (`roomType`,`status`) VALUES ('$room_type','Incomplete');";
+                                    if (mysqli_query($con, $query)) {
+                                        $room_query = "select max(roomID) from Rooms";
+                                        $room_result = mysqli_query($con, $room_query);
+                                        $room_row = mysqli_fetch_array($room_result);
+                                        $roomID = $room_row[0];
+                                        $total_roomID[$i] = $roomID;
+                                        $floorNo = $row["floorNo"];
+                                        $floorID = $row["floorID"];
+                                        $room_per_floor = $_POST["floor" . $floorNo . "_roomtype"][$i];
+                                        $room_per_floor_query = "INSERT INTO `RoomPerFloor` (`floorID`, `roomID`, `roomPerFloor`) VALUES ($floorID, $roomID,$room_per_floor);";
+                                        if (!mysqli_query($con, $room_per_floor_query)) {
+                                            return false;
+                                        }
+                                        $fac_query = "INSERT INTO `FacilitiesInRoom` (`roomID`)VALUES ($roomID);";
+                                        if (!mysqli_query($con, $fac_query)) {
+                                            return false;
+                                        }
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            } else {
+                                for ($j = 0; $j < count($total_roomID); $j++) {
+                                    $roomID = $total_roomID[$j];
+                                    $floorNo = $row["floorNo"];
+                                    $floorID = $row["floorID"];
+                                    $room_per_floor = $_POST["floor" . $floorNo . "_roomtype"][$j];
+                                    $room_per_floor_query = "INSERT INTO `RoomPerFloor` (`floorID`, `roomID`, `roomPerFloor`) VALUES ($floorID, $roomID,$room_per_floor);";
+                                    if (!mysqli_query($con, $room_per_floor_query)) {
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        $query = "select * from floor where dormID = $dormID";
+                        $result = mysqli_query($con, $query);
+                        $total_newroomID = array();
+                        while ($row = mysqli_fetch_array($result)) {
+                            for ($i = 1; $i <= count($_POST["room_name"]); $i++) {
+
+                                $floorID = $row["floorID"];
+                                $floorNo = $row["floorNo"];
+                                $room_per_floor = $_POST["floor" . $floorNo . "_roomtype"][$i - 1];
+                                if (isset($_POST["floor" . $floorNo . "_roomtype_matchingID"][$i - 1])) {
+                                    $matchingID = $_POST["floor" . $floorNo . "_roomtype_matchingID"][$i - 1];
+                                    $query = "update roomperfloor set roomPerFloor = $room_per_floor where matchingID = $matchingID";
+                                } else {
+                                    $roomID = $_POST["roomID"][$i - 1];
+                                    $query = "INSERT INTO `RoomPerFloor` (`floorID`, `roomID`, `roomPerFloor`) VALUES ($floorID, $roomID,$room_per_floor);";
+                                }
+                                if (!mysqli_query($con, $query)) {
+                                    return false;
+                                }
+                            }
+
+
+
+                            if (isset($_POST["newroomtype_name"])) {
+                                if ($row["floorNo"] === '1') {
+                                    for ($i = 0; $i < count($_POST["newroomtype_name"]); $i++) {
+                                        $roomtype_name = $_POST["newroomtype_name"][$i];
+                                        $query = "INSERT INTO `Rooms` (`roomType`,`status`) VALUES ('$roomtype_name','Hiding');";
+
+                                        if (mysqli_query($con, $query)) {
+                                            //Insert Room Per floor
+                                            $room_query = "select max(roomID) from Rooms";
+                                            $room_result = mysqli_query($con, $room_query);
+                                            $room_row = mysqli_fetch_array($room_result);
+                                            $roomID = $room_row[0];
+                                            $total_newroomID[$i] = $roomID;
+                                            $floorNo = $row["floorNo"];
+                                            $floorID = $row["floorID"];
+                                            $room_per_floor = $_POST["floor" . $floorNo . "_newroomtype"][$i];
+                                            $room_per_floor_query = "INSERT INTO `RoomPerFloor` (`floorID`, `roomID`, `roomPerFloor`) VALUES ($floorID, $roomID,$room_per_floor);";
+                                            if (!mysqli_query($con, $room_per_floor_query)) {
+                                                return false;
+                                            }
+                                            //Insert Fac Room
+                                            $fac_query = "INSERT INTO `FacilitiesInRoom` (`roomID`)VALUES ($roomID);";
+                                            if (!mysqli_query($con, $fac_query)) {
+                                                return false;
+                                            }
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                } else {
+                                    for ($j = 0; $j < count($total_newroomID); $j++) {
+                                        $roomID = $total_newroomID[$j];
+                                        $floorNo = $row["floorNo"];
+                                        $floorID = $row["floorID"];
+                                        $room_per_floor = $_POST["floor" . $floorNo . "_newroomtype"][$j];
+                                        $room_per_floor_query = "INSERT INTO `RoomPerFloor` (`floorID`, `roomID`, `roomPerFloor`) VALUES ($floorID, $roomID,$room_per_floor);";
+                                        if (!mysqli_query($con, $room_per_floor_query)) {
+                                            return false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        for ($i = 1; $i <= count($_POST["room_name"]); $i++) {
+                            $roomID = $_POST["roomID"][$i - 1];
+                            $roomName = $_POST["room_name"][$i - 1];
+                            $room_query = "update Rooms set roomType = '$roomName' where roomID = $roomID";
+                            if (!mysqli_query($con, $room_query)) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+
+                function getRoom_Per_floor($dormID) {
+
+                    require 'connection.php';
+
+                    $room_query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                    $room_result = mysqli_query($con, $room_query);
+                    echo '<input type="hidden" name="change_data">';
+                    echo '<thead>';
+                    echo '<tr id="new_thead_input">';
+                    echo '<th>Floor</th>';
+                    while ($room_row = mysqli_fetch_array($room_result)) {
+                        echo '<th data-roomID="' . $room_row["roomID"] . '">' . $room_row["roomType"] . '</th>';
+                    }
+                    echo '</tr>';
+                    echo '</thead>';
+
+                    echo '<tbody id="new_tbody_input">';
+                    $query = "select * from floor where dormID = $dormID";
+                    $result = mysqli_query($con, $query);
+                    while ($row = mysqli_fetch_array($result)) {
+                        $floorID = $row["floorID"];
+                        $floorNo = $row["floorNo"];
+                        $rpf_query = "select * from RoomPerFloor where floorID = $floorID";
+                        $rpf_result = mysqli_query($con, $rpf_query);
+
+                        echo '<tr id="floor' . $floorNo . '">';
+                        echo '<td style="text-align:center">' . $floorNo . '</td>';
+                        while ($rpf_row = mysqli_fetch_array($rpf_result)) {
+                            echo '<td><input type="number" class="form-control" name="floor' . $floorNo . '_roomtype[]" value="' . $rpf_row["roomPerFloor"] . '" data-matchingid="' . $rpf_row["matchingID"] . '"></td>';
+                            echo '<input type="hidden" name="floor' . $floorNo . '_roomtype_matchingID[]" value="' . $rpf_row["matchingID"] . '">';
+                        }
+                        echo '</tr>';
+                    }
+                    echo '</tbody>';
+                }
+
+                function getRoom_type($dormID) {
+
+                    require 'connection.php';
+
+                    $query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                    $result = mysqli_query($con, $query);
+                    $number = 1;
+                    while ($row = mysqli_fetch_array($result)) {
+                        echo '<div class="input-group" style="width:95%;margin-bottom:3%"><span class="input-group-addon">Room Type ' . $number . '</span><input class="form-control" style="width:90%" type="text" value="' . $row["roomType"] . '" name="room_name[]"><input type="hidden" name="roomID[]" value="' . $row["roomID"] . '"></div>';
+                        $number = $number + 1;
+                    }
+                    echo '<input type="hidden" id="num_of_roomtype" value="' . $number . '">';
+                }
+
                 function edit_dorm() {
 
                     require 'connection.php';
@@ -229,6 +428,7 @@
                     $longtitude = filter_var($_POST["longtitude"], FILTER_SANITIZE_STRING);
                     $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
                     $tel = filter_var($_POST["tel"], FILTER_SANITIZE_STRING);
+                    $total_floor = filter_var($_POST["total_floor"], FILTER_SANITIZE_STRING);
 
                     $main_dorm_path = NULL;
 
@@ -274,11 +474,15 @@
 
                     $pic_main_path_query = $main_dorm_path === NULL ? "" : ", dorm_pictures = '$main_dorm_path'";
 
-                    $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , tel = '$tel'" . $pic_main_path_query . " where dormID = $dormID ";
+                    $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , total_floor = '$total_floor' , tel = '$tel'" . $pic_main_path_query . " where dormID = $dormID ";
 
-                    if (mysqli_query($con, $query) && update_fac($dormID) && edit_bank($dormID)) {
-                        echo '<script>alert("Edit Dormitory Success ");</script>';
-                        echo '<script>window.location = "index.php?chose_page=editDormitory&dormID=' . $dormID . '";</script>';
+                    if (add_floor() && mysqli_query($con, $query) && update_fac($dormID) && edit_bank($dormID)) {
+                        if (add_room_per_floor()) {
+                            echo '<script>alert("Edit Dormitory Success ");</script>';
+                            echo '<script>window.location = "index.php?chose_page=editDormitory&dormID=' . $dormID . '";</script>';
+                        } else {
+                            echo '<script>alert("Edit Dormitory Failed (Some Information Wrong)");</script>';
+                        }
                     } else {
                         echo '<script>alert("Edit Dormitory Failed (Some Information Wrong)");</script>';
                     }
@@ -328,9 +532,9 @@
                         ?>
                         <form id="form" action="" method="post" class="form-horizontal" enctype="multipart/form-data">
                             <fieldset>
-                                <br />
+                                <br>
                                 <h1>Edit Your Dormitory<br /><small>You can edit your dormitory information.
-                                    </small></h1><br />
+                                    </small></h1><br>
                                 <div class="row">
                                     <div class="span10">
                                         <legend><span>Dormitory </span>Information</legend>
@@ -344,7 +548,7 @@
                                         </div>
                                         <input name="dormID" type="hidden" value="<?php echo $row["dormID"] ?>" />
                                     </div>
-                                    <div class='col-lg-4 pull-right'>
+                                    <div class='col-lg-5'>
                                         <div class="input-group">
                                             <span class="input-group-addon">Type</span>
                                             <select class="form-control" name="type"><option value="Female" <?php echo $row["type"] === 'Female' ? "selected" : "" ?> />Female Only<option <?php echo $row["type"] === 'Male' ? "selected" : "" ?> value="Male" />Male Only<option <?php echo $row["type"] === 'Female&Male' ? "selected" : "" ?> value="Female&Male" />Female & Male</select>
@@ -359,6 +563,181 @@
                                             <input id="distance" class="form-control" name="distance" type="text" placeholder="Insert only Number unit is KM." value='<?php echo $row["disFromUni"] ?>' >
                                             <span class="input-group-addon">Km.</span>
                                         </div>
+                                    </div>
+                                    <div class='col-lg-5'>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Total Floor</span>
+                                            <input class="form-control" id="total_floor" type="number" value='<?php echo $row["total_floor"] ?>' disabled>
+                                            <input class="form-control" id="total_floor_hide" name="total_floor" type="hidden" value='<?php echo $row["total_floor"] ?>'>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <br>
+                                <div class='row'>
+
+                                    <?php if (!isset($row["total_floor"])) { ?>
+                                        <div class="col-lg-3">
+                                            <button class="btn1 btn1-default" type="button" id="add_roomtype">Add Room Type</button>
+                                        </div>
+                                        <div class="col-lg-9" id="roomtype_number">
+
+                                        </div>
+                                        <script>
+
+                                            var room_number = 0;
+
+                                            $(document).on("click", "#add_roomtype", function() {
+                                                if ($("#total_floor").val() !== "") {
+                                                    if (room_number !== 0) {
+                                                        $("#remove_room").remove();
+                                                    }
+                                                    room_number = room_number + 1;
+                                                    html = '<div class="input-group" style="width:95%;margin-bottom:3%" id="room' + room_number + '"><span class="input-group-addon">Room Type ' + room_number + '</span><input class="form-control" id="roomname_' + room_number + '" style="width:90%" name="roomtype_name[]" type="text" value="" placeholder="Room Type Name"><span id="remove_room" data-id="' + room_number + '" class="close">&times;</span></div>';
+                                                    $("#roomtype_number").append(html);
+                                                    document.getElementById("gen_table").setAttribute("style", "display:block");
+
+                                                } else {
+                                                    alert("Please Input Total Floor");
+                                                }
+                                            });
+
+                                            $(document).on("click", "#remove_room", function() {
+                                                var id = "#room" + $(this).data("id");
+                                                $(id).remove();
+                                                room_number = room_number - 1;
+                                                $("#room" + room_number).append('<span id="remove_room" data-id="' + room_number + '" class="close">&times;</span>');
+                                                if (room_number === 0) {
+                                                    document.getElementById("gen_table").setAttribute("style", "display:none");
+                                                }
+                                            });
+
+                                            $(document).on("click", "#gen_table", function() {
+                                                $("#table_roomtype").html("");
+                                                $("#table_floor").html("");
+                                                $("#table_roomtype").append("<th style='text-align:center'>Floor</th>")
+                                                total_floor = $("#total_floor").val();
+
+                                                for (a = 1; a <= room_number; a++) {
+                                                    $("#table_roomtype").append("<th>" + $("#roomname_" + a).val() + "</th>");
+                                                }
+                                                for (b = 1; b <= total_floor; b++) {
+                                                    $("#table_floor").append("<tr id='floor" + b + "'><td style='text-align:center'> " + b + "</td>");
+                                                    for (c = 1; c <= room_number; c++) {
+                                                        $("#floor" + b).append("<td><input type='number' name='floor" + b + "_roomtype[]' value='0' class='form-control'></td>");
+                                                    }
+                                                }
+
+                                                document.getElementById("input_table").setAttribute("style", "display:block");
+
+                                            });
+
+
+
+                                        </script>
+                                    <?php } else { ?>
+                                        <div class="col-lg-3">
+                                            <button class="btn1 btn1-default" type="button" id="addnew_roomtype">Add Room Type</button>
+                                            <button class="btn1 btn1-default" type="button" id="add_floor" style="margin-top:5%;margin-bottom: 5%">Add Floor</button>
+                                            <button class="btn1 btn1-default" type="button" id="remove_floor" style="display: none">Remove New Floor</button>
+                                        </div>
+                                        <div class="col-lg-9" id="roomtype_number">
+                                            <?php getRoom_type($_GET["dormID"]) ?>
+                                        </div>
+                                        <script>
+
+                                            var newroom_number = parseInt($("#num_of_roomtype").val());
+                                            var oldroom_number = parseInt($("#num_of_roomtype").val());
+                                            var total_floor = <?php echo $row["total_floor"] ?>;
+                                            var original_floor = <?php echo $row["total_floor"] ?>;
+                                            var new_total_floor = "";
+                                            var new_floor = new Array();
+
+                                            $(document).on("click", "#addnew_roomtype", function() {
+
+                                                if (total_floor !== original_floor) {
+                                                    alert("Please Submit edit floor before add room type");
+                                                } else {
+                                                    html = '<div class="input-group" style="width:95%;margin-bottom:3%" id="newroom' + newroom_number + '"><span class="input-group-addon">Room Type ' + newroom_number + '</span><input class="form-control" id="newroomname_' + newroom_number + '" style="width:90%" name="newroomtype_name[]" type="text" value="" placeholder="Room Type Name"><span id="remove_newroom" data-id="' + newroom_number + '" class="close">&times;</span></div>';
+                                                    $("#roomtype_number").append(html);
+                                                    $("#new_thead_input").append("<th id='roomtype" + newroom_number + "'>" + "Room Type " + newroom_number + "</th>");
+                                                    for (i = 1; i <= total_floor; i++) {
+                                                        $("#floor" + i).append("<td id='floor" + i + "_newroom" + newroom_number + "'><input type='number' class='form-control' name='floor" + i + "_newroomtype[]'></td>");
+                                                    }
+                                                    newroom_number = newroom_number + 1;
+                                                }
+                                            });
+
+                                            $(document).on("click", "#remove_newroom", function() {
+                                                var id = "#newroom" + $(this).data("id");
+                                                $(id).remove();
+                                                newroom_number = newroom_number - 1;
+                                                $("#newroom" + newroom_number).append('<span id="remove_room" data-id="' + newroom_number + '" class="close">&times;</span>');
+                                                var roomtype_id = "#roomtype" + (newroom_number);
+                                                $(roomtype_id).remove();
+                                                for (i = 1; i <= total_floor; i++) {
+                                                    var floor_room_id = "#floor" + i + "_newroom" + (newroom_number);
+                                                    $(floor_room_id).remove();
+                                                }
+                                            });
+
+                                            $(document).on("click", "#add_floor", function() {
+                                                if (newroom_number === oldroom_number) {
+                                                    total_floor = total_floor + 1;
+                                                    $("#new_tbody_input").append("<tr id='floor" + total_floor + "'><td style='text-align:center'> " + total_floor + " <input type='hidden' name='new_floor[]'></td>");
+                                                    for (i = 1; i < newroom_number; i++) {
+                                                        $("#floor" + total_floor).append("<td><input type='number'name='floor" + total_floor + "_roomtype[]' class='form-control' value='0'></td>");
+                                                    }
+                                                    $("#new_tbody_input").append("</tr>");
+                                                    document.getElementById("remove_floor").setAttribute("style", "display:block");
+                                                    document.getElementById("total_floor").setAttribute("value", total_floor);
+                                                    document.getElementById("total_floor_hide").setAttribute("value", total_floor);
+                                                } else {
+                                                    alert("Please Submit edit room type before edit floor");
+                                                }
+                                            });
+
+                                            $(document).on("click", "#remove_floor", function() {
+
+                                                if (total_floor > original_floor) {
+                                                    $("#floor" + total_floor).remove();
+                                                    total_floor = total_floor - 1;
+                                                    document.getElementById("total_floor").setAttribute("value", total_floor);
+                                                    document.getElementById("total_floor_hide").setAttribute("value", total_floor);
+                                                    if (total_floor === original_floor) {
+                                                        document.getElementById("remove_floor").setAttribute("style", "display:none");
+                                                    }
+                                                }
+
+
+                                            });
+
+
+                                        </script>
+                                    <?php } ?>
+                                </div>
+
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-11">
+                                        <button id="gen_table" class="btn1 btn-success pull-right" style="display:none" type="button">Generate Table</button>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top:3%">
+                                    <div class="col-lg-12" style="margin-left:auto;margin-right: auto">
+                                        <?php if (!isset($row["total_floor"])) { ?>
+                                            <table id="input_table" class="table table-bordered" style="display:none">
+                                                <thead>
+                                                    <tr id="table_roomtype"> 
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="table_floor">
+                                                </tbody>
+                                            </table>
+                                        <?php } else { ?>
+                                            <table class="table table-bordered" id="new_input_table">
+                                                <?php getRoom_Per_floor($_GET["dormID"]); ?>
+                                            </table>                                        
+                                        <?php } ?> 
                                     </div>
                                 </div>
                                 <br>
@@ -391,7 +770,7 @@
                                     </div>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">Sub District</span>
+                                            <span class="input-group-addon">Sub Distinct</span>
                                             <input id="subdistinct" class="form-control" type="text" name="sub_distinct" value='<?php echo $row["subDistinct"] ?>' >
                                         </div>
                                     </div>
@@ -400,7 +779,7 @@
                                 <div class='row'>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">District</span>
+                                            <span class="input-group-addon">Distinct</span>
                                             <input id="distinct" class="form-control" type="text" name="distinct" value='<?php echo $row["dorm_distinct"] ?>' >
                                         </div>
                                     </div>
@@ -431,15 +810,15 @@
                                         <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    
+
                                                     <div class="modal-body">
                                                         <legend><h4>How to search</h4></legend>
                                                         <h5 style="text-align:left">1. Click <a href="https://www.google.com/maps/@13.6513616,100.4959106,17z?hl=en" target="blank_">Search Latitude , Longitude </a> Link.
-                                                        <br>2. Searching your dormitory place.
-                                                        <br>3. Right click to your dormitory place and chose Direction to here.
-                                                        <br>4. Right click red point and chose What's here.
-                                                        <br>5. Look at left top of page you will see Latitude and Longitude number.
-                                                        <br>Example 13.651327,100.499111 <br> Latitude = 13.651327 <br> Longitude = 100.499111 </h5>
+                                                            <br>2. Searching your dormitory place.
+                                                            <br>3. Right click to your dormitory place and chose Direction to here.
+                                                            <br>4. Right click red point and chose What's here.
+                                                            <br>5. Look at left top of page you will see Latitude and Longitude number.
+                                                            <br>Example 13.651327,100.499111 <br> Latitude = 13.651327 <br> Longitude = 100.499111 </h5>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -874,7 +1253,7 @@
                                     <div class="span10">
                                         <br>
                                         <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
-                                        <button type="button" id="<?php echo $row["status"] === "Active" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Active" ? "Hidden On Page" : "Showing On Page"; ?></button>
+                                        <button type="button" id="<?php echo $row["status"] === "Showing" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Showing" ? "Hide On Page" : "Show On Page"; ?></button>
                                         <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
                                         <br><br>
                                     </div>

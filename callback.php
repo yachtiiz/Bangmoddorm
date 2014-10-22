@@ -139,8 +139,8 @@ if (isset($_GET["reject_submit"]) && is_numeric($_GET["reject_submit"])) {
 
 function disabled_room($roomID) {
     require 'connection.php';
-
-    $query = "update Rooms set status = 'Disabled' where roomID = $roomID";
+    $status = $_GET["room_status"];
+    $query = "update Rooms set status = '$status' where roomID = $roomID";
 
     if (mysqli_query($con, $query)) {
         return true;
@@ -151,7 +151,7 @@ function disabled_room($roomID) {
 
 if (isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])) {
     if (disabled_room($_GET["disabled_room"])) {
-        echo "<script>alert('Delete Success')</script>";
+        echo "<script>alert('Room now ". $_GET["room_status"] ."')</script>";
         echo "<script>window.location = 'index.php?chose_page=ownersystem';</script>";
     } else {
         echo "<script>alert('Delete Failed')</script>";
@@ -176,11 +176,7 @@ function checkingRoom($dormID) {
 function showing_dorm($dormID, $status) {
 
     require 'connection.php';
-    if ($status === "Active") {
-        if (!checkingRoom($dormID)) {
-            return false;
-        }
-    }
+    
     $query = "update Dormitories set status = '$status' where dormID = $dormID ";
     if (mysqli_query($con, $query)) {
         return true;
@@ -190,15 +186,15 @@ function showing_dorm($dormID, $status) {
 }
 
 if (isset($_GET["showing_dorm"]) && is_numeric($_GET["showing_dorm"])) {
-    if (showing_dorm($_GET["showing_dorm"], 'Active')) {
-        echo 'Hidden On Page<script>alert("Your Dormitory is now showing on page."); document.getElementById("active_button").setAttribute("id", "disabled_button");</script>';
+    if (showing_dorm($_GET["showing_dorm"], 'Showing')) {
+        echo 'Show On Page<script>alert("Your Dormitory is now showing on page.");</script>';
     } else {
-        echo 'Showing On Page<script>alert("Empty room type. Please add room before showing on page.");</script>';
+        echo 'Hide On Page<script>alert("Empty room type. Please add room before showing on page.");</script>';
     }
 }
 if (isset($_GET["disabled_dorm"]) && is_numeric($_GET["disabled_dorm"])) {
-    if (showing_dorm($_GET["disabled_dorm"], 'Disable')) {
-        echo 'Showing On Page';
+    if (showing_dorm($_GET["disabled_dorm"], 'Hidden')) {
+        echo 'Hide On Page';
     }
 }
 
@@ -736,7 +732,7 @@ function getMembook($member_id, $page) {
 
     require 'connection.php';
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and r.dormID = d.dormID and b.memberID = $member_id order by date desc limit $limit_start , 8";
+    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and b.memberID = $member_id group by bookingID order by date desc limit $limit_start , 8 ";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($book_row = mysqli_fetch_array($result)) {
@@ -804,11 +800,11 @@ function cancelBooking($bookingID) {
     $query = "update booking set booking_status = 'Canceled' where bookingID = $bookingID";
 
     if (mysqli_query($con, $query)) {
-        $query = "select roomID from booking where bookingID = $bookingID";
+        $query = "select matchingID from booking where bookingID = $bookingID";
         $result = mysqli_query($con, $query);
         $row = mysqli_fetch_array($result);
-        $roomID = $row[0];
-        $query = "update Rooms set roomAvailable = roomAvailable + 1 where roomID = $roomID";
+        $matchingID = $row[0];
+        $query = "update RoomPerFloor set roomPerFloor = roomPerFloor + 1 where matchingID = $matchingID";
         if (mysqli_query($con, $query)) {
             return true;
         }
@@ -919,7 +915,7 @@ function searchingMemberBook($query) {
 if (isset($_GET["search_member_value"])) {
     $value = filter_var($_GET["search_member_value"], FILTER_SANITIZE_STRING);
     $memberID = $_SESSION["memberID"];
-    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and r.dormID = d.dormID and b.memberID = $memberID and bookingID like '%$value%' order by date desc limit 0 , 8";
+    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and b.memberID = $memberID and bookingID like '%$value%' group by bookingID order by date desc limit 0 , 8";
     searchingMemberBook($query);
 }
 
@@ -931,7 +927,7 @@ if (isset($_GET["sortby_memberbooking"]) && isset($_GET["sortby_memberbooking_pa
     }
     $memberID = $_SESSION["memberID"];
     $limit_start = ((8 * $_GET["sortby_memberbooking_page"]) - 8);
-    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and r.dormID = d.dormID and b.memberID = $memberID order by $sort_by limit $limit_start , 8";
+    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and b.memberID = $memberID group by bookingID order by $sort_by limit $limit_start , 8";
     searchingMemberBook($query);
 }
 

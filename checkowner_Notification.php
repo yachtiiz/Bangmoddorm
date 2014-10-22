@@ -219,7 +219,7 @@
                                                                 <h5 style="text-align: center">Change Status</h5>
                                                                 <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
                                                                 <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
-                                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled By Member</button>
+                                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Cancled By Member</button>
                                                                 <br><br>
                                                             </div>
                                                         </div>

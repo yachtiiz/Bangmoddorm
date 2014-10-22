@@ -158,18 +158,18 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             </tr>
             <tr>
                 <td>
-                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["airCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; AIR CLEAN SERVICE</h4>
+                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["airCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; AIRCLEANSERVICE</h4>
                 </td>
                 <td>
-                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["roomCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ROOM CLEAN SERVICE</h4> 
+                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["roomCleanService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; ROOMCLEANSERVICE</h4> 
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["washingService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WASHING SERVICE</h4>
+                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["washingService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WASHINGSERVICE</h4>
                 </td>
                 <td>
-                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["busService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; BUS SERVICE</h4> 
+                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["busService"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; BUSSERVICE</h4> 
                 </td>
             </tr>
             <tr>
@@ -185,7 +185,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["restaurant"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; RESTAURANT</h4>
                 </td>
                 <td>
-                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["vendingMachine"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; VENDING MACHINE</h4> 
+                    <h4 style=" margin-left: 20%"> <?php echo $fac_dorm_row["vendingMachine"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; VENDINGMACHINE</h4> 
                 </td>
             </tr>
             <tr>
