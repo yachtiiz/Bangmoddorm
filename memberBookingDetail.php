@@ -27,6 +27,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
 
         $bank_query = "select * from bankAccount where dormID = $dormID";
         $bank_result = mysqli_query($con, $bank_query);
+        $bank_result_selected = mysqli_query($con, $bank_query);
         ?>
         <script>
 
@@ -53,24 +54,32 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                 if ($book_row["booking_status"] === "Waiting") {
                                     if (isset($_POST["confirm_evidence"])) {
 
-                                        function upSlip($file, $bookingID) {
-                                            if ($_FILES["$file"]["type"] == "image/jpg" || $_FILES["$file"]["type"] == "image/png" || $_FILES["$file"]["type"] == "image/jpeg" || $_FILES["$file"]["type"] == "image/gif" || $_FILES["$file"]["type"] == "image/pjpeg" || $_FILES["$file"]["type"] == "image/x-png") {
-                                                if (move_uploaded_file($_FILES["$file"]["tmp_name"], "images/picture_slip/slip_" . $bookingID . "_" . $_FILES["$file"]["name"])) {
-                                                    return $msg = "slip_" . $bookingID . "_" . $_FILES["$file"]["name"];
-                                                } else {
-                                                    return $msg = "Cant Upload";
-                                                }
-                                            } else {
-                                                return $msg = "Invalid Picture";
-                                            }
-                                        }
+                                        if ($_FILES["slipImage"]["name"] !== "") {
 
-                                        $slipImage = upSlip("slipImage", $bookingID);
+                                            function upSlip($file, $bookingID) {
+                                                if ($_FILES["$file"]["type"] == "image/jpg" || $_FILES["$file"]["type"] == "image/png" || $_FILES["$file"]["type"] == "image/jpeg" || $_FILES["$file"]["type"] == "image/gif" || $_FILES["$file"]["type"] == "image/pjpeg" || $_FILES["$file"]["type"] == "image/x-png") {
+                                                    if (move_uploaded_file($_FILES["$file"]["tmp_name"], "images/picture_slip/slip_" . $bookingID . "_" . $_FILES["$file"]["name"])) {
+                                                        return $msg = "slip_" . $bookingID . "_" . $_FILES["$file"]["name"];
+                                                    } else {
+                                                        return $msg = "Cant Upload";
+                                                    }
+                                                } else {
+                                                    return $msg = "Invalid Picture";
+                                                }
+                                            }
+
+                                            $slipImage = upSlip("slipImage", $bookingID);
+                                        } else {
+                                            $slipImage = "default_slip_picture.jpg";
+                                        }
                                         if ($slipImage !== "Cant Upload" && $slipImage !== "Invalid Picture") {
 
                                             $transfer_name = filter_var($_POST["transfer_name"], FILTER_SANITIZE_STRING);
                                             $transfer_time = filter_var($_POST["transfer_time"], FILTER_SANITIZE_STRING);
-                                            $query = "update Booking  set owner_noti = 1 , booking_status='Checking' , slip = '$slipImage' , transfer_name = '$transfer_name' , transfer_time = '$transfer_time' where bookingID =$bookingID";
+                                            $transfer_reference_id = filter_var($_POST["reference_id"], FILTER_SANITIZE_STRING);
+                                            $bank_acc_id = filter_var($_POST["customer_bank_acc_id"], FILTER_SANITIZE_STRING);
+                                            $transfer_bank = filter_var($_POST["transfer_bank"], FILTER_SANITIZE_STRING);
+                                            $query = "update Booking  set owner_noti = 1 , booking_status='Checking' , slip = '$slipImage' , transfer_name = '$transfer_name' , transfer_time = '$transfer_time' , transfer_time = '$transfer_time' , transfer_referenceID = '$transfer_reference_id' , bank_acc_id = '$bank_acc_id' , transfer_bank = '$transfer_bank' where bookingID =$bookingID";
                                             if (mysqli_query($con, $query)) {
                                                 echo '<script>alert("Confirm Evidence Complete")</script>';
                                                 echo '<script>window.location = "index.php?chose_page=membookdetail&bookingID=' . $bookingID . '"</script>';
@@ -80,6 +89,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                             }
                                         } else {
                                             echo '<script>alert("' . $slipImage . '")</script>';
+                                            echo '<script>window.location = "index.php?chose_page=membookdetail&bookingID=' . $bookingID . '"</script>';
                                         }
                                     } else {
                                         ?>
@@ -89,15 +99,34 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                 <br>
                                                 <div class="input-group" style="width: 70%;margin-left:100px">
                                                     <span class="input-group-addon">Slip Image</span>
-                                                    <input id="slip_image" class="form-control" type="file" name="slipImage" value='' required >
+                                                    <input id="slip_image" class="form-control" type="file" name="slipImage" value='' >
                                                 </div>
                                                 <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
-                                                    <span class="input-group-addon">Transfer Name</span>
+                                                    <span class="input-group-addon">Reference ID <span style="color:red">*</span></span>
+                                                    <input id="transfer_name" class="form-control" type="text" name="reference_id" value='' required>
+                                                </div>
+                                                <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
+                                                    <span class="input-group-addon">Transfer Bank <span style="color:red">*</span></span>
+                                                    <select name="transfer_bank" class="form-control">
+                                                        <?php while ($bank_select_row = mysqli_fetch_array($bank_result_selected)) { ?>
+                                                            <option value="<?php echo $bank_select_row["bankName"] ?>"><?php echo $bank_select_row["bankName"] ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                                <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
+                                                    <span class="input-group-addon">Transfer Name <span style="color:red">*</span></span>
                                                     <input id="transfer_name" class="form-control" type="text" name="transfer_name" value='' required>
                                                 </div>
                                                 <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
-                                                    <span class="input-group-addon">Transfer Time</span>
+                                                    <span class="input-group-addon">Transfer Time <span style="color:red">*</span></span>
                                                     <input id="transfer_time" class="form-control" type="datetime-local" name="transfer_time" placeholder="YYYY-MM-DD" required>
+                                                </div>
+                                                <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
+                                                    <span class="input-group-addon">Your Bank Account ID <span style="color:red">*</span></span>
+                                                    <input id="transfer_name" class="form-control" type="text" name="customer_bank_acc_id" value='' required>
+                                                </div>
+                                                <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
+                                                    <span style="color:red"><span style="color:red">*</span>Your Bank Account ID for transfer back case this room have a problem to booking</span>
                                                 </div>
                                                 <button type='submit' name='confirm_evidence' class='btn1 btn1-success' style='margin-left:350px;margin-top:20px'>Confirm Evidence</button>
                                             </div>
@@ -106,14 +135,22 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                 <?php } else if ($book_row["booking_status"] !== "Canceled" && $book_row["booking_status"] !== "Reject") { ?>
                                     <div class="col-md-12" style='padding: 30px;margin-bottom:50px'>
                                         <legend><h3 style='margin-left:120px'><span>Money</span> Transfer Evidence</h3></legend>
-                                        <img style="margin-left: 130px ;width: 250px;height: 300px" class='img-thumbnail' src='/images/picture_slip/<?php echo $book_row["slip"]; ?>'><br>
+                                        <?php if ($book_row["slip"] !== "None") { ?>
+                                            <img style="margin-left: 130px ;width: 250px;height: 300px" class='img-thumbnail' src='/images/picture_slip/<?php echo $book_row["slip"]; ?>'><br>
+                                        <?php } ?>
                                         <div class="col-md-6" style="margin-top: 30px">
+                                            <h4 style="margin-left:40px">Reference ID :</h4>
                                             <h4 style="margin-left:40px">Transfer Name :</h4>
                                             <h4 style="margin-left:40px">Transfer Time :</h4>
+                                            <h4 style="margin-left:40px">Transfer Bank :</h4>
+                                            <h4 style="margin-left:40px">Bank Account ID :</h4>
                                         </div>
                                         <div class="col-md-6" style="margin-top: 30px">
+                                            <h4 style="margin-left: 20px"><?php echo $book_row["transfer_referenceID"] ?></h4>
                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_name"] ?></h4>
                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_time"] ?></h4>
+                                            <h4 style="margin-left: 20px"><?php echo $book_row["transfer_bank"] ?></h4>
+                                            <h4 style="margin-left: 20px"><?php echo $book_row["bank_acc_id"] ?></h4>
                                         </div>
                                         <div class="col-md-12" style="margin-left: 20px">
                                             <br>
@@ -151,6 +188,9 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                     case "Approve":
                                         $color = "#00cc33";
                                         break;
+                                    case "Refund Needed":
+                                        $color = "red";
+                                        break;
                                 }
                                 ?>
                                 <div class="pull-left strong">Your Name</div><div class="pull-right "><?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?></div><br />
@@ -175,7 +215,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                     <br>
                                 <?php } ?>
 
-                                <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Bath</h3></div><br />
+                                <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo number_format($room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]); ?> Baht</h3></div><br />
                                 <br>
 
 
@@ -201,12 +241,12 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                 <br>
                                 <h3 style="font-style: italic;text-align: center">Price Detail</h3><hr>
                                 <p>Room Price</p>
-                                <span class="price"><?php echo $room_row["price"]; ?> Bath</span>
+                                <span class="price"><?php echo number_format($room_row["price"]); ?> Baht</span>
                                 <hr>
                                 <p>Room Deposit For <?php echo $room_row["roomDeposit"]; ?> Month</p>
-                                <span class="price"><?php echo $room_row["price"] * $room_row["roomDeposit"]; ?> Bath</span><hr style="color:red">
+                                <span class="price"><?php echo number_format($room_row["price"] * $room_row["roomDeposit"]); ?> Baht</span><hr style="color:red">
                                 <h3 style="color: #00cc33;font-style:italic;text-align: center">Total Price</h3>
-                                <span class="price" style="color:#00cc33"><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Bath</span>
+                                <span class="price" style="color:#00cc33"><?php echo number_format($room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]); ?> Baht</span>
                                 <br><br><br>
                             </div>		
                         </div>

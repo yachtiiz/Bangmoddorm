@@ -78,7 +78,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                         <br>
                                     <?php } ?>
                                     
-                                    <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Bath</h3></div><br />
+                                    <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo number_format($room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]); ?> Baht</h3></div><br />
                                     <br>
                                     
 
@@ -101,12 +101,12 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                     <br>
                                     <h3 style="font-style: italic;text-align: center">Price Detail</h3><hr>
                                     <p>Room Price</p>
-                                    <span class="price"><?php echo $room_row["price"]; ?> Bath</span>
+                                    <span class="price"><?php echo number_format($room_row["price"]); ?> Baht</span>
                                     <hr>
                                     <p>Room Deposit For <?php echo $room_row["roomDeposit"]; ?> Month</p>
-                                    <span class="price"><?php echo $room_row["price"] * $room_row["roomDeposit"]; ?> Bath</span><hr style="color:red">
+                                    <span class="price"><?php echo number_format($room_row["price"] * $room_row["roomDeposit"]); ?> Baht</span><hr style="color:red">
                                     <h3 style="color: #00cc33;font-style:italic;text-align: center">Total Price</h3>
-                                    <span class="price" style="color:#00cc33"><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Bath</span>
+                                    <span class="price" style="color:#00cc33"><?php echo number_format($room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]); ?> Baht</span>
                                     <br><br><br>
                                 </div>		
                             </form>

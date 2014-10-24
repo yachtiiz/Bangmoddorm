@@ -448,6 +448,22 @@
                             }
                         }
                     }
+                    
+                    if (isset($_FILES["plan_dorm_pic"])) {
+                        if ($_FILES["plan_dorm_pic"]["name"] !== "") {
+                            if (move_uploaded_file($_FILES["plan_dorm_pic"]["tmp_name"], "images/dormitory_picture/plan_pic_" . $dormID . "_" . $_FILES["plan_dorm_pic"]["name"])) {
+                                $plan_dorm_path = "plan_pic_" . $dormID . "_" . $_FILES["plan_dorm_pic"]["name"];
+                            }
+                        }
+                    }
+
+                    if (isset($_FILES["change_plan_dorm_pic"])) {
+                        if ($_FILES["change_plan_dorm_pic"]["name"] !== "") {
+                            if (move_uploaded_file($_FILES["change_plan_dorm_pic"]["tmp_name"], "images/dormitory_picture/plan_pic_" . $dormID . "_" . $_FILES["change_plan_dorm_pic"]["name"])) {
+                                $plan_dorm_path = "plan_pic_" . $dormID . "_" . $_FILES["change_plan_dorm_pic"]["name"];
+                            }
+                        }
+                    }
 
 
 
@@ -473,8 +489,9 @@
                     }
 
                     $pic_main_path_query = $main_dorm_path === NULL ? "" : ", dorm_pictures = '$main_dorm_path'";
+                    $pic_plan_path_query = $plan_dorm_path === NULL ? "" : ", dorm_plan_pictures = '$plan_dorm_path'";
 
-                    $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , total_floor = '$total_floor' , tel = '$tel'" . $pic_main_path_query . " where dormID = $dormID ";
+                    $query = "update Dormitories set type= '$type', disFromUni = $distance , addressNo = '$addressNO' , soi = '$soi' , road = '$road' , subDistinct = '$subdistinct' , dorm_distinct = '$distinct' , province = '$province' , zip = '$zip_code' , latitude = '$latitude' , longtitude = '$longtitude' , email = '$email' , total_floor = '$total_floor' , tel = '$tel'" . $pic_main_path_query . $pic_plan_path_query . " where dormID = $dormID ";
 
                     if (add_floor() && mysqli_query($con, $query) && update_fac($dormID) && edit_bank($dormID)) {
                         if (add_room_per_floor()) {
@@ -1217,11 +1234,28 @@
                                             </label>
                                         <?php } ?>
                                     </div>
+                                    <div class="span12" style="margin-top:5%">
+                                        <?php if (isset($row["dorm_plan_pictures"]) && $row["dorm_plan_pictures"] !== "") { ?>
+                                            <div class="span3">
+                                                <h4>Dormitory Plan Picture :</h4><br>
+                                                <p>Change Dormitory Plan Picture</p>
+                                                <input style='width:100%' class="form-control" name="change_plan_dorm_pic" type="file" placeholder="" multipart/>
+                                            </div>
+
+                                            <div class="span8 center">
+                                                <img style="width:405px;height: 250px" class="img-thumbnail" src="images/dormitory_picture/<?php echo $row["dorm_plan_pictures"]; ?>">
+                                            </div>
+                                        <?php } else { ?>
+                                            <label>Dormitory Plan Picture : &nbsp;&nbsp;&nbsp;
+                                                <input style='width:50%' class="form-control" name="plan_dorm_pic" type="file" placeholder="" required/>
+                                            </label>
+                                        <?php } ?>
+                                    </div>
                                 </div><br><br>
                                 <div class='row'>
                                     <div class="col-md-12">
                                         <div class="col-md-12">
-                                            <legend><span> Screen</span> Shot</legend>
+                                            <legend><span>Dormitory View</span> Pictures</legend>
                                         </div>
                                         <?php
                                         for ($i = 0; $i < mysqli_num_rows($pic_result); $i++) {

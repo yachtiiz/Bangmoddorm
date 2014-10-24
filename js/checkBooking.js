@@ -209,6 +209,32 @@ $(function() {
                         }, 200);
                     });
                 });
+            } else {
+                url = "callback.php?showbook_dormID=" + $("#select_dorm").val() + "&dormbook_order=" + $("#book_order").val() + "&dormbook_showpage=1";
+                show_page = "callback.php?showpage_dormID=" + $("#select_dorm").val() + "&dormbook_page=1";
+                document.getElementById("status_default").setAttribute("selected", " ");
+                document.getElementById("sort_default").setAttribute("selected", " ");
+                $("#show_status_page").html("");
+                $("#show_sort_page").html("");
+                $("#show_result").animate({
+                    opacity: 0
+                }, 100, function() {
+                    current_url = url;
+                    $("#show_result").load(url, function() {
+                        $("#show_result").animate({
+                            opacity: 1
+                        }, 200);
+                    });
+                });
+                $("#show_book_page").animate({
+                    opacity: 0
+                }, 100, function() {
+                    $("#show_book_page").load(show_page, function() {
+                        $("#show_book_page").animate({
+                            opacity: 1
+                        }, 200);
+                    });
+                });
             }
         }
     });
@@ -229,12 +255,12 @@ $(function() {
             });
         });
     });
-    
+
     $("#approvebutton").on("click", function() {
         if (confirm("Confirm to Change Status ?")) {
             change_url = "callback.php?change_booking_status=Approve&change_booking_id=" + $(this).val();
             $("#ajaxscript").load(change_url);
-            document.getElementById("status").setAttribute("style","color:#00cc33");
+            document.getElementById("status").setAttribute("style", "color:#00cc33");
             $(".modal-body-booking #status").html("Approve");
             $("#show_result").load(current_url);
         }
@@ -244,7 +270,7 @@ $(function() {
         if (confirm("Confirm to Change Status ?")) {
             change_url = "callback.php?change_booking_status=Reject&change_booking_id=" + $(this).val();
             $("#ajaxscript").load(change_url);
-            document.getElementById("status").setAttribute("style","color:red");
+            document.getElementById("status").setAttribute("style", "color:red");
             $(".modal-body-booking #status").html("Reject");
             $("#show_result").load(current_url);
         }
@@ -254,20 +280,30 @@ $(function() {
         if (confirm("Confirm to Change Status ?")) {
             change_url = "callback.php?change_booking_status=Canceled&change_booking_id=" + $(this).val();
             $("#ajaxscript").load(change_url);
-            document.getElementById("status").setAttribute("style","color:red");
+            document.getElementById("status").setAttribute("style", "color:red");
             $(".modal-body-booking #status").html("Canceled");
             $("#show_result").load(current_url);
         }
         return false;
     });
-    
-    $("#close_modal").on("click",function(){
-       $("#show_result").load(current_url);        
+    $("#refundbutton").on("click", function() {
+        if (confirm("Confirm to Change Status ?")) {
+            change_url = "callback.php?change_booking_status=Refund+Needed&change_booking_id=" + $(this).val();
+            $("#ajaxscript").load(change_url);
+            document.getElementById("status").setAttribute("style", "color:red");
+            $(".modal-body-booking #status").html("Refund Needed");
+            $("#show_result").load(current_url);
+        }
+        return false;
     });
-    
-    $("#refresh_result").on("click",function(){
-        
-       $("#show_result").animate({
+
+    $("#close_modal").on("click", function() {
+        $("#show_result").load(current_url);
+    });
+
+    $("#refresh_result").on("click", function() {
+
+        $("#show_result").animate({
             opacity: 0
         }, 100, function() {
             $("#show_result").load(current_url, function() {
@@ -275,10 +311,10 @@ $(function() {
                     opacity: 1
                 }, 200);
             });
-        });   
-       return false;
+        });
+        return false;
     });
-    
+
 
 
 });

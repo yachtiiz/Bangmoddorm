@@ -53,6 +53,7 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
 
     require 'connection.php';
     $dormID = $_POST["dormID"];
+    $matchingID = $_POST["matchingID"];
     $dorm_query = "select dormName from Dormitories where dormID = $dormID";
     $dorm_result = mysqli_query($con, $dorm_query);
     $dorm_row = mysqli_fetch_array($dorm_result);
@@ -65,9 +66,15 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
     $bank_query = "select * from BankAccount where dormID = $dormID and bank_status = 'Showing'";
     $bank_result = mysqli_query($con, $bank_query);
     
+    $floor_query = "select floorNo from RoomPerFloor rpf join floor f where rpf.floorID = f.floorID and rpf.matchingID = $matchingID";
+    $floor_result = mysqli_query($con, $floor_query);
+    $floor_row = mysqli_fetch_array($floor_result);
+    $floor = $floor_row[0];
     $th_number = "th";
     
-    switch ($_POST["floor"]){
+    
+    
+    switch ($floor){
         case "1": $th_number = "st";
             break;
         case "2": $th_number = "nd";
@@ -134,12 +141,12 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
                                 <input type="hidden" name="total_price" value="<?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?>">
                                 <input type="hidden" name="start_date" value="<?php echo strtr(substr(date("c"), 0, 19), "T", " "); ?>">
                                 <input type="hidden" name="expire_date" value="<?php echo strtr(substr(date("c", strtotime("+1 day", strtotime(date("r")))), 0, 19), "T", " "); ?>">
-                                <input type='hidden' name='floor' value="<?php echo $_POST["floor"] ?>">
-                                <input type='hidden' name='matchingID' value="<?php echo $_POST["matchingID"] ?>">
+                                <input type='hidden' name='floor' value="<?php echo $floor ?>">
+                                <input type='hidden' name='matchingID' value="<?php echo $matchingID ?>">
                                 <div class="pull-left strong">Your Name</div><div class="pull-right "><?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"]; ?></div><br />
                                 <div class="pull-left strong">Dormitory</div><div class="pull-right "><?php echo $dorm_row["dormName"]; ?></div><br />
                                 <div class="pull-left strong">Room type</div><div class="pull-right"><?php echo $room_row["roomType"]; ?></div><br />
-                                <div class="pull-left strong">Floor</div><div class="pull-right"><?php echo $_POST["floor"]." ".$th_number; ?></div><br />
+                                <div class="pull-left strong">Floor</div><div class="pull-right"><?php echo $floor." ".$th_number; ?></div><br />
                                 <div class="pull-left strong">Booking Time</div><div class="pull-right"><?php echo substr(date("r"), 0, 25) ?></div><br />
                                 <div class="pull-left strong">Make Contract Before</div><div class="pull-right "><?php echo substr(date("r", strtotime("+1 day", strtotime(date("r")))), 0, 25); ?> </div><br />
                                 <br>
@@ -154,7 +161,7 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
                                     <div class="pull-left strong">Branch </div><div class="pull-right "><?php echo $bank_row["branch"] ?></div><br />
                                     <br>
                                 <?php } ?>
-                                <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Baht</h3></div><br />
+                                <div class="pull-left strong" style="color:#00cc33"><h3>Total Price :  </h3></div><div class="pull-right" style="color:#00cc33"><h3><?php echo number_format($room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]); ?> Baht</h3></div><br />
 
                                 <!--                            <div class="pull-left strong">Please Confirm Your Identity Card Number</div><div class="pull-right strong">Please Confirm Telephone Number</div><br>
                                                             <div class="pull-left strong"><input name="idcard" class="form-control" type="text" required></div>
@@ -178,12 +185,12 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
                                 <br>
                                 <h3 style="font-style: italic;text-align: center">Price Detail</h3><hr>
                                 <p>Room Price</p>
-                                <span class="price"><?php echo $room_row["price"]; ?> Bath</span>
+                                <span class="price"><?php echo number_format($room_row["price"]); ?> Baht</span>
                                 <hr>
                                 <p>Room Deposit For <?php echo $room_row["roomDeposit"]; ?> Month</p>
-                                <span class="price"><?php echo $room_row["price"] * $room_row["roomDeposit"]; ?> Bath</span><hr style="color:red">
+                                <span class="price"><?php echo number_format($room_row["price"] * $room_row["roomDeposit"]) ?> Baht</span><hr style="color:red">
                                 <h3 style="color: #00cc33;font-style:italic;text-align: center">Total Price</h3>
-                                <span class="price" style="color:#00cc33"><?php echo $room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]; ?> Bath</span>
+                                <span class="price" style="color:#00cc33"><?php echo number_format($room_row["price"] * $room_row["roomDeposit"] + $room_row["price"]); ?> Baht</span>
                                 <br><br><br>
                             </div>		
                         </form>

@@ -53,6 +53,7 @@
                                     <option value="Waiting">Waiting</option>
                                     <option value="Canceled">Canceled</option>
                                     <option value="Reject">Reject</option>
+                                    <option value="Refund+Needed">Refund Needed</option>
                                 </select>
                                 </div>
                                 <div class="col-md-3 pull-right" style="margin-left:20px">
@@ -136,6 +137,7 @@
                             document.getElementById("approvebutton").setAttribute("value", $(this).data('bookid'));
                             document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
                             document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
+                            document.getElementById("refundbutton").setAttribute("value", $(this).data('bookid'));
                             $(".modal-body-booking #name").html($(this).data('name'));
                             $(".modal-body-booking #date").html($(this).data('date'));
                             $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -162,7 +164,8 @@
                             $(".modal-body-booking #status").html($(this).data('status'));
                             $(".modal-body-booking #dormname").html($(this).data('dormname'));
                             $(".modal-body-booking #room").html($(this).data('room'));
-                            $(".modal-body-booking #totalprice").html($(this).data('totalprice'));
+                            $(".modal-body-booking #floor").html($(this).data('floor'));
+                            $(".modal-body-booking #totalprice").html($(this).data('totalprice') + " Baht");
                             if ($(this).data('transfername') !== "") {
                                 $(".modal-body-booking #transfername").html($(this).data('transfername'));
                             } else {
@@ -172,6 +175,21 @@
                                 $(".modal-body-booking #transfertime").html($(this).data('transfertime'));
                             } else {
                                 $(".modal-body-booking #transfertime").html("Empty Data");
+                            }
+                            if ($(this).data('transfername') !== "") {
+                                $(".modal-body-booking #transferrefID").html($(this).data('transferrefID'));
+                            } else {
+                                $(".modal-body-booking #transferrefID").html("Empty Data");
+                            }
+                            if ($(this).data('transfername') !== "") {
+                                $(".modal-body-booking #transferbank").html($(this).data('transferbank'));
+                            } else {
+                                $(".modal-body-booking #transferbank").html("Empty Data");
+                            }
+                            if ($(this).data('transfername') !== "") {
+                                $(".modal-body-booking #bankacc_id").html($(this).data('bankacc'));
+                            } else {
+                                $(".modal-body-booking #bankacc_id").html("Empty Data");
                             }
 
                         });
@@ -224,18 +242,25 @@
                                                 <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>
                                                 <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right">Myplace 2</span></h5>
                                                 <h5 style="text-align: left">Room Type : <span id="room" class="pull-right">Superior</span></h5>
+                                                <h5 style="text-align: left">Floor No : <span id="floor" class="pull-right">4</span></h5>
                                                 <h5 style="text-align: left">Booking Status :<span id="status" class="pull-right">Checking</span></h5>
                                                 <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right">2014-09-08 22:50:43</span></h5>
                                                 <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right">2014-09-08 22:50:43</span></h5>
-                                                <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Bath</span></h5>
+                                                <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Baht</span></h5>
                                                 <legend style="font-style: italic;text-align: right">Money Transfer Evidence</legend>
+                                                <h5 style="text-align: left">Reference ID : <span class="pull-right" id="transferrefID">นาย ยอช เอง</span></h5>
                                                 <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername">นาย ยอช เอง</span></h5>
                                                 <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
+                                                <h5 style="text-align: left">Transfer Bank : <span class="pull-right" id="transferbank">2014-09-04T15:33</span></h5>
+                                                <h5 style="text-align: left">Customer Bank Account ID : <span class="pull-right" id="bankacc_id">2014-09-04T15:33</span></h5>
                                                 <br>
                                                 <legend style="font-style: italic;text-align: left">Change Status</legend>
                                                 <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
                                                 <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled</button>
                                                 <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
+                                                <br><br>
+                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , System Error </legend>
+                                                <button id="refundbutton" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
                                                 <br><br>
                                             </div>
                                         </div>

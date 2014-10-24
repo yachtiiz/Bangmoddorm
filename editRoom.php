@@ -95,7 +95,7 @@ function add_room($dormID) {
     $areas = filter_var($_POST["areas"], FILTER_SANITIZE_NUMBER_FLOAT);
     $price = filter_var($_POST["price"], FILTER_SANITIZE_STRING);
     $number_of_room = filter_var($_POST["number_of_room"], FILTER_SANITIZE_STRING);
-    $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
+    $number_of_person = filter_var($_POST["number_of_person"], FILTER_SANITIZE_NUMBER_INT);
     $room_deposit = filter_var($_POST["room_deposit"], FILTER_SANITIZE_NUMBER_INT);
 
     $main_pic_path = "default_picture.jpg";
@@ -109,7 +109,7 @@ function add_room($dormID) {
 
 
     $query = "INSERT INTO `Rooms` (`dormID`, `roomType`, `areas`, `price`, `numOfRoom`, `roomAvailable`, `roomDeposit` , `status` , `main_pic`)
-VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $room_available , $room_deposit , 'Active' , '$main_pic_path');";
+VALUES ( $dormID, '$room_type', $areas , $price , $number_of_room , $number_of_person , $room_deposit , 'Active' , '$main_pic_path');";
 
     if (mysqli_query($con, $query)) {
 
@@ -150,7 +150,7 @@ function edit_room($roomID) {
     $areas = filter_var($_POST["areas"], FILTER_SANITIZE_NUMBER_FLOAT);
     $price = filter_var($_POST["price"], FILTER_SANITIZE_STRING);
     $number_of_room = filter_var($_POST["number_of_room"], FILTER_SANITIZE_STRING);
-    $room_available = filter_var($_POST["room_available"], FILTER_SANITIZE_NUMBER_INT);
+    $number_of_person = filter_var($_POST["number_of_person"], FILTER_SANITIZE_NUMBER_INT);
     $room_deposit = filter_var($_POST["room_deposit"], FILTER_SANITIZE_NUMBER_INT);
     $room_detail = filter_var($_POST["room_detail"], FILTER_SANITIZE_STRING);
     $main_room_path = NULL;
@@ -194,7 +194,7 @@ function edit_room($roomID) {
 
 
     $pic_main_path_query = $main_room_path === NULL ? "" : ", main_pic = '$main_room_path'";
-    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , roomAvailable = $room_available , status = 'Complete' , roomDetail = '$room_detail' , roomDeposit = $room_deposit " . $pic_main_path_query . " where roomID = $roomID;";
+    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , num_of_person = $number_of_person , status = 'Complete' , roomDetail = '$room_detail' , roomDeposit = $room_deposit " . $pic_main_path_query . " where roomID = $roomID;";
 
 
 
@@ -226,28 +226,23 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
     }
 
     if (isset($_POST["edit_submit"])) {
-        if ($_POST["room_available"] <= $_POST["number_of_room"]) {
-            if (isset($_POST["roomID"]) && is_numeric($_POST["roomID"]) && $_POST["roomID"] !== "") {
-                if (edit_room($_POST["roomID"])) {
-                    echo '<script>alert("Edit Room Success");</script>';
-                    echo '<script>window.location = "index.php?chose_page=editroom&dormID=' . $dormID . '&dormName=' . $dormName . '&roomID=' . $roomID . '"</script>';
-                } else {
-                    echo '<script>alert("Edit Room Failed");</script>';
-                    echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
-                }
+        if (isset($_POST["roomID"]) && is_numeric($_POST["roomID"]) && $_POST["roomID"] !== "") {
+            if (edit_room($_POST["roomID"])) {
+                echo '<script>alert("Edit Room Success");</script>';
+                echo '<script>window.location = "index.php?chose_page=editroom&dormID=' . $dormID . '&dormName=' . $dormName . '&roomID=' . $roomID . '"</script>';
             } else {
-                $msg = add_room($_POST["dormID"]);
-                if ($msg == "Add Complete") {
-                    echo '<script>alert("Add Room Complete");</script>';
-                    echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
-                } else {
-                    echo '<script>alert("' . $msg . '");</script>';
-                    echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
-                }
+                echo '<script>alert("Edit Room Failed");</script>';
+                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
             }
         } else {
-            echo '<script>alert("Room available cannot more than Number of room")</script>';
-            echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+            $msg = add_room($_POST["dormID"]);
+            if ($msg == "Add Complete") {
+                echo '<script>alert("Add Room Complete");</script>';
+                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+            } else {
+                echo '<script>alert("' . $msg . '");</script>';
+                echo '<script>window.location = "index.php?chose_page=ownersystem"</script>';
+            }
         }
     }
     ?>
@@ -332,8 +327,8 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     <label>Areas
                                         <input type="text" class="form-control" name="areas" value='<?php echo isset($room_row["areas"]) ? $room_row["areas"] : "" ?>' />
                                     </label>
-                                    <label>Room Avaliable
-                                        <input type="text" class="form-control" name="room_available" value='<?php echo getNumber_of_room($_GET["dormID"], $_GET["roomID"]) ?>'/>
+                                    <label>Number Person Per Room
+                                        <input type="text" class="form-control" name="number_of_person" value='<?php echo isset($room_row["num_of_person"]) ? $room_row["num_of_person"] : "" ?>'/>
                                     </label>
                                 </div>
 
@@ -356,10 +351,10 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                 </div>
                                 <div class="span9">
                                     <label>Room Detail
-                                    <textarea class="form-control" rows="4" name="room_detail"><?php echo isset($room_row["roomDetail"]) ? $room_row["roomDetail"] : "" ?></textarea>
+                                        <textarea class="form-control" rows="4" name="room_detail"><?php echo isset($room_row["roomDetail"]) ? $room_row["roomDetail"] : "" ?></textarea>
                                     </label>
                                 </div>
-                                
+
 
                             </div>  
                             <br />

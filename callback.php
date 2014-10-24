@@ -3,6 +3,22 @@
 session_start();
 date_default_timezone_set('Asia/Bangkok');
 
+//ETC FUNCTION
+function getTHNUMBER($floor){
+    
+    $th_number = "th";
+     
+    switch ($floor){
+        case "1": $th_number = "st";
+            break;
+        case "2": $th_number = "nd";
+            break;
+        case "3": $th_number = "rd";
+            break;
+    }
+    return $th_number;
+}
+
 function login($login, $password) {
     /* Query login matching password in DB */
     include 'connection.php';
@@ -151,7 +167,7 @@ function disabled_room($roomID) {
 
 if (isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])) {
     if (disabled_room($_GET["disabled_room"])) {
-        echo "<script>alert('Room now ". $_GET["room_status"] ."')</script>";
+        echo "<script>alert('Room now " . $_GET["room_status"] . "')</script>";
         echo "<script>window.location = 'index.php?chose_page=ownersystem';</script>";
     } else {
         echo "<script>alert('Delete Failed')</script>";
@@ -176,7 +192,7 @@ function checkingRoom($dormID) {
 function showing_dorm($dormID, $status) {
 
     require 'connection.php';
-    
+
     $query = "update Dormitories set status = '$status' where dormID = $dormID ";
     if (mysqli_query($con, $query)) {
         return true;
@@ -295,6 +311,9 @@ function showDormBook($dormID) {
             case "Approve":
                 $color = "#00cc33";
                 break;
+            case "Refund Needed":
+                $color = "red";
+                break;
         }
 
         echo '<tr>';
@@ -334,7 +353,7 @@ function displayBookingPage($cur_page, $dormID) {
     include 'connection.php';
     mysqli_query($con, "SET NAMES UTF8");
 
-    $query = "select bookingID from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dormID";
+    $query = "select bookingID from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID=$dormID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         $total_page = ceil(mysqli_num_rows($result) / 8);
@@ -365,7 +384,7 @@ function getBookingDorm($page, $order_by, $dormID) {
     mysqli_query($con, "SET NAMES UTF8");
 
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID order by $order_by limit $limit_start , 8";
+    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID order by $order_by limit $limit_start , 8";
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
 
@@ -384,6 +403,9 @@ function getBookingDorm($page, $order_by, $dormID) {
             case "Approve":
                 $color = "#00cc33";
                 break;
+            case "Refund Needed":
+                $color = "red";
+                break;
         }
 
         echo '<tr>';
@@ -393,7 +415,7 @@ function getBookingDorm($page, $order_by, $dormID) {
         echo '<td>' . $row["date"] . '</td>';
         echo '<td>' . $row["expire_date"] . '</td>';
         echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
-        echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+        echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
         echo '</tr> ';
     }
     if (mysqli_num_rows($result) != 8 && mysqli_num_rows($result) != 0) {
@@ -571,7 +593,6 @@ function searchingRequest($query) {
             echo '<td>' . $row["date"] . '</td>';
             if ($row["approval"] == "Rejected") {
                 echo '<td style="color: red" >' . $row["approval"] . '</td>';
-                
             } else if ($row["approval"] == "Waiting") {
                 echo '<td style="color: black">' . $row["approval"] . '</td>';
             } else {
@@ -634,6 +655,9 @@ function searchingBook($query) {
                 case "Approve":
                     $color = "#00cc33";
                     break;
+                case "Refund Needed":
+                    $color = "red";
+                    break;
             }
 
             echo '<tr>';
@@ -643,7 +667,7 @@ function searchingBook($query) {
             echo '<td>' . $row["date"] . '</td>';
             echo '<td>' . $row["expire_date"] . '</td>';
             echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
-            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . '" data-bankacc="' . $row["bank_acc_id"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
             echo '</tr> ';
         }
     } else {
@@ -683,10 +707,10 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
                 $search_value = "%" . $search_value . "%";
             }
             $booksearch_only = $_GET["search_only"];
-            $query = "select * from booking b join rooms r join members m join dormitories d where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID = d.dormID and r.dormID=$dorm_id and $booksearch_only $type '$search_value' order by date desc limit $limit_start , 8";
+            $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dorm_id and $booksearch_only $type '$search_value' order by date limit $limit_start , 8";
             searchingBook($query);
         } else {
-            $query = "select * from booking b join rooms r join members m join dormitories d where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID = d.dormID and r.dormID=$dorm_id and (bookingID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%' or firstName like '%$search_value%' or lastName like '%$search_value%') order by date desc limit 0 , 8 ";
+            $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dorm_id and (bookingID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%' or firstName like '%$search_value%' or lastName like '%$search_value%') order by date desc limit 0 , 8 ";
             searchingBook($query);
         }
     } else {
@@ -703,7 +727,7 @@ if (isset($_GET["dormbookID"]) && is_numeric($_GET["dormbookID"]) && isset($_GET
         $page = $_GET["search_status_page"];
     }
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from booking b join rooms r join members m join dormitories d where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID = d.dormID and r.dormID=$dormID and booking_status='$status' order by date desc limit $limit_start , 8";
+    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and booking_status='$status' order by date desc limit $limit_start , 8";
     searchingBook($query);
 }
 
@@ -711,7 +735,7 @@ if (isset($_GET["search_status_page"]) && is_numeric($_GET["search_status_page"]
     $dormID = $_GET["dormID"];
     $status = $_GET["search_by_status"];
     $cur_page = $_GET["search_status_page"];
-    $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID and booking_status = '$status'";
+    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and booking_status = '$status'";
     $href = 'callback.php?search_status_page=';
     displayPage($cur_page, $query, $href);
 }
@@ -721,7 +745,7 @@ if (isset($_GET["dormbook_id"]) && isset($_GET["search_date"]) && isset($_GET["s
     $dormID = $_GET["dormbook_id"];
     $search_date = $_GET["search_date"];
     $cur_page = $_GET["search_date_page"];
-    $query = "select * from booking b join rooms r join members m where b.memberID = m.memberID and b.roomID=r.roomID and r.dormID=$dormID and date like '%$search_date%'";
+    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and date like '%$search_date%'";
     $href = "callback.php?search_date_page=";
     displayPage($cur_page, $query, $href);
 }
@@ -751,6 +775,9 @@ function getMembook($member_id, $page) {
                 case "Approve":
                     $color = "#00cc33";
                     break;
+                case "Refund Needed":
+                    $color = "red";
+                    break;
             }
             echo '<tr>';
             echo '<td><p style = "margin-left:20px">' . $book_row["bookingID"] . '</p></td>';
@@ -758,7 +785,7 @@ function getMembook($member_id, $page) {
             echo '<td>' . $book_row["roomType"] . '</td>';
             echo '<td>' . $book_row["expire_date"] . '</td>';
             echo '<td style="color:' . $color . '">' . $book_row["booking_status"] . '</td>';
-            echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $book_row["bookingID"] . '" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>';
+            echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $book_row["bookingID"] . '" type="button" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
             echo '</tr>';
         }
     } else {
@@ -830,16 +857,16 @@ function change_booking($bookID, $status) {
 
     require 'connection.php';
     $noti = "";
-    if ($status === "Approve" || $status === "Reject") {
+    if ($status === "Approve" || $status === "Reject" || $status === "Refund Needed") {
         $noti = ", member_noti = 1";
     }
     $query = "update booking set booking_status = '$status' $noti where bookingID = $bookID";
     if (mysqli_query($con, $query)) {
-        if ($status === "Reject" || $status === "Canceled") {
-            $query = "select roomID from booking where bookingID = $bookID";
+        if ($status === "Reject" || $status === "Canceled" || $status === "Refund Needed") {
+            $query = "select matchingID from booking where bookingID = $bookID";
             $result = mysqli_query($con, $query);
             $row = mysqli_fetch_array($result);
-            $plus_room_query = "update rooms set roomAvailable = roomAvailable + 1 where roomID = $row[0]";
+            $plus_room_query = "update RoomPerFloor set roomPerFloor = roomPerFloor + 1 where matchingID = $row[0]";
             if (mysqli_query($con, $plus_room_query)) {
                 return true;
             } else {
@@ -883,6 +910,9 @@ function searchingMemberBook($query) {
                 case "Approve":
                     $color = "#00cc33";
                     break;
+                case "Refund Needed":
+                    $color = "red";
+                    break;
             }
             echo '<tr>';
             echo '<td><p style = "margin-left:20px">' . $book_row["bookingID"] . '</p></td>';
@@ -890,7 +920,7 @@ function searchingMemberBook($query) {
             echo '<td>' . $book_row["roomType"] . '</td>';
             echo '<td>' . $book_row["expire_date"] . '</td>';
             echo '<td style="color:' . $color . '">' . $book_row["booking_status"] . '</td>';
-            echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $book_row["bookingID"] . '" type="button" style="width:100%" class="btn btn-success book-now">View Detail</a></td>';
+            echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $book_row["bookingID"] . '" type="button" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
             echo '</tr>';
         }
     } else {
@@ -915,7 +945,7 @@ function searchingMemberBook($query) {
 if (isset($_GET["search_member_value"])) {
     $value = filter_var($_GET["search_member_value"], FILTER_SANITIZE_STRING);
     $memberID = $_SESSION["memberID"];
-    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and b.memberID = $memberID and bookingID like '%$value%' group by bookingID order by date desc limit 0 , 8";
+    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID and bookingID like '%$value%' group by bookingID order by date desc limit 0 , 8";
     searchingMemberBook($query);
 }
 
@@ -927,7 +957,7 @@ if (isset($_GET["sortby_memberbooking"]) && isset($_GET["sortby_memberbooking_pa
     }
     $memberID = $_SESSION["memberID"];
     $limit_start = ((8 * $_GET["sortby_memberbooking_page"]) - 8);
-    $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and b.memberID = $memberID group by bookingID order by $sort_by limit $limit_start , 8";
+    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID group by bookingID order by $sort_by limit $limit_start , 8";
     searchingMemberBook($query);
 }
 
@@ -1342,6 +1372,9 @@ function getAllNotification($cur_page, $order_by, $status_value) {
                 case "Approve":
                     $color = "#00cc33";
                     break;
+                case "Refund Needed":
+                    $color = "red";
+                    break;
             }
             echo '<tr ' . $unread . '>';
             echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
@@ -1349,7 +1382,7 @@ function getAllNotification($cur_page, $order_by, $status_value) {
             echo '<td>' . $row["date"] . '</td>';
             echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
             echo '<td>' . $row[30] . '</td>';
-            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . $row["totalPrice"] . '" data-transfername="' . $row["transfer_name"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . '" data-bankacc="' . $row["bank_acc_id"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
             echo '</tr>';
             if ($row["owner_noti"] == "1") {
                 if (!readAble($row["bookingID"])) {
@@ -1457,12 +1490,11 @@ function getComment($dormID, $page) {
         echo '<td style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
         echo '</tr>';
     }
-    
+
     if (mysqli_num_rows($result) === 0) {
         echo '<tr>';
         echo '<td colspan="2" style="height:121px"> No Comment</td>';
         echo '</tr>';
-        
     }
 }
 
@@ -1523,41 +1555,41 @@ if (isset($_GET["comment_rating"]) && is_numeric($_GET["comment_rating"])) {
 function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road) {
 
     require 'connection.php';
-    
-    if($type === "all"){
+
+    if ($type === "all") {
         $type = "";
-    }else{
-        $type = "d.type = '".$type."' and";
+    } else {
+        $type = "d.type = '" . $type . "' and";
     }
-    if($disFromUni === 'all'){
+    if ($disFromUni === 'all') {
         $disFromUni = "";
-    }else{
-        $disFromUni = "d.DisFromUni ".$disFromUni. " and";
+    } else {
+        $disFromUni = "d.DisFromUni " . $disFromUni . " and";
     }
-    if($start_price === ""){
+    if ($start_price === "") {
         $start_price = "0";
     }
-    if($end_price === ""){
+    if ($end_price === "") {
         $end_price = "1000000";
     }
-    if($rate === "all"){
+    if ($rate === "all") {
         $rate = "";
-    }else{
-        $rate = "and d.dormitory_rate = ".$rate;
+    } else {
+        $rate = "and d.dormitory_rate = " . $rate;
     }
-    if($road === "all"){
+    if ($road === "all") {
         $road = "";
-    }else{
-        $road = "and d.road like '%".$road."%'";
+    } else {
+        $road = "and d.road like '%" . $road . "%'";
     }
-    
-    
-    
-    
+
+
+
+
     $query = "select * from dormitories d join rooms r where d.dormID = r.dormID and d.status = 'Active' and $type $disFromUni ( r.price >=$start_price and r.price <= $end_price ) $rate $road group by d.dormID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
-        while ($row = mysqli_fetch_array($result)) {            
+        while ($row = mysqli_fetch_array($result)) {
             $dormID = $row["dormID"];
             $room_query = "select min(price) as minprice , max(price) as maxprice from rooms where dormID = $dormID";
             $room_result = mysqli_query($con, $room_query);
@@ -1577,10 +1609,10 @@ function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road)
             echo '<p style = "text-align:center">';
             echo 'DORMITORY TYPE : ' . $row["type"] . '<br>';
             echo 'DISTANCE FROM UNIVERSITY : ' . $row["disFromUni"] . ' Kilometers<br>';
-            if($room_row["minprice"] === $room_row["maxprice"]){
-            echo 'PRICE RATE : '. $room_row["maxprice"] .' BATH/MONTH<br>';
-            }else{
-            echo 'PRICE RATE : '. $room_row["minprice"] .' - '. $room_row["maxprice"] . ' BATH/MONTH<br>';
+            if ($room_row["minprice"] === $room_row["maxprice"]) {
+                echo 'PRICE RATE : ' . $room_row["maxprice"] . ' BATH/MONTH<br>';
+            } else {
+                echo 'PRICE RATE : ' . $room_row["minprice"] . ' - ' . $room_row["maxprice"] . ' BATH/MONTH<br>';
             }
             echo '<a style = "margin-top:20px;" class = "btn1 btn1-primary" href = "index.php?chose_page=dormdetail&dormID=' . $row["dormID"] . '">View Details</a>';
             echo '</p>';
@@ -1592,49 +1624,47 @@ function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road)
     }
 }
 
-if(isset($_GET["search_dorm"]) && $_GET["search_dorm"] === "true"){
-   
+if (isset($_GET["search_dorm"]) && $_GET["search_dorm"] === "true") {
+
     $disFromUni = $_GET["disFromUni"];
     $type = $_GET["search_dorm_type"];
-    if($type ==="FemaleMale"){
+    if ($type === "FemaleMale") {
         $type = "Female&Male";
     }
     $rate = $_GET["search_dorm_rate"];
     $road = $_GET["search_dorm_road"];
     $start_price = $_GET["search_dorm_stprice"];
     $end_price = $_GET["search_dorm_enprice"];
-        
-    filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road);    
+
+    filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road);
 }
 
-
 // Change Bank Account Status
-function change_bank_status($bankID,$status){
+function change_bank_status($bankID, $status) {
     require 'connection.php';
     $query = "update BankAccount set bank_status = '$status' where bankID = $bankID";
-    if(mysqli_query($con, $query)){
+    if (mysqli_query($con, $query)) {
         return true;
-    }else{
+    } else {
         return false;
     }
 }
 
-if(isset($_GET["bank_show_status"]) && isset($_GET["bank_id"])){
-    
+if (isset($_GET["bank_show_status"]) && isset($_GET["bank_id"])) {
+
     $bankID = $_GET["bank_id"];
     $status = $_GET["bank_show_status"];
     $revert_status = "";
-    if($status === "Showing"){
+    if ($status === "Showing") {
         $revert_status = "Hiding";
-    }else if($status === "Hiding"){
+    } else if ($status === "Hiding") {
         $revert_status = "Showing";
     }
-    if(change_bank_status($bankID, $status) && ($status === "Showing" | $status === "Hiding")){
-        echo 'Now '. $status .' on page ( Click for '. $revert_status .' )<script>alert("Now '. $status .' on page")</script>';
-    }else{
+    if (change_bank_status($bankID, $status) && ($status === "Showing" | $status === "Hiding")) {
+        echo 'Now ' . $status . ' on page ( Click for ' . $revert_status . ' )<script>alert("Now ' . $status . ' on page")</script>';
+    } else {
         echo '<script>alert("change status failed")</script>';
     }
-    
 }
 ?>
 

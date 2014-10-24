@@ -156,7 +156,7 @@
 
                                             $memberID = $_SESSION["memberID"];
 
-                                            $query = "select * from Booking b join Dormitories d join Rooms r where b.roomID = r.roomID and b.memberID = $memberID group by bookingID order by date desc limit 0 , 8 ";
+                                            $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID order by date desc limit 0 , 8 ";
                                             $result = mysqli_query($con, $query);
                                             while ($book_row = mysqli_fetch_array($result)) {
 
@@ -174,6 +174,9 @@
                                                         break;
                                                     case "Approve":
                                                         $color = "#00cc33";
+                                                        break;
+                                                    case "Refund Needed":
+                                                        $color = "red";
                                                         break;
                                                 }
                                                 ?>
