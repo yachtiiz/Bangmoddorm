@@ -431,6 +431,7 @@
                     $total_floor = filter_var($_POST["total_floor"], FILTER_SANITIZE_STRING);
 
                     $main_dorm_path = NULL;
+                    $plan_dorm_path = NULL;
 
 
                     if (isset($_FILES["main_dorm_pic"])) {
@@ -582,11 +583,18 @@
                                         </div>
                                     </div>
                                     <div class='col-lg-5'>
+                                        <?php if(!isset($row["total_floor"])){ ?>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">Total Floor</span>
+                                            <input class="form-control" id="total_floor" name="total_floor" type="number" value='<?php echo $row["total_floor"] ?>'>
+                                        </div>
+                                        <?php } else { ?>
                                         <div class="input-group">
                                             <span class="input-group-addon">Total Floor</span>
                                             <input class="form-control" id="total_floor" type="number" value='<?php echo $row["total_floor"] ?>' disabled>
                                             <input class="form-control" id="total_floor_hide" name="total_floor" type="hidden" value='<?php echo $row["total_floor"] ?>'>
                                         </div>
+                                        <?php } ?>
                                     </div>                                    
                                 </div>
                                 <br>

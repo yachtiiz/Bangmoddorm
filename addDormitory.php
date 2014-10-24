@@ -12,14 +12,11 @@
                     maxlength: 256
                 },
                 license_dorm: {
-                    checkSpecial: true,
-                    required: true,
+                    checkSpecial: true, 
                     minlength: 4,
                     maxlength: 256
                 },
-                special_request: {
-                    required: true,
-                }
+                
             }
         });
     });
