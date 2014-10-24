@@ -309,7 +309,7 @@
                                 if ($row["floorNo"] === '1') {
                                     for ($i = 0; $i < count($_POST["newroomtype_name"]); $i++) {
                                         $roomtype_name = $_POST["newroomtype_name"][$i];
-                                        $query = "INSERT INTO `Rooms` (`roomType`,`status`) VALUES ('$roomtype_name','Hiding');";
+                                        $query = "INSERT INTO `Rooms` (`roomType`,`status`) VALUES ('$roomtype_name','Incomplete');";
 
                                         if (mysqli_query($con, $query)) {
                                             //Insert Room Per floor
