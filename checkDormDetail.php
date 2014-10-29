@@ -4,7 +4,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
 
     $dormID = $_GET["dormID"];
     require 'connection.php';
-    $query = "select dormName,d.type,firstName,lastName,m.memberID,m.email,m.tel,disFromUni,dormitory_rate,count(roomType) as AllroomType,sum(numOfRoom) as Allroom,sum(roomAvailable) as AvailableRoom,d.status from dormitories d join rooms r join members m where d.dormID = r.dormID and d.memberID = m.memberID and d.dormID = $dormID";
+    $query = "select dormName,d.type,firstName,lastName,m.memberID,m.email,m.tel,disFromUni,dormitory_rate, sum(roomPerFloor) as AvailableRoom,d.status from dormitories d join rooms r join members m join floor f join roomperfloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and r.roomID = rpf.roomID and d.memberID = m.memberID and d.dormID = $dormID group by d.dormID";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     ?>
@@ -89,29 +89,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         <td>
                             <span class="" style="color:gold"><?php echo $star ?></span>
                         </td>
-                    </tr>    
-                    <tr style=" border-bottom: #cccccc solid 1px"> 
-                        <td>
-                            <h4><span>Total Room Types : </span></h4>
-                        </td>
-                        <td>
-                            <?php echo $row["AllroomType"] ?> Types
-                        </td>
-                    </tr>
-                    <tr style=" border-bottom: #cccccc solid 1px"> 
-                        <td>
-                            <h4><span>Total Rooms : </span></h4>
-                        </td>
-                        <td>
-                            <?php
-                            if ($row["Allroom"] !== NULL) {
-                                echo $row["Allroom"];
-                            } else {
-                                echo "Empty";
-                            }
-                            ?> Rooms
-                        </td>
-                    </tr>
+                    </tr>                        
                     <tr style=" border-bottom: #cccccc solid 1px"> 
                         <td>
                             <h4><span>Available Rooms : </span></h4>

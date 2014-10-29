@@ -74,10 +74,25 @@
                                             }
                                         }
 
+                                        function getTHNUMBER($floor) {
+
+                                            $th_number = "th";
+
+                                            switch ($floor) {
+                                                case "1": $th_number = "st";
+                                                    break;
+                                                case "2": $th_number = "nd";
+                                                    break;
+                                                case "3": $th_number = "rd";
+                                                    break;
+                                            }
+                                            return $th_number;
+                                        }
+
                                         function getAllNotification() {
                                             require 'connection.php';
                                             $memberID = $_SESSION["memberID"];
-                                            $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by date desc limit 0 , 8";
+                                            $query = "select *,m.tel as dormTel from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by date desc limit 0 , 8";
                                             $result = mysqli_query($con, $query);
                                             if (mysqli_num_rows($result) !== 0) {
                                                 while ($row = mysqli_fetch_array($result)) {
@@ -100,14 +115,17 @@
                                                         case "Approve":
                                                             $color = "#00cc33";
                                                             break;
+                                                        case "Refund Needed":
+                                                            $color = "red";
+                                                            break;
                                                     }
                                                     echo '<tr ' . $unread . '>';
                                                     echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
                                                     echo '<td>' . $row["firstName"] . " " . $row["lastName"] . '</td>';
                                                     echo '<td>' . $row["date"] . '</td>';
                                                     echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
-                                                    echo '<td>' . $row[30] . '</td>';
-                                                    echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+                                                    echo '<td>' . $row["dormTel"] . '</td>';
+                                                    echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="'. $row["bank_name"] .'" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
                                                     echo '</tr>';
                                                     if ($row["owner_noti"] == "1") {
                                                         if (!readAble($row["bookingID"])) {
@@ -146,6 +164,7 @@
                                             document.getElementById("approvebutton").setAttribute("value", $(this).data('bookid'));
                                             document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
                                             document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
+                                            document.getElementById("refundbutton").setAttribute("value", $(this).data('bookid'));
                                             $(".modal-body-booking #name").html($(this).data('name'));
                                             $(".modal-body-booking #date").html($(this).data('date'));
                                             $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -172,7 +191,8 @@
                                             $(".modal-body-booking #status").html($(this).data('status'));
                                             $(".modal-body-booking #dormname").html($(this).data('dormname'));
                                             $(".modal-body-booking #room").html($(this).data('room'));
-                                            $(".modal-body-booking #totalprice").html($(this).data('totalprice'));
+                                            $(".modal-body-booking #floor").html($(this).data('floor'));
+                                            $(".modal-body-booking #totalprice").html($(this).data('totalprice') + " Baht");
                                             if ($(this).data('transfername') !== "") {
                                                 $(".modal-body-booking #transfername").html($(this).data('transfername'));
                                             } else {
@@ -183,8 +203,54 @@
                                             } else {
                                                 $(".modal-body-booking #transfertime").html("Empty Data");
                                             }
+                                            if ($(this).data('transferrefid') !== "") {
+                                                $(".modal-body-booking #transferrefID").html($(this).data('transferrefid'));
+                                            } else {
+                                                $(".modal-body-booking #transferrefID").html("Empty Data");
+                                            }
+                                            if ($(this).data('transfername') !== "") {
+                                                $(".modal-body-booking #transferbank").html($(this).data('transferbank'));
+                                            } else {
+                                                $(".modal-body-booking #transferbank").html("Empty Data");
+                                            }
+                                            if ($(this).data('bankacc') !== "") {
+                                                $(".modal-body-booking #bankacc_id").html($(this).data('bankacc'));
+                                            } else {
+                                                $(".modal-body-booking #bankacc_id").html("Empty Data");
+                                            }
+                                            if ($(this).data('bankname') !== "") {
+                                                $(".modal-body-booking #bankname").html($(this).data('bankname'));
+                                            } else {
+                                                $(".modal-body-booking #bankname").html("Empty Data");
+                                            }
 
                                         });
+
+                                        $(function() {
+
+                                            $("#submitbutton").on("click", function() {
+
+                                                change_url = "callback.php?change_booking_status=" + $("#book_status").val() + "&change_booking_id=" + $(this).val();
+                                                $("#submitbutton").load(change_url);
+
+                                                url = "callback.php?dormbook_id=" + $("#select_dorm").val() + "&booking_searching=" + $("#searching").val().replace(/ /g, "+");
+                                                if ($("#only_bookid").attr("checked")) {
+                                                    special_url = url + "&search_only=bookingID";
+                                                    $("#show_result").load(special_url);
+                                                } else
+                                                if ($("#only_date").attr("checked")) {
+                                                    special_url = url + "&search_only=expire_date";
+                                                    $("#show_result").load(special_url);
+                                                } else
+                                                if ($("#only_status").attr("checked")) {
+                                                    special_url = url + "&search_only=booking_status";
+                                                    $("#show_result").load(special_url);
+                                                } else {
+                                                    $("#show_result").load(url);
+                                                }
+                                            });
+                                        });
+
                                     </script>
                                     <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
@@ -204,22 +270,30 @@
                                                                 <img id="slip" style="width: 340px;height: 370px;" src="images/picture_evidence/evidance_9_LNERU" class="img-thumbnail">
                                                             </div>
                                                             <div class="col-md-7" style="margin-top: 0px">
-                                                                <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right"></span></h5>
-                                                                <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right"></span></h5>
-                                                                <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right"></span></h5>
-                                                                <h5 style="text-align: left">Room Type : <span id="room" class="pull-right"></span></h5>
-                                                                <h5 style="text-align: left">Booking Status :<span id="status" class="pull-right"></span></h5>
-                                                                <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right"></span></h5>
-                                                                <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right"></span></h5>
-                                                                <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00"></span></h5>
+                                                                <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right">14</span></h5>
+                                                                <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>
+                                                                <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right">Myplace 2</span></h5>
+                                                                <h5 style="text-align: left">Room Type : <span id="room" class="pull-right">Superior</span></h5>
+                                                                <h5 style="text-align: left">Floor No : <span id="floor" class="pull-right">4</span></h5>
+                                                                <h5 style="text-align: left">Booking Status :<span id="status" class="pull-right">Checking</span></h5>
+                                                                <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right">2014-09-08 22:50:43</span></h5>
+                                                                <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right">2014-09-08 22:50:43</span></h5>
+                                                                <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Baht</span></h5>
                                                                 <legend style="font-style: italic;text-align: right">Money Transfer Evidence</legend>
-                                                                <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername"></span></h5>
-                                                                <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime"></span></h5>
+                                                                <h5 style="text-align: left">Reference ID : <span class="pull-right" id="transferrefID">Empty Data</span></h5>
+                                                                <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername">นาย ยอช เอง</span></h5>
+                                                                <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
+                                                                <h5 style="text-align: left">Transfer Bank : <span class="pull-right" id="transferbank">2014-09-04T15:33</span></h5>
+                                                                <h5 style="text-align: left">Customer Bank Account ID : <span class="pull-right" id="bankacc_id">2014-09-04T15:33</span></h5>
+                                                                <h5 style="text-align: left">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
                                                                 <br>
-                                                                <h5 style="text-align: center">Change Status</h5>
+                                                                <legend style="font-style: italic;text-align: left">Change Status</legend>
                                                                 <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
+                                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled</button>
                                                                 <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
-                                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Cancled By Member</button>
+                                                                <br><br>
+                                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , Money Transfer Problem </legend>
+                                                                <button id="refundbutton" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
                                                                 <br><br>
                                                             </div>
                                                         </div>
@@ -266,6 +340,18 @@
                                                                     event.preventDefault();
                                                                 }
                                                             });
+                                                            $("#refundbutton").on("click", function() {
+                                                                if (confirm("Confirm to Change Status ?")) {
+                                                                    change_url = "callback.php?change_booking_status=Refund+Needed&change_booking_id=" + $(this).val();
+                                                                    $("#refundbutton").load(change_url);
+                                                                    event.preventDefault();
+                                                                    window.location = "index.php?chose_page=ownernotification";
+                                                                } else {
+                                                                    event.preventDefault();
+                                                                }
+                                                            });
+
+
 
                                                             $("#search_status").on("change", function() {
                                                                 url = "callback.php?ownernoti_curpage=1&ownernoti_orderby=&search_ownernoti=" + $(this).val();
@@ -328,7 +414,7 @@
                                     <?php
                                     $cur_page = 1;
                                     $memberID = $_SESSION["memberID"];
-                                    $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
+                                    $query = "select *,m.tel as dormTel from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
                                     $href = "callback.php?owner_noti_curpage=";
                                     displayPage($cur_page, $query, $href);
                                     ?>

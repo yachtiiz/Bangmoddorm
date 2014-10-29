@@ -1,4 +1,5 @@
 <?php
+
 if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
     require 'connection.php';
     $memberID = $_GET["memberID"];
@@ -123,7 +124,7 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
                     </tr>
                     <tr style=" border-bottom: #cccccc solid 1px"> 
                         <td>
-                            <h4><span>Distinct : </span></h4>
+                            <h4><span>District : </span></h4>
                         </td>
                         <td>
                             <?php echo $row["province"]; ?>
@@ -241,7 +242,48 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
 
         <div class="col-md-12">
             <?php if (isset($_GET["backtodorm"]) && is_numeric($_GET["backtodorm"])) { ?>
-                <a href="index.php?chose_page=checkDormDetail&dormID=<?php echo $_GET["backtodorm"] ?>" class="btn1 btn1-danger" style="">Back</a>                                
+                <a href="index.php?chose_page=checkDormDetail&dormID=<?php echo $_GET["backtodorm"] ?>" class="btn1 btn1-danger" style="margin-left: 18%; margin-top: 10% ;margin-bottom: 10%; width: 30%" style="">Back</a> 
+                <a href="" data-toggle="modal" data-target="#blacklist_modal" class="btn1 btn1-warning" style="margin-left: 5%;margin-top : 10% ;margin-bottom: 10%; width: 30%">Add to Blacklist</a>
+
+                    <div class="modal fade" id="blacklist_modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">Add this member to Blacklist</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h3 style="margin-top:0px">Reason</h3>
+                                    <textarea id="blacklist_reason" rows="3" class="form-control" style="margin-bottom:30px"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button id="addBlacklist" type="button" class="btn btn-primary">Add to blacklist</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div>
+        
+                    
+                
+
+
+
+                <script>
+                    $(function() {
+                        $("#addBlacklist").on("click", function() {
+                            if (confirm("Add this member to Blacklist ?")) {
+                                reason = $("#blacklist_reason").val().replace(/ /g, "+");
+                                url = "callback.php?addblacklist=<?php echo $row["memberID"] ?>&blacklist_reason=" + reason ;
+                                alert(url);
+                                $("#addBlacklist").load(url);
+                            } else {
+                                event.preventDefault();
+                            }
+                        });
+
+                    });
+                </script>
             <?php } else { ?>
                 <a href="index.php?chose_page=checkMemberInfo" class="btn1 btn1-danger" style="margin-left: 18%; margin-top: 10% ;margin-bottom: 10%; width: 30%">Back</a>
                 <?php if ($row["status"] === "Normal") { ?>

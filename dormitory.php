@@ -21,7 +21,7 @@ $dorm_result = mysqli_query($con, $query);
         while ($dorm_row = mysqli_fetch_array($dorm_result)) {
 
             $dormID = $dorm_row["dormID"];
-            $room_query = "select min(price) as minprice , max(price) as maxprice from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and r.status = 'Showing' and f.dormID = $dormID";
+            $room_query = "select min(price) as minprice , max(price) as maxprice from dormitories d join rooms r join floor f join roomperfloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and rpf.roomID = r.roomID and d.status = 'Showing' and r.status = 'Complete' and d.dormID = $dormID group by d.dormID";
             $room_result = mysqli_query($con, $room_query);
             $room_row = mysqli_fetch_array($room_result);
             ?>
@@ -42,7 +42,7 @@ $dorm_result = mysqli_query($con, $query);
 
                         DORMITORY TYPE : <?php echo $dorm_row["type"]; ?><br>
                         DISTANCE FROM UNIVERSITY : <?php echo $dorm_row["disFromUni"]; ?> Kilometers<br>
-                        <?php if($room_row["minprice"] === $room_row["maxprice"]) { ?>PRICE RATE : <?php echo $room_row["maxprice"] ?> BATH/MONTH<br> <?php } else { ?>PRICE RATE : <?php echo $room_row["minprice"] ?> - <?php echo $room_row["maxprice"] ?> BATH/MONTH<br> <?php } ?>
+                        <?php if($room_row["minprice"] === $room_row["maxprice"]) { ?>PRICE RATE : <?php echo $room_row["maxprice"] ?> BAHT/MONTH<br> <?php } else { ?>PRICE RATE : <?php echo $room_row["minprice"] ?> - <?php echo $room_row["maxprice"] ?> BAHT/MONTH<br> <?php } ?>
 
                         <!--                       <h4 style="text-align:center">Dormitory Facilities</h4>
                                            <ul class="pagination" style="margin-left:30px;margin-top:0px">
@@ -104,7 +104,7 @@ $dorm_result = mysqli_query($con, $query);
 
                     DORMITORY TYPE : <?php echo $dorm_row["type"]; ?><br>
                     DISTANCE FROM UNIVERSITY : <?php echo $dorm_row["disFromUni"]; ?><br>
-                    PRICE RATE : 2000 - 5000 BATH/MONTH<br>
+                    PRICE RATE : 2000 - 5000 BAHT/MONTH<br>
                 </p>
                 <br>
                 <a style="margin-left:70px;width: 50%" class="btn book-now2" href="index.php?chose_page=dormdetail&dormID=<?php echo $dorm_row["dormID"]; ?>">View Details</a>

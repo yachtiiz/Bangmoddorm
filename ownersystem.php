@@ -56,6 +56,11 @@
                     }
                     echo '</tr>';
                 }
+                if (mysqli_num_rows($result) === 0) {
+                    echo '<tr>';
+                    echo '<td><h4 style="text-align:center;color:red">Uneditable</h4></td>';
+                    echo '</tr>';
+                }
                 echo '</tbody>';
             }
 
@@ -91,19 +96,40 @@
                 $result = mysqli_query($con, $query);
                 while ($row = mysqli_fetch_array($result)) {
                     $color = "green";
+                    $edited = "";
                     if ($row["status"] === "Incomplete") {
                         $color = "red";
+                        $edited = "(Click to edit room)";
                     }
                     echo '<tr>';
                     echo '<td style="text-align: left;padding-left:15%">';
-                    echo '<a href="index.php?chose_page=editroom&dormID=' . $dormID . '&dormName=' . $dormName . '&roomID=' . $row["roomID"] . '">' . $row["roomType"] . '</a><span class="pull-right" style="color:' . $color . '">' . $row["status"] . '</span>';
+                    echo '<a href="index.php?chose_page=editroom&dormID=' . $dormID . '&dormName=' . $dormName . '&roomID=' . $row["roomID"] . '">' . $row["roomType"] . " " . $edited . '</a><span class="pull-right" style="color:' . $color . '">' . $row["status"] . '</span>';
                     echo '</td>';
                     echo '</tr>';
                 }
                 if (mysqli_num_rows($result) === 0) {
                     echo '<tr>';
+                    echo '<td><h4 style="text-align:center;color:red">Uneditable</h4></td>';
                     echo '</tr>';
                 }
+            }
+
+            function getRoom($dormID) {
+
+                require 'connection.php';
+
+                $query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                $result = mysqli_query($con, $query);
+                $number_of_complete = 0;
+                while ($row = mysqli_fetch_array($result)) {
+                    if ($row["status"] === "Complete") {
+                        $number_of_complete = $number_of_complete + 1;
+                    }
+                }
+                if ($number_of_complete > 0)
+                    return true;
+                else
+                    return false;
             }
 
             if (isset($_POST["update_rpf"])) {
@@ -136,25 +162,29 @@
                                         <td><h4><?php echo $row["dormName"] ?><span class="pull-right" style="color:<?php echo $row["status"] === "Showing" ? "green" : "red" ?>"><?php echo $row["status"] ?></span></h4></td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: center"><button type="button" id="<?php echo $row["status"] === "Showing" ? "disabled_button_".$row["dormID"] : "active_button_".$row["dormID"]; ?>" class="btn1 btn1-<?php echo $row["status"] === "Showing" ? "danger" : "success" ?>"><?php echo $row["status"] === "Showing" ? "Hide On Page" : "Show On Page"; ?></button></td>
+                                        <td style="text-align: center"><button type="button" id="<?php echo getRoom($row["dormID"]) === true ? ($row["status"] === "Showing" ? "disabled_button_" . $row["dormID"] : "active_button_" . $row["dormID"]) : "cannotshow_button_" . $row["dormID"]; ?>" class="btn1 btn1-<?php echo $row["status"] === "Showing" ? "danger" : "success" ?>"><?php echo $row["status"] === "Showing" ? "Hide from Page" : "Show on Page"; ?></button></td>
                                     </tr>
-                                    <script>
+                                <script>
 
-                                        $(document).on("click", "#disabled_button_<?php echo $row["dormID"] ?>", function() {
-                                            $("#disabled_button_<?php echo $row["dormID"] ?>").load("callback.php?disabled_dorm=" + "<?php echo $row["dormID"]; ?>");
-                                            alert("Your Dormitory Information be Hidden on Dormitory Page");
-                                            window.location = "index.php?chose_page=ownersystem";
-                                        });
-                                        $(document).on("click", "#active_button_<?php echo $row["dormID"] ?>", function() {
-                                            $("#active_button_<?php echo $row["dormID"] ?>").load("callback.php?showing_dorm=" + "<?php echo $row["dormID"]; ?>");
-                                            window.location = "index.php?chose_page=ownersystem";
-                                        });
+                                    $(document).on("click", "#cannotshow_button_<?php echo $row["dormID"] ?>", function() {
+                                        alert("Must edit at least one room before show your dormitory");
+                                    });
+
+                                    $(document).on("click", "#disabled_button_<?php echo $row["dormID"] ?>", function() {
+                                        $("#disabled_button_<?php echo $row["dormID"] ?>").load("callback.php?disabled_dorm=" + "<?php echo $row["dormID"]; ?>");
+                                        alert("Your Dormitory Information be Hidden on Dormitory Page");
+                                        window.location = "index.php?chose_page=ownersystem";
+                                    });
+                                    $(document).on("click", "#active_button_<?php echo $row["dormID"] ?>", function() {
+                                        $("#active_button_<?php echo $row["dormID"] ?>").load("callback.php?showing_dorm=" + "<?php echo $row["dormID"]; ?>");
+                                        window.location = "index.php?chose_page=ownersystem";
+                                    });
 
 
-                                    </script>
-                                    <tr>
-                                        <td style="text-align: center"><a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>"><button class="btn1 btn1-primary" type="button">Edit Dormitory</button></a></td>
-                                    </tr>
+                                </script>
+                                <tr>
+                                    <td style="text-align: center"><a href="index.php?chose_page=editDormitory&dormID=<?php echo $row["dormID"]; ?>"><button class="btn1 btn1-primary" type="button">Edit Dormitory</button></a></td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

@@ -12,11 +12,10 @@
                     maxlength: 256
                 },
                 license_dorm: {
-                    checkSpecial: true, 
+                    checkSpecial: true,
                     minlength: 4,
                     maxlength: 256
-                },
-                
+                }
             }
         });
     });
@@ -104,7 +103,7 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
 
                             <div class="span3">
                                 <label>Evidence
-                                    <input id="evidence_dorm" name="evidence_dorm" class="form-control" type="file" required/>
+                                    <input id="evidence_dorm" name="evidence_dorm" class="form-control" type="file"/>
                                 </label>
                             </div>	
                         </div>

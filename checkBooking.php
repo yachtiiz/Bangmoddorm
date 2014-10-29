@@ -36,7 +36,7 @@
                                     <span class="input-group-addon">Search By Booking Date</span>
                                     <input id="sort_chosendate" type="date" class="form-control" placeholder="Username">
                                 </div>
-                                
+
                             </div>
                             <div class="span12">
                                 <div class="col-md-5" style="padding: 0px">
@@ -46,15 +46,15 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3" style="">
-                                <select id="search_status" class="form-control" style="width:100%;margin-left:20%">
-                                    <option id="status_default" value="default">Search By Status</option>
-                                    <option value="Approve">Approve</option>
-                                    <option value="Checking">Checking</option>
-                                    <option value="Waiting">Waiting</option>
-                                    <option value="Canceled">Canceled</option>
-                                    <option value="Reject">Reject</option>
-                                    <option value="Refund+Needed">Refund Needed</option>
-                                </select>
+                                    <select id="search_status" class="form-control" style="width:100%;margin-left:20%">
+                                        <option id="status_default" value="default">Search By Status</option>
+                                        <option value="Approve">Approve</option>
+                                        <option value="Checking">Checking</option>
+                                        <option value="Waiting">Waiting</option>
+                                        <option value="Canceled">Canceled</option>
+                                        <option value="Reject">Reject</option>
+                                        <option value="Refund+Needed">Refund Needed</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-3 pull-right" style="margin-left:20px">
                                     <select id="book_order" class="form-control pull-right" style="width:100%">
@@ -176,8 +176,8 @@
                             } else {
                                 $(".modal-body-booking #transfertime").html("Empty Data");
                             }
-                            if ($(this).data('transfername') !== "") {
-                                $(".modal-body-booking #transferrefID").html($(this).data('transferrefID'));
+                            if ($(this).data('transferrefid') !== "") {
+                                $(".modal-body-booking #transferrefID").html($(this).data('transferrefid'));
                             } else {
                                 $(".modal-body-booking #transferrefID").html("Empty Data");
                             }
@@ -186,10 +186,15 @@
                             } else {
                                 $(".modal-body-booking #transferbank").html("Empty Data");
                             }
-                            if ($(this).data('transfername') !== "") {
+                            if ($(this).data('bankacc') !== "") {
                                 $(".modal-body-booking #bankacc_id").html($(this).data('bankacc'));
                             } else {
                                 $(".modal-body-booking #bankacc_id").html("Empty Data");
+                            }
+                            if ($(this).data('bankname') !== "") {
+                                $(".modal-body-booking #bankname").html($(this).data('bankname'));
+                            } else {
+                                $(".modal-body-booking #bankname").html("Empty Data");
                             }
 
                         });
@@ -253,14 +258,15 @@
                                                 <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
                                                 <h5 style="text-align: left">Transfer Bank : <span class="pull-right" id="transferbank">2014-09-04T15:33</span></h5>
                                                 <h5 style="text-align: left">Customer Bank Account ID : <span class="pull-right" id="bankacc_id">2014-09-04T15:33</span></h5>
+                                                <h5 style="text-align: left">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
                                                 <br>
                                                 <legend style="font-style: italic;text-align: left">Change Status</legend>
-                                                <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
-                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled</button>
-                                                <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
+                                                <button id="approvebutton" type="button" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
+                                                <button id="canceledbutton" type="button" class="btn1 btn1-warning" style="width:35%">Canceled</button>
+                                                <button id="rejectbutton" type="button" class="btn1 btn1-danger" style="width:30%">Reject</button>
                                                 <br><br>
-                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , System Error </legend>
-                                                <button id="refundbutton" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
+                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , Money Transfer Problem </legend>
+                                                <button id="refundbutton" type="button" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
                                                 <br><br>
                                             </div>
                                         </div>

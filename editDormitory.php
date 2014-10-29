@@ -366,8 +366,12 @@
 
                     $room_query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
                     $room_result = mysqli_query($con, $room_query);
+                    $colspan = mysqli_num_rows($room_result) + 1;
                     echo '<input type="hidden" name="change_data">';
                     echo '<thead>';
+                    echo '<tr>';
+                    echo '<th style="background-color:#f9f9f9" colspan="'. $colspan .'"><h4 style="text-align:center">Room Per Floor</h4></th>';
+                    echo '</tr>';
                     echo '<tr id="new_thead_input">';
                     echo '<th>Floor</th>';
                     while ($room_row = mysqli_fetch_array($room_result)) {
@@ -638,8 +642,11 @@
 
                                             $(document).on("click", "#gen_table", function() {
                                                 $("#table_roomtype").html("");
+                                                $("#table_thead").html("");
                                                 $("#table_floor").html("");
-                                                $("#table_roomtype").append("<th style='text-align:center'>Floor</th>")
+                                                $("#table_thead").append("<tr><th colspan='" + (room_number+1) + "'><h4 style='text-align:center'>Room Per Floor</h4></th></tr>");
+                                                $("#table_thead").append("<tr id='table_roomtype'><th style='text-align:center'>Floor</th></tr>");
+                                                
                                                 total_floor = $("#total_floor").val();
 
                                                 for (a = 1; a <= room_number; a++) {
@@ -689,6 +696,7 @@
                                                         $("#floor" + i).append("<td id='floor" + i + "_newroom" + newroom_number + "'><input type='number' class='form-control' name='floor" + i + "_newroomtype[]'></td>");
                                                     }
                                                     newroom_number = newroom_number + 1;
+                                                    document.getElementById("submit_floor").setAttribute("style","margin-left:40%;display:block");
                                                 }
                                             });
 
@@ -710,12 +718,14 @@
                                                     total_floor = total_floor + 1;
                                                     $("#new_tbody_input").append("<tr id='floor" + total_floor + "'><td style='text-align:center'> " + total_floor + " <input type='hidden' name='new_floor[]'></td>");
                                                     for (i = 1; i < newroom_number; i++) {
-                                                        $("#floor" + total_floor).append("<td><input type='number'name='floor" + total_floor + "_roomtype[]' class='form-control' value='0'></td>");
+                                                        $("#floor" + total_floor).append("<td><input id='new_room_floor"+ total_floor +"' type='number'name='floor" + total_floor + "_roomtype[]' class='form-control' value='0'></td>");
                                                     }
                                                     $("#new_tbody_input").append("</tr>");
                                                     document.getElementById("remove_floor").setAttribute("style", "display:block");
                                                     document.getElementById("total_floor").setAttribute("value", total_floor);
                                                     document.getElementById("total_floor_hide").setAttribute("value", total_floor);
+                                                    $("#new_room_floor"+total_floor).focus();
+                                                    document.getElementById("submit_floor").setAttribute("style","margin-left:40%;display:block");
                                                 } else {
                                                     alert("Please Submit edit room type before edit floor");
                                                 }
@@ -730,6 +740,7 @@
                                                     document.getElementById("total_floor_hide").setAttribute("value", total_floor);
                                                     if (total_floor === original_floor) {
                                                         document.getElementById("remove_floor").setAttribute("style", "display:none");
+                                                        document.getElementById("submit_floor").setAttribute("style","display:none");
                                                     }
                                                 }
 
@@ -751,7 +762,7 @@
                                     <div class="col-lg-12" style="margin-left:auto;margin-right: auto">
                                         <?php if (!isset($row["total_floor"])) { ?>
                                             <table id="input_table" class="table table-bordered" style="display:none">
-                                                <thead>
+                                                <thead id="table_thead">
                                                     <tr id="table_roomtype"> 
                                                     </tr>
                                                 </thead>
@@ -765,6 +776,7 @@
                                         <?php } ?> 
                                     </div>
                                 </div>
+                                <button id="submit_floor" name="edit_dorm_submit" type="submit" class="btn1 btn1-success" style="margin-left:43%;display:none">Submit New Floor or New Room</button>
                                 <br>
                                 <div class="row">
                                     <div class="span10">
@@ -795,7 +807,7 @@
                                     </div>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">Sub Distinct</span>
+                                            <span class="input-group-addon">Sub District</span>
                                             <input id="subdistinct" class="form-control" type="text" name="sub_distinct" value='<?php echo $row["subDistinct"] ?>' >
                                         </div>
                                     </div>
@@ -804,7 +816,7 @@
                                 <div class='row'>
                                     <div class='col-lg-6'>
                                         <div class="input-group">
-                                            <span class="input-group-addon">Distinct</span>
+                                            <span class="input-group-addon">District</span>
                                             <input id="distinct" class="form-control" type="text" name="distinct" value='<?php echo $row["dorm_distinct"] ?>' >
                                         </div>
                                     </div>
@@ -1295,23 +1307,10 @@
                                     <div class="span10">
                                         <br>
                                         <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
-                                        <button type="button" id="<?php echo $row["status"] === "Showing" ? "disabled_button" : "active_button"; ?>" style='margin-left: 15px' class="btn btn-primary btn-large book-now pull-right"><?php echo $row["status"] === "Showing" ? "Hide On Page" : "Show On Page"; ?></button>
                                         <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
                                         <br><br>
                                     </div>
-                                    <script>
-
-                                        $(document).on("click", "#disabled_button", function() {
-                                            $("#disabled_button").load("callback.php?disabled_dorm=" + "<?php echo $row["dormID"]; ?>");
-                                            document.getElementById("disabled_button").setAttribute("id", "active_button");
-                                            alert("Your Dormitory Information be Hidden on Dormitory Page");
-                                        });
-                                        $(document).on("click", "#active_button", function() {
-                                            $("#active_button").load("callback.php?showing_dorm=" + "<?php echo $row["dormID"]; ?>");
-                                        });
-
-
-                                    </script>
+                                    
                                 </div>
                             </fieldset>
                         </form>

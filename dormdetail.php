@@ -391,7 +391,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                     Price :  
                                 </td>
                                 <td>
-                                    <?php echo $dorm_room_row["price"]; ?> BATH/MONTH 
+                                    <?php echo $dorm_room_row["price"]; ?> BAHT/MONTH 
                                 </td>
                             </tr>
                             <tr>

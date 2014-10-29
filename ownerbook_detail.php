@@ -86,7 +86,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                                 <div class="pull-left strong"><input name="idcard" class="form-control" type="text" required></div>
                                                                 <div class="pull-right strong" style="width: 40%"><input name="telephone" class="form-control" type="text" required></div><br>-->
 
-                                    <button type="submit" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancle This Booking</button>
+                                    <button type="submit" name="submit_book" style="margin-top: 30px;margin-left:420px" class="btn btn-primary btn-large book-now">Cancel This Booking</button>
                                     <br />
                                     <br />
                                     <br />

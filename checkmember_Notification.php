@@ -10,9 +10,9 @@
                                 <legend>
                                     <span>Notification</span> System
                                 </legend>
-                                <select class="form-control" style="width: 30%">
-                                    <option>Sort By Date</option>
-                                    <option>Sort By Status</option>
+                                <select class="form-control" style="width: 30%" id="sort_by">
+                                    <option value="date+desc">Sort By Date</option>
+                                    <option value="booking_status">Sort By Status</option>
                                 </select>
                             </div>
                             <br><br><br><br><br><br>
@@ -23,66 +23,117 @@
                                     <th>Expire Date</th>
                                     <th></th>
                                     <th></th>
-                                    <?php
+                                    <tbody id="noti_result">
+                                        <?php
 
-                                    function readAble($bookingID) {
+                                        function displayPage($cur_page, $query, $href) {
 
-                                        require 'connection.php';
-                                        $query = "update booking set member_noti = 2 where bookingID = $bookingID";
-                                        if (mysqli_query($con, $query)) {
-                                            return true;
-                                        } else {
-                                            return false;
+                                            require 'connection.php';
+
+                                            $result = mysqli_query($con, $query);
+
+                                            if (mysqli_num_rows($result) !== 0) {
+                                                $total_page = ceil(mysqli_num_rows($result) / 8);
+                                            } else {
+                                                $total_page = 1;
+                                            }
+                                            if ($cur_page == 1) {
+                                                $prev_page = 1;
+                                            } else {
+                                                $prev_page = $cur_page - 1;
+                                            }
+                                            if ($cur_page == $total_page) {
+                                                $next_page = $cur_page;
+                                            } else {
+                                                $next_page = $cur_page + 1;
+                                            }
+
+                                            echo '<li><a value=' . $prev_page . ' href="' . $href . $prev_page . '">&laquo;</a></li>';
+                                            for ($i = 1; $i <= $total_page; $i++) {
+                                                $class = ($cur_page == $i ? "class = 'active'" : "");
+                                                echo '<li ' . $class . '><a value=' . $i . ' href="' . $href . $i . '">' . $i . '</a></li>';
+                                            }
+                                            echo '<li><a value=' . $next_page . ' href="' . $href . $next_page . '">&raquo;</a></li>';
                                         }
-                                    }
 
-                                    function getAllNotification() {
-                                        require 'connection.php';
-                                        $memberID = $_SESSION["memberID"];
-                                        $query = "select * from booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by date desc";
-                                        $result = mysqli_query($con, $query);
-                                        if (mysqli_num_rows($result) !== 0) {
-                                            while ($row = mysqli_fetch_array($result)) {
-                                                $unread = "";
-                                                if ($row["member_noti"] == "1") {
-                                                    $unread = 'style="background-color:#f9f9f9"';
-                                                }
-                                                echo '<tr ' . $unread . '>';
-                                                echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
-                                                echo '<td>' . $row["date"] . '</td>';
-                                                echo '<td>' . $row["expire_date"] . '</td>';
-                                                echo '<td>This Booking change status to ' . $row["booking_status"] . '</td>';
-                                                echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
-                                                echo '</tr>';
-                                                if ($row["member_noti"] == "1") {
-                                                    if (!readAble($row["bookingID"])) {
-                                                        echo '<script>alert("something error")<script>';
-                                                        break;
+                                        function readAble($bookingID) {
+
+                                            require 'connection.php';
+                                            $query = "update booking set member_noti = 2 where bookingID = $bookingID";
+                                            if (mysqli_query($con, $query)) {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+
+                                        function getAllNotification() {
+                                            require 'connection.php';
+                                            $memberID = $_SESSION["memberID"];
+                                            $query = "select * from booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by date desc limit 0 , 8";
+                                            $result = mysqli_query($con, $query);
+                                            if (mysqli_num_rows($result) !== 0) {
+                                                while ($row = mysqli_fetch_array($result)) {
+                                                    $unread = "";
+                                                    if ($row["member_noti"] == "1") {
+                                                        $unread = 'style="background-color:#f9f9f9"';
+                                                    }
+                                                    $color = "black";
+
+                                                    switch ($row["booking_status"]) {
+                                                        case "Canceled":
+                                                            $color = "red";
+                                                            break;
+                                                        case "Reject":
+                                                            $color = "red";
+                                                            break;
+                                                        case "Checking":
+                                                            $color = "#0480be";
+                                                            break;
+                                                        case "Approve":
+                                                            $color = "#00cc33";
+                                                            break;
+                                                        case "Refund Needed":
+                                                            $color = "red";
+                                                            break;
+                                                    }
+                                                    echo '<tr ' . $unread . '>';
+                                                    echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
+                                                    echo '<td>' . $row["date"] . '</td>';
+                                                    echo '<td>' . $row["expire_date"] . '</td>';
+                                                    echo '<td>This Booking change status to <span style="color:' . $color . '">' . $row["booking_status"] . '</span></td>';
+                                                    echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
+                                                    echo '</tr>';
+                                                    if ($row["member_noti"] == "1") {
+                                                        if (!readAble($row["bookingID"])) {
+                                                            echo '<script>alert("something error")<script>';
+                                                            break;
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        } else {
-                                            echo '<tr>';
-                                            echo '<td colspan="5" style="text-align:center">No Result</td>';
-                                            echo '</tr>';
-
-                                            for ($i = 1; $i < 8; $i++) {
+                                            } else {
                                                 echo '<tr>';
-                                                echo '<td colspan="5" style="height:47px"></td>';
+                                                echo '<td colspan="5" style="text-align:center">No Result</td>';
                                                 echo '</tr>';
+
+                                                for ($i = 1; $i < 8; $i++) {
+                                                    echo '<tr>';
+                                                    echo '<td colspan="5" style="height:47px"></td>';
+                                                    echo '</tr>';
+                                                }
+                                            }
+                                            if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 8) {
+                                                for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+                                                    echo '<tr>';
+                                                    echo '<td colspan="5" style="height:47px"></td>';
+                                                    echo '</tr>';
+                                                }
                                             }
                                         }
-                                        if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 8) {
-                                            for ($i = mysqli_num_rows($result); $i < 8; $i++) {
-                                                echo '<tr>';
-                                                echo '<td colspan="5" style="height:47px"></td>';
-                                                echo '</tr>';
-                                            }
-                                        }
-                                    }
 
-                                    getAllNotification();
-                                    ?>
+                                        getAllNotification();
+                                        ?>
+                                    </tbody>
                                     <script>
 
                                         $(document).on("click", ".viewdetail", function() {
@@ -125,6 +176,36 @@
                                                 $(".modal-body-booking #transfertime").html("Empty Data");
                                             }
 
+                                        });
+
+                                        $(".member_pagi li a").live("click", function() {
+                                            event.preventDefault();
+                                            url = "callback.php?ownernoti_curpage=" + $(this).attr("value") + "&ownernoti_orderby=" + $("#noti_orderby").val() + $("#search_status").val() === "default" ? "" : ("&search_ownernoti=" + $("#search_status").val());
+                                            cur_page = $(this).attr("href");
+                                            $(".member_pagi").load(cur_page);
+                                            $("#noti_result").animate({
+                                                opacity: 0
+                                            }, 100, function() {
+                                                $("#noti_result").load(url, function() {
+                                                    $("#noti_result").animate({
+                                                        opacity: 1
+                                                    }, 200);
+                                                });
+                                            });
+                                        });
+
+                                        $("#sort_by").on("change", function() {
+                                            url = "callback.php?membernoti_curpage=1" + "&membernoti_orderby=" + $(this).val();
+                                            $(".member_pagi").load("callback.php?member_noti_curpage=1");
+                                            $("#noti_result").animate({
+                                                opacity: 0
+                                            }, 100, function() {
+                                                $("#noti_result").load(url, function() {
+                                                    $("#noti_result").animate({
+                                                        opacity: 1
+                                                    }, 200);
+                                                });
+                                            });
                                         });
 
 
@@ -170,17 +251,17 @@
                                         </div>
                                     </div>
                                 </table>
-                                <ul class="pagination pull-right">
-                                    <li><a href="#">&laquo;</a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li> <a href="#">&raquo;</a></li>
+                                <ul class="pagination pull-right member_pagi">
+                                    <?php
+                                    $cur_page = 1;
+                                    $memberID = $_SESSION["memberID"];
+                                    $query = "select * from booking where memberID = $memberID and (member_noti = 1 or member_noti = 2)";
+                                    $href = "callback.php?member_noti_curpage=";
+                                    displayPage($cur_page, $query, $href);
+                                    ?>
                                 </ul>
                             </div>
                         </div>
-                        <a href="membersystem.jsp" class="btn btn-primary btn-large book-now pull-left">Back</a>
                     </fieldset>
                 </form>
             </div>

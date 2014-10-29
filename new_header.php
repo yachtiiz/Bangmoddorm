@@ -102,14 +102,14 @@ function getUserType() {
                                             <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Member</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span></a></li>
+<!--                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getNotification() ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkBookingHis">Check Booking History</a></li>
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
                                             </ul>
                                         </div>
                                     </li>
-                                    <!--<li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=membernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span> </h5></a></li>-->
+                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=membernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getNotification() ?></span> </h5></a></li>
                                 <?php } ?>
                                 <?php
                                 if ($row["type"] === "Owner") {
@@ -117,7 +117,7 @@ function getUserType() {
                                     function getOwnerNotification() {
                                         require 'connection.php';
                                         $memberID = $_SESSION["memberID"];
-                                        $query = "select * from booking b join rooms r join members m join Dormitories d where r.dormID = d.dormID and b.memberID = m.memberID and b.roomID=r.roomID and d.memberID = $memberID and owner_noti = 1";
+                                        $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and b.owner_noti = 1 ";
                                         $result = mysqli_query($con, $query);
                                         $noti = mysqli_num_rows($result);
                                         return $noti;
@@ -125,11 +125,11 @@ function getUserType() {
                                     ?>
                                     <li class="pull-right" style="margin-top: 1%;">
                                         <div class="dropdown dropdownuser">
-                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php // if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php // } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
+                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php  } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
                                             <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Owner</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-                                                <!--<li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span></a></li>-->
+<!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getOwnerNotification() ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkDormBooking">Check All Booking</a></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
@@ -139,7 +139,7 @@ function getUserType() {
                                             </ul>
                                         </div>
                                     </li>
-                                    <!--<li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=ownernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span> </h5></a></li>-->
+                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=ownernotification"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getOwnerNotification() ?></span> </h5></a></li>
                                 <?php }
                                 ?>
 
