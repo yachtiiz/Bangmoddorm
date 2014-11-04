@@ -66,7 +66,7 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
     $bank_query = "select * from BankAccount where dormID = $dormID and bank_status = 'Showing'";
     $bank_result = mysqli_query($con, $bank_query);
     
-    $floor_query = "select floorNo from RoomPerFloor rpf join floor f where rpf.floorID = f.floorID and rpf.matchingID = $matchingID";
+    $floor_query = "select floorNo from RoomPerFloor rpf join Floor f where rpf.floorID = f.floorID and rpf.matchingID = $matchingID";
     $floor_result = mysqli_query($con, $floor_query);
     $floor_row = mysqli_fetch_array($floor_result);
     $floor = $floor_row[0];
