@@ -180,7 +180,7 @@ if (isset($_GET["disabled_room"]) && is_numeric($_GET["disabled_room"])) {
 function checkingRoom($dormID) {
 
     require 'connection.php';
-    $query = "select * from rooms where dormID = $dormID";
+    $query = "select * from Rooms where dormID = $dormID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         return true;
@@ -219,7 +219,7 @@ function checkBooking($memberID) {
 
     require 'connection.php';
 
-    $query = "select * from booking where memberID = $memberID and  (booking_status = 'Waiting' or booking_status = 'Checking')";
+    $query = "select * from Booking where memberID = $memberID and  (booking_status = 'Waiting' or booking_status = 'Checking')";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     if ($row !== NULL) {
@@ -233,7 +233,7 @@ function checkRoomAvailable($roomID) {
 
     require 'connection.php';
 
-    $query = "select roomAvailable from rooms where roomID = $roomID";
+    $query = "select roomAvailable from Rooms where roomID = $roomID";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     if ($row["roomAvailable"] !== '0') {
@@ -266,7 +266,7 @@ function checkDormitory($memberID) {
 
     require 'connection.php';
 
-    $query = "select * from dormitories where memberID = $memberID";
+    $query = "select * from Dormitories where memberID = $memberID";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     if ($row !== NULL) {
@@ -291,7 +291,7 @@ if (isset($_GET["checkdorm_memberID"]) && is_numeric($_GET["checkdorm_memberID"]
 function showDormBook($dormID) {
 
     require 'connection.php';
-    $query = "select * from booking b join rooms r where b.roomID=r.roomID and r.dormID=$dormID";
+    $query = "select * from Booking b join Rooms r where b.roomID=r.roomID and r.dormID=$dormID";
     $result = mysqli_query($con, $query);
 
     while ($row = mysqli_fetch_array($result)) {
@@ -353,7 +353,7 @@ function displayBookingPage($cur_page, $dormID) {
     include 'connection.php';
     mysqli_query($con, "SET NAMES UTF8");
 
-    $query = "select bookingID from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID=$dormID";
+    $query = "select bookingID from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID=$dormID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         $total_page = ceil(mysqli_num_rows($result) / 8);
@@ -384,7 +384,7 @@ function getBookingDorm($page, $order_by, $dormID) {
     mysqli_query($con, "SET NAMES UTF8");
 
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID order by $order_by limit $limit_start , 8";
+    $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID order by $order_by limit $limit_start , 8";
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
 
@@ -707,10 +707,10 @@ if (isset($_GET["booking_searching"]) && isset($_GET["dormbook_id"]) && is_numer
                 $search_value = "%" . $search_value . "%";
             }
             $booksearch_only = $_GET["search_only"];
-            $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dorm_id and $booksearch_only $type '$search_value' order by date limit $limit_start , 8";
+            $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dorm_id and $booksearch_only $type '$search_value' order by date limit $limit_start , 8";
             searchingBook($query);
         } else {
-            $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dorm_id and (bookingID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%' or firstName like '%$search_value%' or lastName like '%$search_value%') order by date desc limit 0 , 8 ";
+            $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dorm_id and (bookingID like '$search_value' or date like '%$search_value%' or expire_date like '%$search_value%' or booking_status like '%$search_value%' or roomType like '%$search_value%' or firstName like '%$search_value%' or lastName like '%$search_value%') order by date desc limit 0 , 8 ";
             searchingBook($query);
         }
     } else {
@@ -727,7 +727,7 @@ if (isset($_GET["dormbookID"]) && is_numeric($_GET["dormbookID"]) && isset($_GET
         $page = $_GET["search_status_page"];
     }
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and booking_status='$status' order by date desc limit $limit_start , 8";
+    $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and booking_status='$status' order by date desc limit $limit_start , 8";
     searchingBook($query);
 }
 
@@ -735,7 +735,7 @@ if (isset($_GET["search_status_page"]) && is_numeric($_GET["search_status_page"]
     $dormID = $_GET["dormID"];
     $status = $_GET["search_by_status"];
     $cur_page = $_GET["search_status_page"];
-    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and booking_status = '$status'";
+    $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and booking_status = '$status'";
     $href = 'callback.php?search_status_page=';
     displayPage($cur_page, $query, $href);
 }
@@ -745,7 +745,7 @@ if (isset($_GET["dormbook_id"]) && isset($_GET["search_date"]) && isset($_GET["s
     $dormID = $_GET["dormbook_id"];
     $search_date = $_GET["search_date"];
     $cur_page = $_GET["search_date_page"];
-    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and date like '%$search_date%'";
+    $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and f.dormID= $dormID and date like '%$search_date%'";
     $href = "callback.php?search_date_page=";
     displayPage($cur_page, $query, $href);
 }
@@ -824,10 +824,10 @@ if (isset($_GET["membook_curpage"]) && is_numeric($_GET["membook_curpage"])) {
 function cancelBooking($bookingID) {
 
     require 'connection.php';
-    $query = "update booking set booking_status = 'Canceled' where bookingID = $bookingID";
+    $query = "update Booking set booking_status = 'Canceled' where bookingID = $bookingID";
 
     if (mysqli_query($con, $query)) {
-        $query = "select matchingID from booking where bookingID = $bookingID";
+        $query = "select matchingID from Booking where bookingID = $bookingID";
         $result = mysqli_query($con, $query);
         $row = mysqli_fetch_array($result);
         $matchingID = $row[0];
@@ -860,10 +860,10 @@ function change_booking($bookID, $status) {
     if ($status === "Approve" || $status === "Reject" || $status === "Refund Needed") {
         $noti = ", member_noti = 1";
     }
-    $query = "update booking set booking_status = '$status' $noti where bookingID = $bookID";
+    $query = "update Booking set booking_status = '$status' $noti where bookingID = $bookID";
     if (mysqli_query($con, $query)) {
         if ($status === "Reject" || $status === "Canceled" || $status === "Refund Needed") {
-            $query = "select matchingID from booking where bookingID = $bookID";
+            $query = "select matchingID from Booking where bookingID = $bookID";
             $result = mysqli_query($con, $query);
             $row = mysqli_fetch_array($result);
             $plus_room_query = "update RoomPerFloor set roomPerFloor = roomPerFloor + 1 where matchingID = $row[0]";
@@ -945,7 +945,7 @@ function searchingMemberBook($query) {
 if (isset($_GET["search_member_value"])) {
     $value = filter_var($_GET["search_member_value"], FILTER_SANITIZE_STRING);
     $memberID = $_SESSION["memberID"];
-    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID and bookingID like '%$value%' group by bookingID order by date desc limit 0 , 8";
+    $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID and bookingID like '%$value%' group by bookingID order by date desc limit 0 , 8";
     searchingMemberBook($query);
 }
 
@@ -957,7 +957,7 @@ if (isset($_GET["sortby_memberbooking"]) && isset($_GET["sortby_memberbooking_pa
     }
     $memberID = $_SESSION["memberID"];
     $limit_start = ((8 * $_GET["sortby_memberbooking_page"]) - 8);
-    $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID group by bookingID order by $sort_by limit $limit_start , 8";
+    $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID group by bookingID order by $sort_by limit $limit_start , 8";
     searchingMemberBook($query);
 }
 
@@ -977,7 +977,7 @@ function getAllDorm($page, $order_by) {
 
     require 'connection.php';
     $limit_start = ((8 * $page) - 8);
-    $query = "select dormID,dormName,firstName,lastName,d.type,d.status from dormitories d join members m where d.memberID = m.memberID order by $order_by limit $limit_start,8";
+    $query = "select dormID,dormName,firstName,lastName,d.type,d.status from Dormitories d join Members m where d.memberID = m.memberID order by $order_by limit $limit_start,8";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
@@ -1061,7 +1061,7 @@ if (isset($_GET["checkdorm_currentpage"]) && is_numeric($_GET["checkdorm_current
 
 if (isset($_GET["checkdorm_showpage"]) && is_numeric($_GET["checkdorm_showpage"])) {
     $href = "callback.php?checkdorm_currentpage=";
-    $query = "select * from dormitories";
+    $query = "select * from Dormitories";
     if (isset($_GET["sortby_dorm"])) {
         $sort_by = $_GET["sortby_dorm"];
         $href = "callback.php?sortby_dormitories=" . $sort_by . "&sortby_dormitories_page=";
@@ -1071,7 +1071,7 @@ if (isset($_GET["checkdorm_showpage"]) && is_numeric($_GET["checkdorm_showpage"]
 
 if (isset($_GET["search_dormitories"])) {
     $value = $_GET["search_dormitories"];
-    $query = "select dormID,dormName,firstName,lastName,d.type,d.status from dormitories d join members m where d.memberID = m.memberID and  (dormID like '%$value%' or dormName like '%$value%' or firstName like '%$value%' or lastName like '%$value%' or d.type like '%$value%' or d.status like '%$value%') limit 0,8";
+    $query = "select dormID,dormName,firstName,lastName,d.type,d.status from Dormitories d join Members m where d.memberID = m.memberID and  (dormID like '%$value%' or dormName like '%$value%' or firstName like '%$value%' or lastName like '%$value%' or d.type like '%$value%' or d.status like '%$value%') limit 0,8";
     searchDormitories($query);
 }
 
@@ -1088,7 +1088,7 @@ function getAllMember($page, $order_by) {
 
     require 'connection.php';
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from members order by $order_by limit $limit_start , 8";
+    $query = "select * from Members order by $order_by limit $limit_start , 8";
 
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
@@ -1222,7 +1222,7 @@ if (isset($_GET["show_member_curpage"]) && is_numeric($_GET["show_member_curpage
 if (isset($_GET["search_members"])) {
 
     $value = filter_var($_GET["search_members"], FILTER_SANITIZE_STRING);
-    $query = "select * from members where ( memberID like '%$value%' or firstName like '%$value%'  or lastName like '%$value%' or username like '%$value%' or idCard like '%$value%' or email like '%$value%' ) limit 0 , 8";
+    $query = "select * from Members where ( memberID like '%$value%' or firstName like '%$value%'  or lastName like '%$value%' or username like '%$value%' or idCard like '%$value%' or email like '%$value%' ) limit 0 , 8";
     searchingMembers($query);
 }
 
@@ -1230,7 +1230,7 @@ if (isset($_GET["sortby_member"]) && isset($_GET["sortby_member_page"])) {
     $sort_by = $_GET["sortby_member"];
     $page = $_GET["sortby_member_page"];
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from members order by $sort_by limit $limit_start , 8";
+    $query = "select * from Members order by $sort_by limit $limit_start , 8";
     searchingMembers($query);
 }
 
@@ -1264,7 +1264,7 @@ if (isset($_GET["comment_value"]) && isset($_GET["comment_dormID"]) && isset($_G
 function updateBooking() {
     require 'connection.php';
 
-    $query = "select * from booking where booking_status = 'Waiting'";
+    $query = "select * from Booking where booking_status = 'Waiting'";
     $result = mysqli_query($con, $query);
     $update_row = 0;
     $time_now = substr(strtr(substr(date("c"), 0, 19), "T", " "), 11, 19);
@@ -1275,10 +1275,10 @@ function updateBooking() {
         $expire_time = $row["expire_date"];
         if ($expire_time <= $date_now) { // Check Date Time
             if (substr($expire_time, 11, 19) < $time_now) { // Check Time
-                $update_query = "update booking set booking_status = 'Reject' where bookingID = $bookingID";
+                $update_query = "update Booking set booking_status = 'Reject' where bookingID = $bookingID";
                 if (mysqli_query($con, $update_query)) {
                     $roomID = $row["roomID"];
-                    $plus_room_query = "update rooms set roomAvailable = roomAvailable + 1 where roomID = $roomID";
+                    $plus_room_query = "update Rooms set roomAvailable = roomAvailable + 1 where roomID = $roomID";
                     if (mysqli_query($con, $plus_room_query)) {
                         $update_row = $update_row + 1;
                     }
@@ -1297,7 +1297,7 @@ if (isset($_GET["updateBooking"])) {
 //Add Blacklist 
 function addBlacklist($memberID, $reason) {
     require 'connection.php';
-    $query = "update members set status = 'Blacklist' , status_reason = '$reason' where memberID = $memberID";
+    $query = "update Members set status = 'Blacklist' , status_reason = '$reason' where memberID = $memberID";
     if (mysqli_query($con, $query)) {
         return true;
     } else {
@@ -1307,7 +1307,7 @@ function addBlacklist($memberID, $reason) {
 
 function removeBlacklist($memberID) {
     require 'connection.php';
-    $query = "update members set status = 'Normal' where memberID = $memberID";
+    $query = "update Members set status = 'Normal' where memberID = $memberID";
     if (mysqli_query($con, $query)) {
         return true;
     } else {
@@ -1346,9 +1346,9 @@ function getAllNotification($cur_page, $order_by, $status_value) {
     $limit_start = ((8 * $cur_page) - 8);
     $memberID = $_SESSION["memberID"];
     if ($status_value === "") {
-        $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by $order_by limit $limit_start,8";
+        $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by $order_by limit $limit_start,8";
     } else {
-        $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) and booking_status = '$status_value' limit $limit_start,8";
+        $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) and booking_status = '$status_value' limit $limit_start,8";
     }
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
@@ -1423,7 +1423,7 @@ if (isset($_GET["ownernoti_orderby"]) && isset($_GET["ownernoti_curpage"])) {
 if (isset($_GET["owner_noti_curpage"]) && is_numeric($_GET["owner_noti_curpage"])) {
     $cur_page = $_GET["owner_noti_curpage"];
     $memberID = $_SESSION["memberID"];
-    $query = "select *,m.tel as dormTel from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
+    $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
     $href = "callback.php?owner_noti_curpage=";
     displayPage($cur_page, $query, $href);
 }
@@ -1434,12 +1434,12 @@ function change_password($oldpass, $newpass) {
     require 'connection.php';
     $change_pass = false;
     $memberID = $_SESSION["memberID"];
-    $query = "select password from members where memberID = $memberID";
+    $query = "select password from Members where memberID = $memberID";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     if ($row !== NULL && $row[0] === md5($oldpass)) {
         $newpass = md5($newpass);
-        $update_query = "update members set password = '$newpass' where memberID = $memberID";
+        $update_query = "update Members set password = '$newpass' where memberID = $memberID";
         if (mysqli_query($con, $update_query)) {
             $change_pass = true;
         }
@@ -1468,7 +1468,7 @@ function getComment($dormID, $page) {
     require 'connection.php';
 
     $limit_start = ((4 * $page ) - 4);
-    $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID order by date desc limit $limit_start , 4";
+    $query = "select * from Comment c join Members m where c.memberID = m.memberID and c.dormID = $dormID order by date desc limit $limit_start , 4";
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
         $star = "";
@@ -1501,7 +1501,7 @@ function getComment($dormID, $page) {
 function getRating($dormID) {
 
     require 'connection.php';
-    $query = "select rating from comment where dormID = $dormID";
+    $query = "select rating from Comment where dormID = $dormID";
     $result = mysqli_query($con, $query);
     $allcomment = mysqli_num_rows($result);
     $allrate = 0;
@@ -1537,7 +1537,7 @@ if (isset($_GET["comment_page"]) && isset($_GET["comment_dormID"])) {
 
 if (isset($_GET["request_comment_page"]) && is_numeric($_GET["request_comment_page"]) && isset($_GET["request_comment_dormID"]) && is_numeric($_GET["request_comment_dormID"])) {
     $dormID = $_GET["request_comment_dormID"];
-    $page_query = "select * from comment where dormID = $dormID";
+    $page_query = "select * from Comment where dormID = $dormID";
     $cur_page = $_GET["request_comment_page"];
     $page_href = "callback.php?comment_page=";
     displayCommentPage($cur_page, $page_query, $page_href);
@@ -1586,12 +1586,12 @@ function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road)
 
 
 
-    $query = "select * from dormitories d join rooms r join floor f join roomperfloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and rpf.roomID = r.roomID and d.status = 'Showing' and $type $disFromUni ( r.price >=$start_price and r.price <= $end_price ) $rate $road group by d.dormID";
+    $query = "select * from Dormitories d join Rooms r join Floor f join RoomPerFloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and rpf.roomID = r.roomID and d.status = 'Showing' and $type $disFromUni ( r.price >=$start_price and r.price <= $end_price ) $rate $road group by d.dormID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
             $dormID = $row["dormID"];
-            $room_query = "select min(price) as minprice , max(price) as maxprice from dormitories d join rooms r join floor f join roomperfloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and rpf.roomID = r.roomID and d.status = 'Showing' and r.status = 'Complete' and d.dormID = $dormID group by d.dormID";
+            $room_query = "select min(price) as minprice , max(price) as maxprice from Dormitories d join Rooms r join Floor f join RoomPerFloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and rpf.roomID = r.roomID and d.status = 'Showing' and r.status = 'Complete' and d.dormID = $dormID group by d.dormID";
             $room_result = mysqli_query($con, $room_query);
             $room_row = mysqli_fetch_array($room_result);
             $star = '';
@@ -1673,7 +1673,7 @@ function getMemberNotification($page,$order_by) {
     require 'connection.php';
     $memberID = $_SESSION["memberID"];
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by $order_by limit $limit_start , 8";
+    $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by $order_by limit $limit_start , 8";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
@@ -1743,7 +1743,7 @@ if (isset($_GET["membernoti_orderby"]) && isset($_GET["membernoti_curpage"])) {
 if (isset($_GET["member_noti_curpage"]) && is_numeric($_GET["member_noti_curpage"])) {
     $cur_page = $_GET["member_noti_curpage"];
     $memberID = $_SESSION["memberID"];
-    $query = "select * from booking where memberID = $memberID and (member_noti = 1 or member_noti = 2)";
+    $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2)";
     $href = "callback.php?member_noti_curpage=";
     displayPage($cur_page, $query, $href);
 }

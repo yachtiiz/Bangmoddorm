@@ -4,7 +4,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
 
     $dormID = $_GET["dormID"];
     require 'connection.php';
-    $query = "select dormName,d.type,firstName,lastName,m.memberID,m.email,m.tel,disFromUni,dormitory_rate, sum(roomPerFloor) as AvailableRoom,d.status from dormitories d join rooms r join members m join floor f join roomperfloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and r.roomID = rpf.roomID and d.memberID = m.memberID and d.dormID = $dormID group by d.dormID";
+    $query = "select dormName,d.type,firstName,lastName,m.memberID,m.email,m.tel,disFromUni,dormitory_rate, sum(roomPerFloor) as AvailableRoom,d.status from Dormitories d join Rooms r join Members m join Floor f join RoomPerFloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and r.roomID = rpf.roomID and d.memberID = m.memberID and d.dormID = $dormID group by d.dormID";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     ?>

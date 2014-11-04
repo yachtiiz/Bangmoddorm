@@ -3,7 +3,7 @@
 if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
     require 'connection.php';
     $memberID = $_GET["memberID"];
-    $query = "select * from members where memberID = $memberID";
+    $query = "select * from Members where memberID = $memberID";
 
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);

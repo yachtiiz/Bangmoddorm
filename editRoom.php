@@ -23,7 +23,7 @@ function upPicture($file, $i, $roomID) {
 function getNumber_of_room($dormID, $roomID) {
 
     require 'connection.php';
-    $query = "select r.roomType,sum(roomPerFloor) as numofroom from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and r.roomID = $roomID group by rpf.roomID";
+    $query = "select r.roomType,sum(roomPerFloor) as numofroom from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and r.roomID = $roomID group by rpf.roomID";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     $numofroom = $row["numofroom"];
@@ -194,7 +194,7 @@ function edit_room($roomID) {
 
 
     $pic_main_path_query = $main_room_path === NULL ? "" : ", main_pic = '$main_room_path'";
-    $query = "update rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , num_of_person = $number_of_person , status = 'Complete' , roomDetail = '$room_detail' , roomDeposit = $room_deposit " . $pic_main_path_query . " where roomID = $roomID;";
+    $query = "update Rooms set roomType = '$room_type' , areas = $areas , price = $price , numOfRoom = $number_of_room , num_of_person = $number_of_person , status = 'Complete' , roomDetail = '$room_detail' , roomDeposit = $room_deposit " . $pic_main_path_query . " where roomID = $roomID;";
 
 
 

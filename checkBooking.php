@@ -23,7 +23,7 @@
                                     require 'connection.php';
                                     $memberID = $_SESSION["memberID"];
 
-                                    $query = "select * from dormitories where memberID = $memberID";
+                                    $query = "select * from Dormitories where memberID = $memberID";
                                     $result = mysqli_query($con, $query);
                                     while ($row = mysqli_fetch_array($result)) {
                                         ?>

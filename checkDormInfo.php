@@ -33,7 +33,7 @@ function displayPage($cur_page, $query, $href) {
 
 require 'connection.php';
 
-$query = "select dormID,dormName,firstName,lastName,d.type,d.status from dormitories d join members m where d.memberID = m.memberID order by dormID desc limit 0,8";
+$query = "select dormID,dormName,firstName,lastName,d.type,d.status from Dormitories d join Members m where d.memberID = m.memberID order by dormID desc limit 0,8";
 $result = mysqli_query($con, $query);
 ?>
 <script>

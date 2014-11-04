@@ -66,7 +66,7 @@
                                         function readAble($bookingID) {
 
                                             require 'connection.php';
-                                            $query = "update booking set owner_noti = 2 where bookingID = $bookingID";
+                                            $query = "update Booking set owner_noti = 2 where bookingID = $bookingID";
                                             if (mysqli_query($con, $query)) {
                                                 return true;
                                             } else {
@@ -92,7 +92,7 @@
                                         function getAllNotification() {
                                             require 'connection.php';
                                             $memberID = $_SESSION["memberID"];
-                                            $query = "select *,m.tel as dormTel from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by date desc limit 0 , 8";
+                                            $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by date desc limit 0 , 8";
                                             $result = mysqli_query($con, $query);
                                             if (mysqli_num_rows($result) !== 0) {
                                                 while ($row = mysqli_fetch_array($result)) {
@@ -414,7 +414,7 @@
                                     <?php
                                     $cur_page = 1;
                                     $memberID = $_SESSION["memberID"];
-                                    $query = "select *,m.tel as dormTel from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
+                                    $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
                                     $href = "callback.php?owner_noti_curpage=";
                                     displayPage($cur_page, $query, $href);
                                     ?>

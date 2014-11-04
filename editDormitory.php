@@ -87,7 +87,7 @@
                 function checkPermission($dormID) {
                     require 'connection.php';
 
-                    $query = 'select memberID from dormitories where dormID = ' . $dormID;
+                    $query = 'select memberID from Dormitories where dormID = ' . $dormID;
 
                     $result = mysqli_query($con, $query);
                     $row = mysqli_fetch_array($result);
@@ -239,7 +239,7 @@
                     require 'connection.php';
                     $dormID = filter_var($_POST["dormID"], FILTER_SANITIZE_STRING);
                     if (!isset($_POST["change_data"])) {
-                        $query = "select * from floor where dormID = $dormID order by floorNo";
+                        $query = "select * from Floor where dormID = $dormID order by floorNo";
                         $result = mysqli_query($con, $query);
                         $total_roomID = array();
                         while ($row = mysqli_fetch_array($result)) {
@@ -282,7 +282,7 @@
                             }
                         }
                     } else {
-                        $query = "select * from floor where dormID = $dormID";
+                        $query = "select * from Floor where dormID = $dormID";
                         $result = mysqli_query($con, $query);
                         $total_newroomID = array();
                         while ($row = mysqli_fetch_array($result)) {
@@ -293,7 +293,7 @@
                                 $room_per_floor = $_POST["floor" . $floorNo . "_roomtype"][$i - 1];
                                 if (isset($_POST["floor" . $floorNo . "_roomtype_matchingID"][$i - 1])) {
                                     $matchingID = $_POST["floor" . $floorNo . "_roomtype_matchingID"][$i - 1];
-                                    $query = "update roomperfloor set roomPerFloor = $room_per_floor where matchingID = $matchingID";
+                                    $query = "update RoomPerFloor set roomPerFloor = $room_per_floor where matchingID = $matchingID";
                                 } else {
                                     $roomID = $_POST["roomID"][$i - 1];
                                     $query = "INSERT INTO `RoomPerFloor` (`floorID`, `roomID`, `roomPerFloor`) VALUES ($floorID, $roomID,$room_per_floor);";
@@ -364,7 +364,7 @@
 
                     require 'connection.php';
 
-                    $room_query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                    $room_query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
                     $room_result = mysqli_query($con, $room_query);
                     $colspan = mysqli_num_rows($room_result) + 1;
                     echo '<input type="hidden" name="change_data">';
@@ -381,7 +381,7 @@
                     echo '</thead>';
 
                     echo '<tbody id="new_tbody_input">';
-                    $query = "select * from floor where dormID = $dormID";
+                    $query = "select * from Floor where dormID = $dormID";
                     $result = mysqli_query($con, $query);
                     while ($row = mysqli_fetch_array($result)) {
                         $floorID = $row["floorID"];
@@ -404,7 +404,7 @@
 
                     require 'connection.php';
 
-                    $query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                    $query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
                     $result = mysqli_query($con, $query);
                     $number = 1;
                     while ($row = mysqli_fetch_array($result)) {
@@ -541,7 +541,7 @@
                         }
 
 
-                        $query = "select * from dormitories where dormID=" . $_GET["dormID"];
+                        $query = "select * from Dormitories where dormID=" . $_GET["dormID"];
                         $result = mysqli_query($con, $query);
                         $row = mysqli_fetch_array($result);
 

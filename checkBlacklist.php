@@ -36,7 +36,7 @@ function getAllBlacklist($page, $order_by) {
 
     require 'connection.php';
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from members where status = 'Blacklist' order by $order_by limit $limit_start , 8";
+    $query = "select * from Members where status = 'Blacklist' order by $order_by limit $limit_start , 8";
 
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
@@ -134,7 +134,7 @@ function getAllBlacklist($page, $order_by) {
                             <ul class="pagination pull-right">
                                 <?php
                                 $cur_page = 1;
-                                $query = "select * from members where status = 'Blacklist'";
+                                $query = "select * from Members where status = 'Blacklist'";
                                 $href = "callback.php?blacklist_curpage=";
                                 displayPage($cur_page, $query, $href);
                                 

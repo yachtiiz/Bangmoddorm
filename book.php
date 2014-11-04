@@ -25,7 +25,7 @@ function checkBooking($memberID) {
 
     require 'connection.php';
 
-    $query = "select * from booking where memberID = $memberID and  (booking_status = 'Waiting' or booking_status = 'Checking')";
+    $query = "select * from Booking where memberID = $memberID and  (booking_status = 'Waiting' or booking_status = 'Checking')";
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
     if ($row !== NULL) {
@@ -59,7 +59,7 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
     $dorm_row = mysqli_fetch_array($dorm_result);
     
     $roomID = $_POST["roomID"];
-    $room_query = "select roomType,price,roomDeposit from rooms where roomID = $roomID";
+    $room_query = "select roomType,price,roomDeposit from Rooms where roomID = $roomID";
     $room_result = mysqli_query($con, $room_query);
     $room_row = mysqli_fetch_array($room_result);
 

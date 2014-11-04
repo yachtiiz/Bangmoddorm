@@ -140,7 +140,7 @@
                                         function getMember() {
                                             require 'connection.php';
                                             $memberID = $_SESSION["memberID"];
-                                            $query = "select * from members where memberID = $memberID";
+                                            $query = "select * from Members where memberID = $memberID";
                                             $result = mysqli_query($con, $query);
                                             $row = mysqli_fetch_array($result);
                                             if (mysqli_num_rows($result) !== 0) {
@@ -156,7 +156,7 @@
 
                                             $memberID = $_SESSION["memberID"];
 
-                                            $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID order by date desc limit 0 , 8 ";
+                                            $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and b.memberID = $memberID order by date desc limit 0 , 8 ";
                                             $result = mysqli_query($con, $query);
                                             while ($book_row = mysqli_fetch_array($result)) {
 

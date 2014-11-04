@@ -23,7 +23,7 @@
 
                 require 'connection.php';
 
-                $room_query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                $room_query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
                 $room_result = mysqli_query($con, $room_query);
                 $colspan = mysqli_num_rows($room_result) + 1;
                 echo '<input type="hidden" name="dormID" value="' . $dormID . '">';
@@ -40,7 +40,7 @@
                 echo '</thead>';
 
                 echo '<tbody id="new_tbody_input">';
-                $query = "select * from floor where dormID = $dormID";
+                $query = "select * from Floor where dormID = $dormID";
                 $result = mysqli_query($con, $query);
                 while ($row = mysqli_fetch_array($result)) {
                     $floorID = $row["floorID"];
@@ -68,17 +68,17 @@
 
                 require 'connection.php';
                 $dormID = $_POST["dormID"];
-                $room_query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                $room_query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
                 $room_result = mysqli_query($con, $room_query);
                 $number_of_room = mysqli_num_rows($room_result);
-                $query = "select * from floor where dormID = $dormID";
+                $query = "select * from Floor where dormID = $dormID";
                 $result = mysqli_query($con, $query);
                 while ($row = mysqli_fetch_array($result)) {
                     for ($i = 1; $i <= $number_of_room; $i++) {
                         $floorNo = $row["floorNo"];
                         $room_per_floor = $_POST["floor" . $floorNo . "_roomtype"][$i - 1];
                         $matchingID = $_POST["floor" . $floorNo . "_roomtype_matchingID"][$i - 1];
-                        $query = "update roomperfloor set roomPerFloor = $room_per_floor where matchingID = $matchingID";
+                        $query = "update RoomPerFloor set roomPerFloor = $room_per_floor where matchingID = $matchingID";
                         if (!mysqli_query($con, $query)) {
                             return false;
                         }
@@ -91,7 +91,7 @@
 
                 require 'connection.php';
 
-                $query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                $query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
 
                 $result = mysqli_query($con, $query);
                 while ($row = mysqli_fetch_array($result)) {
@@ -118,7 +118,7 @@
 
                 require 'connection.php';
 
-                $query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
+                $query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID group by rpf.roomID";
                 $result = mysqli_query($con, $query);
                 $number_of_complete = 0;
                 while ($row = mysqli_fetch_array($result)) {

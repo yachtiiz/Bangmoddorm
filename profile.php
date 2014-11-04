@@ -6,7 +6,7 @@
             function getMember() {
                 require 'connection.php';
                 $memberID = $_SESSION["memberID"];
-                $query = "select * from members where memberID = $memberID";
+                $query = "select * from Members where memberID = $memberID";
                 $result = mysqli_query($con, $query);
                 $row = mysqli_fetch_array($result);
                 if (mysqli_num_rows($result) !== 0) {
@@ -54,7 +54,7 @@
                     }
                 }
 
-                $query = "update members set firstName = '$firstname' , lastName = '$lastname' , idCard = '$idcard' , email = '$email' , tel = '$tel' , 
+                $query = "update Members set firstName = '$firstname' , lastName = '$lastname' , idCard = '$idcard' , email = '$email' , tel = '$tel' , 
                           address= '$address' , city = '$city' , province = '$province' , zipcode = '$zipcode' , country = '$country' , about = '$about' ,
                         displayName = '$displayname' , memberUrl = '$memberurl' , facebook = '$facebook' $pic_path where memberID = $memberID";
 

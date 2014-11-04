@@ -35,7 +35,7 @@ function getAllMember($page, $order_by) {
 
     require 'connection.php';
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from members order by $order_by limit $limit_start , 8";
+    $query = "select * from Members order by $order_by limit $limit_start , 8";
 
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {

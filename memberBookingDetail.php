@@ -4,7 +4,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
     $bookingID = $_GET["bookingID"];
 
     require 'connection.php';
-    $query = "select * from booking where bookingID = $bookingID";
+    $query = "select * from Booking where bookingID = $bookingID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         $book_row = mysqli_fetch_array($result);
@@ -12,20 +12,20 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
         $memberID = $book_row["memberID"];
         $floorNo = $book_row["floor_no"];
 
-        $member_query = "select * from members where memberID = $memberID";
+        $member_query = "select * from Members where memberID = $memberID";
         $member_result = mysqli_query($con, $member_query);
         $member_row = mysqli_fetch_array($member_result);
 
-        $room_query = "select * from rooms r join roomperfloor rpf join floor f where r.roomID = rpf.roomID and rpf.floorID = f.floorID and r.roomID = $roomID and f.floorNo = $floorNo";
+        $room_query = "select * from Rooms r join RoomPerFloor rpf join Floor f where r.roomID = rpf.roomID and rpf.floorID = f.floorID and r.roomID = $roomID and f.floorNo = $floorNo";
         $room_result = mysqli_query($con, $room_query);
         $room_row = mysqli_fetch_array($room_result);
 
         $dormID = $room_row["dormID"];
-        $dorm_query = "select * from dormitories where dormID = $dormID";
+        $dorm_query = "select * from Dormitories where dormID = $dormID";
         $dorm_result = mysqli_query($con, $dorm_query);
         $dorm_row = mysqli_fetch_array($dorm_result);
 
-        $bank_query = "select * from bankAccount where dormID = $dormID";
+        $bank_query = "select * from BankAccount where dormID = $dormID";
         $bank_result = mysqli_query($con, $bank_query);
         $bank_result_selected = mysqli_query($con, $bank_query);
         ?>

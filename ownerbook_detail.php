@@ -4,27 +4,27 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
     $bookingID = $_GET["bookingID"];
 
     require 'connection.php';
-    $query = "select * from booking where bookingID = $bookingID";
+    $query = "select * from Booking where bookingID = $bookingID";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         $book_row = mysqli_fetch_array($result);
         $roomID = $book_row["roomID"];
         $memberID = $book_row["memberID"];
 
-        $member_query = "select * from members where memberID = $memberID";
+        $member_query = "select * from Members where memberID = $memberID";
         $member_result = mysqli_query($con, $member_query);
         $member_row = mysqli_fetch_array($member_result);
 
-        $room_query = "select * from rooms where roomID = $roomID";
+        $room_query = "select * from Rooms where roomID = $roomID";
         $room_result = mysqli_query($con, $room_query);
         $room_row = mysqli_fetch_array($room_result);
 
         $dormID = $room_row["dormID"];
-        $dorm_query = "select * from dormitories where dormID = $dormID";
+        $dorm_query = "select * from Dormitories where dormID = $dormID";
         $dorm_result = mysqli_query($con, $dorm_query);
         $dorm_row = mysqli_fetch_array($dorm_result);
 
-        $bank_query = "select * from bankAccount where dormID = $dormID";
+        $bank_query = "select * from BankAccount where dormID = $dormID";
         $bank_result = mysqli_query($con, $bank_query);
         ?>
         <div class="row book-pay">

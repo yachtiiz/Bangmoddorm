@@ -59,7 +59,7 @@
                                         function readAble($bookingID) {
 
                                             require 'connection.php';
-                                            $query = "update booking set member_noti = 2 where bookingID = $bookingID";
+                                            $query = "update Booking set member_noti = 2 where bookingID = $bookingID";
                                             if (mysqli_query($con, $query)) {
                                                 return true;
                                             } else {
@@ -70,7 +70,7 @@
                                         function getAllNotification() {
                                             require 'connection.php';
                                             $memberID = $_SESSION["memberID"];
-                                            $query = "select * from booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by date desc limit 0 , 8";
+                                            $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by date desc limit 0 , 8";
                                             $result = mysqli_query($con, $query);
                                             if (mysqli_num_rows($result) !== 0) {
                                                 while ($row = mysqli_fetch_array($result)) {
@@ -255,7 +255,7 @@
                                     <?php
                                     $cur_page = 1;
                                     $memberID = $_SESSION["memberID"];
-                                    $query = "select * from booking where memberID = $memberID and (member_noti = 1 or member_noti = 2)";
+                                    $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2)";
                                     $href = "callback.php?member_noti_curpage=";
                                     displayPage($cur_page, $query, $href);
                                     ?>

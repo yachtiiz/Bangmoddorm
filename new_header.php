@@ -117,7 +117,7 @@ function getUserType() {
                                     function getOwnerNotification() {
                                         require 'connection.php';
                                         $memberID = $_SESSION["memberID"];
-                                        $query = "select * from booking b join rooms r join members m join Dormitories d join floor f join roomperfloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and b.owner_noti = 1 ";
+                                        $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and b.owner_noti = 1 ";
                                         $result = mysqli_query($con, $query);
                                         $noti = mysqli_num_rows($result);
                                         return $noti;

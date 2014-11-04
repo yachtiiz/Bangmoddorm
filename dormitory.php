@@ -21,7 +21,7 @@ $dorm_result = mysqli_query($con, $query);
         while ($dorm_row = mysqli_fetch_array($dorm_result)) {
 
             $dormID = $dorm_row["dormID"];
-            $room_query = "select min(price) as minprice , max(price) as maxprice from dormitories d join rooms r join floor f join roomperfloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and rpf.roomID = r.roomID and d.status = 'Showing' and r.status = 'Complete' and d.dormID = $dormID group by d.dormID";
+            $room_query = "select min(price) as minprice , max(price) as maxprice from Dormitories d join Rooms r join Floor f join RoomPerFloor rpf where d.dormID = f.dormID and f.floorID = rpf.floorID and rpf.roomID = r.roomID and d.status = 'Showing' and r.status = 'Complete' and d.dormID = $dormID group by d.dormID";
             $room_result = mysqli_query($con, $room_query);
             $room_row = mysqli_fetch_array($room_result);
             ?>

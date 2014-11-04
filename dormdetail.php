@@ -5,7 +5,7 @@ function get_room_per_floor($roomID, $dormID) {
 
     require 'connection.php';
 
-    $query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and rpf.roomID = $roomID";
+    $query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and rpf.roomID = $roomID";
 
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
@@ -27,7 +27,7 @@ function get_room_per_floor($roomID, $dormID) {
 function show_all_room($dormID) {
     require 'connection.php';
 
-    $room_query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and r.status = 'Complete' group by rpf.roomID";
+    $room_query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and r.status = 'Complete' group by rpf.roomID";
     $result = mysqli_query($con, $room_query);
     while ($row = mysqli_fetch_array($result)) {
         echo '<a href="#' . $row["roomID"] . '"><button class="btn1 btn1-default" style="margin-right:1%">' . $row["roomType"] . '</button></a> ';
@@ -48,10 +48,10 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
     $fac_dorm_result = mysqli_query($con, $fac_dorm_query);
     $fac_dorm_row = mysqli_fetch_array($fac_dorm_result);
 
-    $pic_dorm_query = "select * from dormPic where dormID = $dormID";
+    $pic_dorm_query = "select * from DormPic where dormID = $dormID";
     $pic_dorm_result = mysqli_query($con, $pic_dorm_query);
 
-    $dorm_room_query = "select * from floor f join roomperfloor rpf join rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and r.status = 'Complete' group by rpf.roomID";
+    $dorm_room_query = "select * from Floor f join RoomPerFloor rpf join Rooms r where f.floorID = rpf.floorID and rpf.roomID = r.roomID and f.dormID = $dormID and r.status = 'Complete' group by rpf.roomID";
     $dorm_room_result = mysqli_query($con, $dorm_room_query);
     ?>
 
@@ -490,7 +490,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
         function getRating($dormID) {
 
             require 'connection.php';
-            $query = "select rating from comment where dormID = $dormID";
+            $query = "select rating from Comment where dormID = $dormID";
             $result = mysqli_query($con, $query);
             $allcomment = mysqli_num_rows($result);
             $allrate = 0;
@@ -528,7 +528,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     require 'connection.php';
 
                     $limit_start = ((4 * $page ) - 4);
-                    $query = "select * from comment c join members m where c.memberID = m.memberID and c.dormID = $dormID order by date desc limit $limit_start , 4";
+                    $query = "select * from Comment c join Members m where c.memberID = m.memberID and c.dormID = $dormID order by date desc limit $limit_start , 4";
                     $result = mysqli_query($con, $query);
                     while ($row = mysqli_fetch_array($result)) {
                         $star = "";
@@ -597,7 +597,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                 echo '<li><a value=' . $next_page . ' href="' . $href . $next_page . '">&raquo;</a></li>';
                             }
 
-                            $page_query = "select * from comment where dormID = $dormID";
+                            $page_query = "select * from Comment where dormID = $dormID";
                             $cur_page = 1;
                             $page_href = "callback.php?comment_page=";
                             displayPage($cur_page, $page_query, $page_href);
