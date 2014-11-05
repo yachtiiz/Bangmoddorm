@@ -208,7 +208,7 @@
                                     <?php getRoom_Per_floor($row["dormID"]) ?>
 
                                 </table>
-                                <button class="btn1 btn1-default" type="submit" style="margin-left:45%" name="update_rpf"> Save Change</button>
+                                <button class="btn1 btn1-success" type="submit" style="margin-left:44%" name="update_rpf"> Save Change</button>
                             </form>
                         </div>
 

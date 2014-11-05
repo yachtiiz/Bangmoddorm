@@ -125,7 +125,7 @@
                                 </ul>
 
                             </div>
-                            <a href="index.php?chose_page=ownersystem" class="btn1 btn1-danger" style="margin-left: 20px;margin-top: 30px; width: 30%">Back</a>
+                            <a href="index.php?chose_page=ownersystem" class="btn1 btn1-danger" style="margin-top:5%;margin-left:40%;width: 20%">Back</a>
                         </div>
                         <br />
                     </fieldset>
@@ -273,7 +273,7 @@
                                     </div>
                                     <div class="modal-footer" style="text-align: center">
                                         <span id="ajaxscript"></span>
-                                        <button id="close_modal" type="button" class="btn1 btn1-danger" data-dismiss="modal" style="width: 20%">Close</button>
+                                        <button id="close_modal" type="button" class="btn1 btn1-default pull-right" data-dismiss="modal" style="width: 10%">Close</button>
                                     </div>
                                 </form>
                             </div>

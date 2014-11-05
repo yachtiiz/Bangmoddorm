@@ -220,7 +220,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <a href="index.php?chose_page=membersystem" class="btn1 btn1-danger" style="width: 30%">Back</a>
+                       <!--<a href="index.php?chose_page=membersystem" class="btn1 btn1-danger" style="width: 30%">Back</a>-->
                     </fieldset>
                 </form>
             </div>

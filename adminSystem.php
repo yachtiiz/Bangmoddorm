@@ -14,7 +14,7 @@
                                         <a href="index.php?chose_page=checkDormitory"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Dormitory Information</button></a><br><br>
                                         <a href="index.php?chose_page=checkRequestDorm"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Request Dormitory</button></a>
                                     </div>
-                                    <div class="span3">
+                                    <div class="span3" style="margin-bottom: 10%;">
                                         <a href="index.php?chose_page=checkMemberInfo"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Member</button></a><br><br>
                                         <a href="index.php?chose_page=checkblacklist"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Blacklist</button></a></div>
                                 </div>

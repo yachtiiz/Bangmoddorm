@@ -544,8 +544,8 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                             <div class="row">
                                 <div class="span10">
                                     <br />
-                                    <button type='submit' name='edit_submit' class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
-                                    <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
+                                    <button type='submit' name='edit_submit' class="btn1 btn1-success pull-right" style="margin-left:15px;margin-bottom: 50px;width: 25%">Submit</button>
+                                    <a href="index.php?chose_page=ownersystem" class="btn1 btn1-danger pull-right" style="margin-bottom: 50px;width: 25%">Back</a>
                                     <br><br>
                                     <br />
                                     <br />

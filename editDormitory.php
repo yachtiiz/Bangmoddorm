@@ -969,9 +969,9 @@
                                         <div class='row'>
                                             <div class="col-lg-12" style="margin-bottom:2%;">
                                                 <?php if ($bank_row["bank_status"] === "Showing") { ?>
-                                                    <button type="button" class="btn1 btn1-success" id="hiding_click<?php echo $bank_row["bankID"] ?>">Now Showing on page ( Click for Hiding )</button>
+                                                    <button type="button" class="btn1 btn1-success" id="hiding_click<?php echo $bank_row["bankID"] ?>">Now Showing on Page ( Click for Hiding )</button>
                                                 <?php } else { ?>
-                                                    <button type="button" class="btn1 btn1-danger" id="showing_click<?php echo $bank_row["bankID"] ?>">Now Hiding on page ( Click for Showing )</button>
+                                                    <button type="button" class="btn1 btn1-danger" id="showing_click<?php echo $bank_row["bankID"] ?>">Now Hiding from Page ( Click for Showing )</button>
                                                 <?php } ?>
                                             </div>
                                             <script>
@@ -1306,8 +1306,8 @@
                                 <div class="row">
                                     <div class="span10">
                                         <br>
-                                        <button name="edit_dorm_submit" type="submit" class="btn btn-primary btn-large book-now pull-right" style="margin-left:15px">Submit</button>
-                                        <a href="index.php?chose_page=ownersystem" class="btn btn-primary btn-large book-now pull-right">Back</a>
+                                        <button name="edit_dorm_submit" type="submit" class="btn1 btn1-success pull-right" style="margin-left:15px;margin-top: 50px;margin-bottom: 50px;width: 25%">Submit</button>
+                                        <a href="index.php?chose_page=ownersystem" class="btn1 btn1-danger pull-right" style="margin-top: 50px;margin-bottom: 50px;width: 25%">Back</a>
                                         <br><br>
                                     </div>
                                     

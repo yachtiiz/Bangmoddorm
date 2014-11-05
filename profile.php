@@ -303,8 +303,8 @@
                             </div><br><br>
                             <div class="row">
                                 <div class="span10" style="margin-left:10%">
-                                    <button type="submit" name="change_profile_submit" class="btn btn-primary book-now" style="margin-left: 160px">Change Your Profile</button>
-                                    <button data-toggle="modal" data-target="#changePasswordModal" type="button" class="btn btn-primary book-now" style="margin-left: 20px">Change Password</button>
+                                    <button type="submit" name="change_profile_submit" class="btn1 btn1-success" style="margin-left: 200px;width: 20%">Change Your Profile</button>
+                                    <button data-toggle="modal" data-target="#changePasswordModal" type="button" class="btn1 btn1-primary" style="margin-left: 20px;width: 20%">Change Password</button>
                                     <div class="modal fade" id="changePasswordModal">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
