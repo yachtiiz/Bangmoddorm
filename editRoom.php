@@ -285,7 +285,6 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
 
     </script>
 
-    <div class="row booking_summary">
         <div class="span12">	
             <div class="row">
                 <div class="span10">
@@ -556,8 +555,9 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                 </div>
             </div>
 
-        </div></div> <!-- /container -->
-    </div>
+        </div>
+    </div> <!-- /container -->
+    
 <?php } else { ?>
     <h1>Something Error</h1>
 <?php } ?>

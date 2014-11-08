@@ -40,7 +40,7 @@ function getAllMember($page, $order_by) {
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
-            
+
             $color = "black";
             switch ($row["type"]) {
                 case "Member":
@@ -53,21 +53,21 @@ function getAllMember($page, $order_by) {
                     $color = "red";
                     break;
             }
-            
+
             $bl_color = "black";
-            if($row["status"] === "Blacklist"){
+            if ($row["status"] === "Blacklist") {
                 $bl_color = "red";
             }
-            
+
             echo '<tr>';
             echo '<td style="text-align: center">' . $row["memberID"] . '</td>';
             echo '<td>' . $row["username"] . '</td>';
             echo '<td>' . $row["firstName"] . '</td>';
             echo '<td>' . $row["lastName"] . '</td>';
-            echo '<td style="color:'. $color . '">' . $row["type"] . '</td>';
-            echo '<td style="color:'. $bl_color . '">' . $row["status"] . '</td>';
+            echo '<td style="color:' . $color . '">' . $row["type"] . '</td>';
+            echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["tel"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo&memberID='. $row["memberID"] .'"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -148,54 +148,52 @@ function getAllMember($page, $order_by) {
 
 
 </script>
-<div class="row booking_summary">
-    <div class="span12">	
-        <div class="row">
-            <div class="span9">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <br />
-                        <div class="row">
-                            <div class="span12">
-                                <legend>
-                                    <span>Member</span> Information
-                                </legend>
-                                Search Member : 
-                                <input id="searching_member" type="text" style="width:40%" placeholder="" class="form-control">
-                                <select id="sort_by" style="width:20%" class="form-control pull-right">
-                                    <option id="memberID" value="memberID">Sort By Member ID</option>
-                                    <option value="status">Sort By Status</option>
-                                    <option value="type">Sort By Type</option>
-                                </select>
-                            </div>
-                            <br><br><br><br><br><br>
-                            <div class="span12">
-                                <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
-                                    <th>Member ID</th>
-                                    <th>Username</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Telephone</th>
-                                    <th></th>
-                                    <tbody id="show_member">
-                                        <?php getAllMember(1, "memberID") ?>
-                                    </tbody>
-                                </table>
-                                <ul id="show_member_page" class="check_mem pagination pull-right" style="margin-top: 0px;height: 34px">
-                                    <?php
-                                    $href = "callback.php?show_member_page=";
-                                    displayPage(1, "select * from members", $href);
-                                    ?>
-                                </ul>
-                            </div>
+<div class="span12">	
+    <div class="row">
+        <div class="span9">
+            <form class="form-horizontal">
+                <fieldset>
+                    <br />
+                    <div class="row">
+                        <div class="span12">
+                            <legend>
+                                <span>Member</span> Information
+                            </legend>
+                            Search Member : 
+                            <input id="searching_member" type="text" style="width:40%" placeholder="" class="form-control">
+                            <select id="sort_by" style="width:20%" class="form-control pull-right">
+                                <option id="memberID" value="memberID">Sort By Member ID</option>
+                                <option value="status">Sort By Status</option>
+                                <option value="type">Sort By Type</option>
+                            </select>
                         </div>
-                        <a href="index.php?chose_page=adminsystem" class="btn1 btn1-danger" style="margin-left: 50%; width: 30%">Back</a>
-                    </fieldset>
-                </form>
+                        <br><br><br><br><br><br>
+                        <div class="span12">
+                            <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
+                                <th>Member ID</th>
+                                <th>Username</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Telephone</th>
+                                <th></th>
+                                <tbody id="show_member">
+                                    <?php getAllMember(1, "memberID") ?>
+                                </tbody>
+                            </table>
+                            <ul id="show_member_page" class="check_mem pagination pull-right" style="margin-top: 0px;height: 34px">
+                                <?php
+                                $href = "callback.php?show_member_page=";
+                                displayPage(1, "select * from members", $href);
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="index.php?chose_page=adminsystem" class="btn1 btn1-danger" style="margin-left: 50%; width: 30%">Back</a>
+                </fieldset>
+            </form>
 
-            </div>
         </div>
     </div>
 </div>

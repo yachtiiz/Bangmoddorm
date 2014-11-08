@@ -1,5 +1,4 @@
-<div class="row booking_summary">
-    <div class="span12">	
+<div class="span12">	
         <div class="row">
             <?php
 
@@ -376,5 +375,5 @@
         </div>
     </div>
 
-</div></div> <!-- /container -->
+</div> <!-- /container -->
 <br><br><br>

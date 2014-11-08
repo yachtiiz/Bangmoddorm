@@ -3,7 +3,7 @@
 <script type="text/javascript" src="js/checkBooking.js"></script>
 
 
-<div class="row booking_summary">
+
     <div class="span12">	
         <div class="row">
             <div class="span12">
@@ -288,6 +288,6 @@
             </div>
         </div>
     </div>
-</div>
+
 </div> <!-- /container -->
 <br><br><br><br><br>       

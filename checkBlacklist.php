@@ -1,6 +1,6 @@
 
 
-<?php 
+<?php
 
 function displayPage($cur_page, $query, $href) {
 
@@ -41,7 +41,7 @@ function getAllBlacklist($page, $order_by) {
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
-            
+
             $color = "black";
             switch ($row["type"]) {
                 case "Member":
@@ -54,20 +54,20 @@ function getAllBlacklist($page, $order_by) {
                     $color = "red";
                     break;
             }
-            
+
             $bl_color = "black";
-            if($row["status"] === "Blacklist"){
+            if ($row["status"] === "Blacklist") {
                 $bl_color = "red";
             }
-            
+
             echo '<tr>';
             echo '<td style="text-align: center">' . $row["memberID"] . '</td>';
             echo '<td>' . $row["username"] . '</td>';
             echo '<td>' . $row["firstName"] . '</td>';
             echo '<td>' . $row["lastName"] . '</td>';
-            echo '<td style="color:'. $bl_color . '">' . $row["status"] . '</td>';
+            echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["status_reason"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo&memberID='. $row["memberID"] .'"><button type="button" class="btn1 btn1-primary pull-right" style="width:80%"> View Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn1 btn1-primary pull-right" style="width:80%"> View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -89,64 +89,56 @@ function getAllBlacklist($page, $order_by) {
         }
     }
 }
-
-
-
-
 ?>
 
-<div class="row booking_summary">
-    <div class="span12">	
-        <div class="row">
-            <div class="span9">
-                <form class="form-horizontal" />
-                <fieldset>
-                    <br>
-                    <div class="row">
-                        <div class="span12">
-                            <legend>
-                                <span>Blacklist</span> Information
-                            </legend>
-                            Search Member : 
-                            <input type="text" placeholder="" class="form-control" style="width: 30%">
-                            <select class="form-control pull-right" style="width:25%">
-                                <option>Sort By Member ID</option>
-                                <option>Sort By Alphabet</option>
-                                <option>Sort By Status</option>
-                            </select>
-                        </div>
-                        <br><br><br><br><br><br>
-                        <div class="span12">
-                            <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
-                                
-                                <th>Member ID</th>
-                                <th>Username</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Status</th>
-                                <th>Reason</th>
-                                <th></th>
-                                <tbody id="show_blacklist">
-                                    <?php getAllBlacklist(1, "memberID") ?>
-                                </tbody>
-
-                            </table>
-                            <ul class="pagination pull-right">
-                                <?php
-                                $cur_page = 1;
-                                $query = "select * from Members where status = 'Blacklist'";
-                                $href = "callback.php?blacklist_curpage=";
-                                displayPage($cur_page, $query, $href);
-                                
-                                
-                                ?>
-                            </ul>
-                        </div>
+<div class="span12">	
+    <div class="row">
+        <div class="span9">
+            <form class="form-horizontal" />
+            <fieldset>
+                <br>
+                <div class="row">
+                    <div class="span12">
+                        <legend>
+                            <span>Blacklist</span> Information
+                        </legend>
+                        Search Member : 
+                        <input type="text" placeholder="" class="form-control" style="width: 30%">
+                        <select class="form-control pull-right" style="width:25%">
+                            <option>Sort By Member ID</option>
+                            <option>Sort By Alphabet</option>
+                            <option>Sort By Status</option>
+                        </select>
                     </div>
-                    <a href="index.php?chose_page=adminsystem" class="btn1 btn1-danger" style="margin-left: 50%;width: 30%">Back</a>
-                </fieldset>
-                </form>
-            </div>
+                    <br><br><br><br><br><br>
+                    <div class="span12">
+                        <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
+
+                            <th>Member ID</th>
+                            <th>Username</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Status</th>
+                            <th>Reason</th>
+                            <th></th>
+                            <tbody id="show_blacklist">
+<?php getAllBlacklist(1, "memberID") ?>
+                            </tbody>
+
+                        </table>
+                        <ul class="pagination pull-right">
+<?php
+$cur_page = 1;
+$query = "select * from Members where status = 'Blacklist'";
+$href = "callback.php?blacklist_curpage=";
+displayPage($cur_page, $query, $href);
+?>
+                        </ul>
+                    </div>
+                </div>
+                <a href="index.php?chose_page=adminsystem" class="btn1 btn1-danger" style="margin-left: 50%;width: 30%">Back</a>
+            </fieldset>
+            </form>
         </div>
     </div>
 </div>

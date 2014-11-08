@@ -3,7 +3,7 @@
 <?php
 ?>
 
-<div class="row booking_summary">
+
     <div class="span12">
         <fieldset>
             <script>
@@ -218,5 +218,5 @@
 
         </fieldset>
     </div>
-</div></div> <!-- /container -->
+</div> <!-- /container -->
 <br><br><br><br><br><br><br>

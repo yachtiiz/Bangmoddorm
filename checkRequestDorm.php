@@ -135,23 +135,23 @@ function displayPage($cur_page) {
             } else {
                 $("#requestlist").load(url);
             }
-            if($("#searching").val() === ""){
+            if ($("#searching").val() === "") {
                 $("#show_page_request").load("callback.php?request_curpage=1");
             }
         });
-        $("#only_confirm").click(function(){
+        $("#only_confirm").click(function() {
             url = "callback.php?request_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=confirmID";
             $("#requestlist").load(url);
         });
-        $("#only_dormname").click(function(){
+        $("#only_dormname").click(function() {
             url = "callback.php?request_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=dormName";
             $("#requestlist").load(url);
         });
-        $("#only_license").click(function(){
+        $("#only_license").click(function() {
             url = "callback.php?request_searching=" + $("#searching").val().replace(/ /g, "+") + "&search_only=license";
             $("#requestlist").load(url);
         });
-        $("#all_type").click(function(){
+        $("#all_type").click(function() {
             url = "callback.php?request_searching=" + $("#searching").val().replace(/ /g, "+");
             $("#requestlist").load(url);
         });
@@ -159,97 +159,95 @@ function displayPage($cur_page) {
 
 
 </script>
-<div class="row booking_summary">
-    <div class="span12">	
-        <div class="row">
-            <div class="span9">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <br />
-                        <div class="row">
-                            <div class="span12">
-                                <legend>
-                                    <span>Dormitory</span> Request
-                                </legend>
-                                <div class="col-md-7" style="padding: 0;">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Searching</span>
-                                        <input id="searching" type="text"  class="form-control" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3 pull-right" style="padding: 0;margin-right: 20px;">
-                                    <select id="order" class="form-control">
-                                        <option value="date%20desc">Sort By Send Date</option>
-                                        <option value="approval">Sort By Status</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-2 radio">
-                                    <label>
-                                        <input id="only_confirm" name="search_only" type="radio"> By Confirm ID
-                                    </label>
-                                </div>
-                                <div class="col-md-3 radio">
-                                    <label>
-                                        <input id="only_dormname" name="search_only" type="radio"> By Dormitory Name
-                                    </label>
-                                </div>
-                                <div class="col-md-2 radio">
-                                    <label>
-                                        <input id="only_license" name="search_only" type="radio"> By License ID
-                                    </label>
-                                </div>
-                                <div class="col-md-2 radio">
-                                    <label>
-                                        <input id="all_type" name="search_only" type="radio" checked> All
-                                    </label>
+<div class="span12">	
+    <div class="row">
+        <div class="span9">
+            <form class="form-horizontal">
+                <fieldset>
+                    <br />
+                    <div class="row">
+                        <div class="span12">
+                            <legend>
+                                <span>Dormitory</span> Request
+                            </legend>
+                            <div class="col-md-7" style="padding: 0;">
+                                <div class="input-group">
+                                    <span class="input-group-addon">Searching</span>
+                                    <input id="searching" type="text"  class="form-control" placeholder="">
                                 </div>
                             </div>
 
-
-
-                            <div class="span12">
-                                <table class="table table-striped table-hover" style="margin-top: 30px;border-left: solid 1px #ddd;border-right: solid 1px #ddd;border-bottom: solid 1px #ddd;border-top: solid 1px #ddd;background-color: white">
-                                    <thead>
-                                    <th>Confirm ID</th>
-                                    <th>Member ID</th>
-                                    <th>Dormitory Name</th>
-                                    <th>License ID</th>
-                                    <th>Send Date</th>
-                                    <th>Approval</th>
-                                    <th></th>
-                                    </thead>
-                                    <tbody id="requestlist" style="font-size: 16px">
-                                        <?php
-                                        if (!isset($_GET["request_page"])) {
-                                            $order = "date desc";
-                                            $page = 1;
-                                            getRequest($page, $order);
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                            <div class="col-md-3 pull-right" style="padding: 0;margin-right: 20px;">
+                                <select id="order" class="form-control">
+                                    <option value="date%20desc">Sort By Send Date</option>
+                                    <option value="approval">Sort By Status</option>
+                                </select>
                             </div>
-                            <div class="span12">
-                                <ul id='show_page_request' class="page_request pagination pull-right" style="margin-top: 0px;height: 34px">
-                                    <?php
-                                    if (!isset($_GET["request_page"])) {
-                                        $cur_page = 1;
-                                        displayPage($cur_page);
-                                    }
-                                    ?>
-                                </ul>
+
+                            <div class="col-md-2 radio">
+                                <label>
+                                    <input id="only_confirm" name="search_only" type="radio"> By Confirm ID
+                                </label>
                             </div>
-                            <a href="index.php?chose_page=adminsystem" style="margin-top:5%;margin-left:50%;width: 30%" class="btn1 btn1-danger">Back</a>
-
-
+                            <div class="col-md-3 radio">
+                                <label>
+                                    <input id="only_dormname" name="search_only" type="radio"> By Dormitory Name
+                                </label>
+                            </div>
+                            <div class="col-md-2 radio">
+                                <label>
+                                    <input id="only_license" name="search_only" type="radio"> By License ID
+                                </label>
+                            </div>
+                            <div class="col-md-2 radio">
+                                <label>
+                                    <input id="all_type" name="search_only" type="radio" checked> All
+                                </label>
+                            </div>
                         </div>
 
-                    </fieldset>
-                </form>
 
-            </div>
+
+                        <div class="span12">
+                            <table class="table table-striped table-hover" style="margin-top: 30px;border-left: solid 1px #ddd;border-right: solid 1px #ddd;border-bottom: solid 1px #ddd;border-top: solid 1px #ddd;background-color: white">
+                                <thead>
+                                <th>Confirm ID</th>
+                                <th>Member ID</th>
+                                <th>Dormitory Name</th>
+                                <th>License ID</th>
+                                <th>Send Date</th>
+                                <th>Approval</th>
+                                <th></th>
+                                </thead>
+                                <tbody id="requestlist" style="font-size: 16px">
+                                    <?php
+                                    if (!isset($_GET["request_page"])) {
+                                        $order = "date desc";
+                                        $page = 1;
+                                        getRequest($page, $order);
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="span12">
+                            <ul id='show_page_request' class="page_request pagination pull-right" style="margin-top: 0px;height: 34px">
+                                <?php
+                                if (!isset($_GET["request_page"])) {
+                                    $cur_page = 1;
+                                    displayPage($cur_page);
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                        <a href="index.php?chose_page=adminsystem" style="margin-top:5%;margin-left:50%;width: 30%" class="btn1 btn1-danger">Back</a>
+
+
+                    </div>
+
+                </fieldset>
+            </form>
+
         </div>
     </div>
 </div>

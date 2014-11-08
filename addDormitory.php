@@ -22,7 +22,7 @@
 
 
 </script>
-<div class="row booking_summary">
+
     <div class="span12">
         <?php
 
@@ -197,4 +197,4 @@ VALUES ($memberID, '$dorm_name', '$evidence_dorm', '$license_dorm', 'Waiting' , 
             </div>
         <?php } ?>
     </div>
-</div></div> <!-- /container -->
+</div> <!-- /container -->
