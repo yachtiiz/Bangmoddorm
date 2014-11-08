@@ -450,6 +450,21 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                             });
 
                                         </script>
+                                    <?php } else if ($_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin") { ?>
+                                        <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="width: 40% ">Booking</button>
+                                        <script>
+
+                                            $(function() {
+
+                                                $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
+                                                    alert("Only Member can be booking.");
+                                                });
+
+
+
+                                            });
+
+                                        </script>    
                                     <?php } else if ($_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["status"] === "Blacklist") { ?>
                                         <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="width: 40% ">Booking</button>
                                         <script>
