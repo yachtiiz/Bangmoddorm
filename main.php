@@ -1,8 +1,8 @@
 
 </div>
 <div style="margin-top: -20px;">    
-    <img src="../images/IMG_4009.jpg" style="width: 100%; height: 630px">
-    <div class="thumbnail" style="position: absolute; left: 280px; top:250px; width:700px; height:270px;padding:20px ">
+    <img src="../images/IMG_4009.jpg" style="width: 100%; height: 630px;">
+    <div class="thumbnail" style="position: absolute; left: 20%; top:30%; width:60%; height:40%;padding:20px ">
 
         <div class="col-md-5">
             <p>Distance From University</p>
@@ -49,7 +49,8 @@
             <input id="start_price" type="number" class="form-control" placeholder="Start Price">
         </div>
         <div class="col-md-3" style="margin-top:2%;margin-bottom: 5%">
-            <input id="end_price" type="number" class="form-control" placeholder="End Price" style="margin-top:22%">
+            <p>&nbsp;</p>
+            <input id="end_price" type="number" class="form-control" placeholder="End Price">
         </div>
         <button id="search_button" data-target="#dormModal" data-toggle="modal" class="btn1 btn1-default btn1-lg" style="margin-left:0%;width:100%"> SEARCH DORMITORIES</button>
 

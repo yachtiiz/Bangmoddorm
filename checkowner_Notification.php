@@ -26,7 +26,7 @@
                                 <table class="table table-hover" style="border:solid 1px #cccccc;margin-bottom: 0px">
                                     <th>Booking ID</th>
                                     <th>Member Name</th>
-                                    <th>Booking Date</th>
+                                    <th>Dormitory</th>
                                     <th>Status</th>
                                     <th>Contact</th>
                                     <th></th>
@@ -122,10 +122,10 @@
                                                     echo '<tr ' . $unread . '>';
                                                     echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
                                                     echo '<td>' . $row["firstName"] . " " . $row["lastName"] . '</td>';
-                                                    echo '<td>' . $row["date"] . '</td>';
+                                                    echo '<td>' . $row["dormName"] . '</td>';
                                                     echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
                                                     echo '<td>' . $row["dormTel"] . '</td>';
-                                                    echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="'. $row["bank_name"] .'" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+                                                    echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="' . $row["bank_name"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
                                                     echo '</tr>';
                                                     if ($row["owner_noti"] == "1") {
                                                         if (!readAble($row["bookingID"])) {
@@ -162,7 +162,7 @@
                                         $(document).on("click", ".viewdetail", function() {
                                             $(".modal-body-booking #bookid").html($(this).data('bookid'));
                                             document.getElementById("approvebutton").setAttribute("value", $(this).data('bookid'));
-                                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
+//                                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
                                             document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
                                             document.getElementById("refundbutton").setAttribute("value", $(this).data('bookid'));
                                             $(".modal-body-booking #name").html($(this).data('name'));
@@ -288,13 +288,14 @@
                                                                 <h5 style="text-align: left">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
                                                                 <br>
                                                                 <legend style="font-style: italic;text-align: left">Change Status</legend>
-                                                                <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
-                                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%">Canceled</button>
-                                                                <button id="rejectbutton" class="btn1 btn1-danger" style="width:30%">Reject</button>
+                                                                <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%" data-toggle="tooltip" data-placement="bottom" title="Correct Evidence or Real transfer money" type="button">Approve</button>
+                                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%" data-toggle="tooltip" data-placement="bottom" title="Fault Evidence or money not come">Canceled</button>
+                                                                <button id="refundbutton" class="btn1 btn1-danger" style="width:30%" data-toggle="tooltip" data-placement="bottom" title="Have a problem ex.Full Room , Money Transfer Problem">Refund Needed</button>
                                                                 <br><br>
-                                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , Money Transfer Problem </legend>
-                                                                <button id="refundbutton" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
-                                                                <br><br>
+                                                                <!--                                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , Money Transfer Problem </legend>
+                                                                                                                                <button id="refundbutton" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
+                                                                                                                                <br><br>-->
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -305,6 +306,10 @@
                                                     <script>
 
                                                         $(function() {
+                                                            
+                                                            $('#approvebutton').tooltip('hide');
+                                                            $('#canceledbutton').tooltip('hide');
+                                                            $('#refundbutton').tooltip('hide');
 
                                                             $("#linkbutton").on("click", function() {
                                                                 window.location = "index.php?chose_page=checkDormBooking&memberID=<?php echo $_SESSION["memberID"]; ?>";
@@ -320,16 +325,16 @@
                                                                     event.preventDefault();
                                                                 }
                                                             });
-                                                            $("#rejectbutton").on("click", function() {
-                                                                if (confirm("Confirm to Change Status ?")) {
-                                                                    change_url = "callback.php?change_booking_status=Reject&change_booking_id=" + $(this).val();
-                                                                    $("#rejectbutton").load(change_url);
-                                                                    event.preventDefault();
-                                                                    window.location = "index.php?chose_page=ownernotification";
-                                                                } else {
-                                                                    event.preventDefault();
-                                                                }
-                                                            });
+//                                                            $("#rejectbutton").on("click", function() {
+//                                                                if (confirm("Confirm to Change Status ?")) {
+//                                                                    change_url = "callback.php?change_booking_status=Reject&change_booking_id=" + $(this).val();
+//                                                                    $("#rejectbutton").load(change_url);
+//                                                                    event.preventDefault();
+//                                                                    window.location = "index.php?chose_page=ownernotification";
+//                                                                } else {
+//                                                                    event.preventDefault();
+//                                                                }
+//                                                            });
                                                             $("#canceledbutton").on("click", function() {
                                                                 if (confirm("Confirm to Change Status ?")) {
                                                                     change_url = "callback.php?change_booking_status=Canceled&change_booking_id=" + $(this).val();

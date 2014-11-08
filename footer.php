@@ -28,7 +28,7 @@
 <!--                        <p>that make you choice to make a decision.</p>-->
                     </div>
                     <div class="col-md-4">
-                        <div style="margin-left: 50px">
+                        <div style="margin-left: 50%">
                         <h4>Sponsors<span class="line"></span></h4>
                         <ul class="thumbnails" style="margin-top: -20px;">
                             <li class="span2">

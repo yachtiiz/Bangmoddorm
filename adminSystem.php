@@ -8,13 +8,13 @@
                                 <div class="row">
 
                                     <div class="span12">
-                                        <legend><span style="margin-left:40%">Admin</span> System</legend>
+                                        <legend><span style="margin-left:35%">Administrator</span> System</legend>
                                     </div>
                                     <div class="span4" style="margin-left:22%">
                                         <a href="index.php?chose_page=checkDormitory"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Dormitory Information</button></a><br><br>
                                         <a href="index.php?chose_page=checkRequestDorm"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Request Dormitory</button></a>
                                     </div>
-                                    <div class="span3" style="margin-bottom: 10%;">
+                                    <div class="span3" style="margin-bottom: 20%;">
                                         <a href="index.php?chose_page=checkMemberInfo"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Member</button></a><br><br>
                                         <a href="index.php?chose_page=checkblacklist"><button type="button" class="btn btn-primary btn-lg btn-block book-now2">Check Blacklist</button></a></div>
                                 </div>

@@ -318,7 +318,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     <label>Room Name
                                         <input class="form-control" type="text" name="room_type" value='<?php echo isset($room_row["roomType"]) ? $room_row["roomType"] : "" ?>'>
                                     </label>
-                                    <label>Number Of Room
+                                    <label>Number of Room
                                         <input type="text" class="form-control" name="number_of_room" value='<?php echo getNumber_of_room($_GET["dormID"], $_GET["roomID"]) ?>' >
                                     </label>
                                 </div>				
@@ -327,7 +327,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                                     <label>Areas
                                         <input type="text" class="form-control" name="areas" value='<?php echo isset($room_row["areas"]) ? $room_row["areas"] : "" ?>' />
                                     </label>
-                                    <label>Number Person Per Room
+                                    <label>Number Person per Room
                                         <input type="text" class="form-control" name="number_of_person" value='<?php echo isset($room_row["num_of_person"]) ? $room_row["num_of_person"] : "" ?>'/>
                                     </label>
                                 </div>

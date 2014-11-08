@@ -135,7 +135,7 @@
                         $(document).on("click", ".viewdetail", function() {
                             $(".modal-body-booking #bookid").html($(this).data('bookid'));
                             document.getElementById("approvebutton").setAttribute("value", $(this).data('bookid'));
-                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
+//                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
                             document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
                             document.getElementById("refundbutton").setAttribute("value", $(this).data('bookid'));
                             $(".modal-body-booking #name").html($(this).data('name'));
@@ -222,6 +222,11 @@
                                     $("#show_result").load(url);
                                 }
                             });
+
+                            $('#approvebutton').tooltip('hide');
+                            $('#canceledbutton').tooltip('hide');
+                            $('#refundbutton').tooltip('hide');
+
                         });
 
                     </script>
@@ -261,13 +266,13 @@
                                                 <h5 style="text-align: left">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
                                                 <br>
                                                 <legend style="font-style: italic;text-align: left">Change Status</legend>
-                                                <button id="approvebutton" type="button" class="btn1 btn1-success" style="width:30%;margin-left:2%">Approve</button>
-                                                <button id="canceledbutton" type="button" class="btn1 btn1-warning" style="width:35%">Canceled</button>
-                                                <button id="rejectbutton" type="button" class="btn1 btn1-danger" style="width:30%">Reject</button>
+                                                <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%" data-toggle="tooltip" data-placement="bottom" title="Correct Evidence or Real transfer money" type="button">Approve</button>
+                                                <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%" data-toggle="tooltip" data-placement="bottom" title="Fault Evidence or money not come">Canceled</button>
+                                                <button id="refundbutton" class="btn1 btn1-danger" style="width:30%" data-toggle="tooltip" data-placement="bottom" title="Have a problem ex.Full Room , Money Transfer Problem">Refund Needed</button>
                                                 <br><br>
-                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , Money Transfer Problem </legend>
-                                                <button id="refundbutton" type="button" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
-                                                <br><br>
+                                                <!--                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , Money Transfer Problem </legend>
+                                                                                                <button id="refundbutton" type="button" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
+                                                                                                <br><br>-->
                                             </div>
                                         </div>
                                     </div>

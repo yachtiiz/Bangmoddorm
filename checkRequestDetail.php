@@ -84,7 +84,7 @@ if (isset($_GET["confirmID"]) && is_numeric($_GET["confirmID"])) {
     <div class="col-md-12">
     <div class="col-md-4 pull-left">
         <select id="dorm_rate" name="dorm_rate" class="form-control" style="width: 80%">
-            <option value="default">Chose Dormitory Rate</option>
+            <option value="default">Chose Dormitory Rating</option>
             <option value="1">1 Star</option>
             <option value="2">2 Star</option>
             <option value="3">3 Star</option>

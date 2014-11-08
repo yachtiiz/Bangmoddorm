@@ -18,8 +18,8 @@ function getUserType() {
 
         <!-- JS -->
         <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.js"></script>
         <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>
         <script type="text/javascript" src="js/jquery.roundabout.js"></script>
         <script type="text/javascript" src="js/jquery.easing.js"></script>
         <script type="text/javascript" src="js/jquery.nivo.slider.js"></script>
@@ -162,7 +162,7 @@ function getUserType() {
                                                 <li><h5>Admin</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
 <!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span></a></li>-->
-                                                <li role="presentation"><a href="index.php?chose_page=adminsystem">Admin Page</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=adminsystem">Administrator Page</a></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkRequestDorm">Check Request Dormitory</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkDormitory">Check Dormitory Information</a></li>

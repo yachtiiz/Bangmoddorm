@@ -220,7 +220,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                         <div class="col-md-12" style="margin-left: 20px">
                                             <br>
                                             <?php if ($book_row["booking_status"] === "Checking") { ?><h4 style="font-style: italic;color: #0480be; text-align: center">Waiting for Owner to check your evidence</h4> <?php } ?>
-                                            <?php if ($book_row["booking_status"] === "Approve") { ?><h4 style="font-style: italic;color: #33cc00; text-align: center">Your Evidence is Correct.</h4> <?php } ?>
+                                            <?php if ($book_row["booking_status"] === "Approve") { ?><h4 style="font-style: italic;color: #33cc00; text-align: center">Your Evidence is Correct. When you contract with Dormitory receptionist you can tell booking id for your room.</h4> <?php } ?>
 
                                         </div>
                                     </div>
@@ -296,11 +296,13 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                 <br />
                                 <br />
                                 <br />
+                                <?php if($book_row["booking_status"] === "Waiting") { ?>
                                 <div class ="span10" style="margin-top: 50px">
                                     <h3><span>You Should transfer money to Dormitory before <?php echo date("r", strtotime("+1 day", strtotime(date("r")))); ?> 
                                             <br>If you don't go to make contract the System will recognize
                                             <br>And If it already 3 times you will be a blacklist  </span></h3>
                                 </div>
+                                <?php } ?>
                             </div>
                             <div class="span3" style="border: solid black 2px;text-align: center;margin-left:70px">
                                 <br>
