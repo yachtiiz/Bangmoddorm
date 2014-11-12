@@ -314,6 +314,9 @@ function showDormBook($dormID) {
             case "Refund Needed":
                 $color = "red";
                 break;
+            case "Already Refunded":
+                $color = "#00cc33";
+                break;
         }
 
         echo '<tr>';
@@ -406,6 +409,9 @@ function getBookingDorm($page, $order_by, $dormID) {
             case "Refund Needed":
                 $color = "red";
                 break;
+            case "Already Refunded":
+                $color = "#00cc33";
+                break;
         }
 
         echo '<tr>';
@@ -415,7 +421,7 @@ function getBookingDorm($page, $order_by, $dormID) {
         echo '<td>' . $row["date"] . '</td>';
         echo '<td>' . $row["expire_date"] . '</td>';
         echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
-        echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="'. $row["bank_name"] .'" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+        echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-transferamount="' . number_format($row["transfer_amount"]) . '" data-bankname="' . $row["bank_name"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
         echo '</tr> ';
     }
     if (mysqli_num_rows($result) != 8 && mysqli_num_rows($result) != 0) {
@@ -658,6 +664,9 @@ function searchingBook($query) {
                 case "Refund Needed":
                     $color = "red";
                     break;
+                case "Already Refunded":
+                    $color = "#00cc33";
+                    break;
             }
 
             echo '<tr>';
@@ -667,7 +676,7 @@ function searchingBook($query) {
             echo '<td>' . $row["date"] . '</td>';
             echo '<td>' . $row["expire_date"] . '</td>';
             echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
-            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="'. $row["bank_name"] .'" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="' . $row["bank_name"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transferamount="' . number_format($row["transfer_amount"]) . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
             echo '</tr> ';
         }
     } else {
@@ -778,6 +787,9 @@ function getMembook($member_id, $page) {
                 case "Refund Needed":
                     $color = "red";
                     break;
+                case "Already Refunded":
+                    $color = "#00cc33";
+                    break;
             }
             echo '<tr>';
             echo '<td><p style = "margin-left:20px">' . $book_row["bookingID"] . '</p></td>';
@@ -857,7 +869,7 @@ function change_booking($bookID, $status) {
 
     require 'connection.php';
     $noti = "";
-    if ($status === "Approve" || $status === "Reject" || $status === "Refund Needed") {
+    if ($status === "Approve" || $status === "Reject" || $status === "Refund Needed" || $status === "Already Refunded") {
         $noti = ", member_noti = 1";
     }
     $query = "update Booking set booking_status = '$status' $noti where bookingID = $bookID";
@@ -912,6 +924,9 @@ function searchingMemberBook($query) {
                     break;
                 case "Refund Needed":
                     $color = "red";
+                    break;
+                case "Already Refunded":
+                    $color = "#00cc33";
                     break;
             }
             echo '<tr>';
@@ -983,7 +998,7 @@ function getAllDorm($page, $order_by) {
         while ($row = mysqli_fetch_array($result)) {
 
             $color = "red";
-            if ($row["status"] == "Active") {
+            if ($row["status"] == "Showing") {
                 $color = "#00cc33";
             }
 
@@ -1022,17 +1037,17 @@ function searchDormitories($query) {
         while ($row = mysqli_fetch_array($result)) {
 
             $color = "red";
-            if ($row["status"] == "Active") {
+            if ($row["status"] == "Showing") {
                 $color = "#00cc33";
             }
 
             echo "<tr>";
             echo '<td style="text-align: center">' . $row["dormID"] . '</td>';
             echo '<td>' . $row["dormName"] . '</td>';
-            echo '<td>' . $row["firstName"] . " " . $row["lastName"] . '</td>';
+            echo '<td>' . $row["firstName"] . $row["lastName"] . '</td>';
             echo '<td>' . $row["type"] . '</td>';
             echo '<td style="color:' . $color . '">' . $row["status"] . '</td>';
-            echo '<td><a href="index.php?chose_page=checkDormDetail&getdorm=' . $row["dormID"] . '"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=checkDormDetail&getdorm=' . $row["dormID"] . '"><button type="button" class="btn1 btn1-primary pull-right " style="width:100%">View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -1176,7 +1191,7 @@ function searchingMembers($query) {
             echo '<td style="color:' . $color . '">' . $row["type"] . '</td>';
             echo '<td style="color:' . $bl_color . '">' . $row["status"] . '</td>';
             echo '<td>' . $row["tel"] . '</td>';
-            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn btn-success book-now">Detail</button></a></td>';
+            echo '<td><a href="index.php?chose_page=memberInfo&memberID=' . $row["memberID"] . '"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
             echo '</tr>';
         }
     } else {
@@ -1346,9 +1361,9 @@ function getAllNotification($cur_page, $order_by, $status_value) {
     $limit_start = ((8 * $cur_page) - 8);
     $memberID = $_SESSION["memberID"];
     if ($status_value === "") {
-        $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by $order_by limit $limit_start,8";
+        $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) order by $order_by limit $limit_start,8";
     } else {
-        $query = "select * from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) and booking_status = '$status_value' limit $limit_start,8";
+        $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) and booking_status = '$status_value' limit $limit_start,8";
     }
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
@@ -1375,6 +1390,9 @@ function getAllNotification($cur_page, $order_by, $status_value) {
                 case "Refund Needed":
                     $color = "red";
                     break;
+                case "Already Refunded":
+                    $color = "#00cc33";
+                    break;
             }
             echo '<tr ' . $unread . '>';
             echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
@@ -1382,7 +1400,7 @@ function getAllNotification($cur_page, $order_by, $status_value) {
             echo '<td>' . $row["date"] . '</td>';
             echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
             echo '<td>' . $row["dormTel"] . '</td>';
-            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="'. $row["bank_name"] .'" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+            echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-transferamount="' . number_format($row["transfer_amount"]) . '" data-floor="' . $row["floor_no"] . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="' . $row["bank_name"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transferamount="' . $row["transfer_amount"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
             echo '</tr>';
             if ($row["owner_noti"] == "1") {
                 if (!readAble($row["bookingID"])) {
@@ -1424,6 +1442,10 @@ if (isset($_GET["owner_noti_curpage"]) && is_numeric($_GET["owner_noti_curpage"]
     $cur_page = $_GET["owner_noti_curpage"];
     $memberID = $_SESSION["memberID"];
     $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
+    if (isset($_GET["search_ownernoti"])) {
+        $status = $_GET["search_ownernoti"];
+        $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and b.booking_status = '$status' and (owner_noti = 1 or owner_noti = 2)";
+    }
     $href = "callback.php?owner_noti_curpage=";
     displayPage($cur_page, $query, $href);
 }
@@ -1669,48 +1691,61 @@ if (isset($_GET["bank_show_status"]) && isset($_GET["bank_id"])) {
 
 //Member Notification
 
-function getMemberNotification($page,$order_by) {
+function getMemberNotification($page, $order_by) {
     require 'connection.php';
     $memberID = $_SESSION["memberID"];
     $limit_start = ((8 * $page) - 8);
-    $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by $order_by limit $limit_start , 8";
+    $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2 or booking_status = 'Waiting') order by $order_by limit $limit_start , 8";
     $result = mysqli_query($con, $query);
     if (mysqli_num_rows($result) !== 0) {
         while ($row = mysqli_fetch_array($result)) {
-            $unread = "";
-            if ($row["member_noti"] == "1") {
-                $unread = 'style="background-color:#f9f9f9"';
-            }
-            $color = "black";
+            if ($row["booking_status"] === "Waiting") {
+                echo '<tr style="background-color:#f9f9f9">';
+                echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
+                echo '<td>' . $row["date"] . '</td>';
+                echo '<td>' . $row["expire_date"] . '</td>';
+                echo '<td>This Booking is wating to confirm evidance</td>';
+                echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-success">Click to confirm</a></td>';
+                echo '</tr>';
+            } else {
+                $unread = "";
+                if ($row["member_noti"] == "1") {
+                    $unread = 'style="background-color:#f9f9f9"';
+                }
+                $color = "black";
 
-            switch ($row["booking_status"]) {
-                case "Canceled":
-                    $color = "red";
-                    break;
-                case "Reject":
-                    $color = "red";
-                    break;
-                case "Checking":
-                    $color = "#0480be";
-                    break;
-                case "Approve":
-                    $color = "#00cc33";
-                    break;
-                case "Refund Needed":
-                    $color = "red";
-                    break;
-            }
-            echo '<tr ' . $unread . '>';
-            echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
-            echo '<td>' . $row["date"] . '</td>';
-            echo '<td>' . $row["expire_date"] . '</td>';
-            echo '<td>This Booking change status to <span style="color:' . $color . '">' . $row["booking_status"] . '</span></td>';
-            echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
-            echo '</tr>';
-            if ($row["member_noti"] == "1") {
-                if (!readAble($row["bookingID"])) {
-                    echo '<script>alert("something error")<script>';
-                    break;
+                switch ($row["booking_status"]) {
+                    case "Canceled":
+                        $color = "red";
+                        break;
+                    case "Reject":
+                        $color = "red";
+                        break;
+                    case "Checking":
+                        $color = "#0480be";
+                        break;
+                    case "Approve":
+                        $color = "#00cc33";
+                        break;
+                    case "Refund Needed":
+                        $color = "red";
+                        break;
+                    case "Already Refunded":
+                        $color = "#00cc33";
+                        break;
+                }
+                echo '<tr ' . $unread . '>';
+                echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
+                echo '<td>' . $row["date"] . '</td>';
+                echo '<td>' . $row["expire_date"] . '</td>';
+                echo '<td>This Booking change status to <span style="color:' . $color . '">' . $row["booking_status"] . '</span></td>';
+                echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
+                echo '</tr>';
+                if ($row["member_noti"] == "1") {
+                    if (!readAble($row["bookingID"])) {
+                        echo '<script>alert("something error")<script>';
+                        break;
+                    }
                 }
             }
         }
@@ -1735,7 +1770,7 @@ function getMemberNotification($page,$order_by) {
 }
 
 if (isset($_GET["membernoti_orderby"]) && isset($_GET["membernoti_curpage"])) {
-    
+
     $order_by = filter_var($_GET["membernoti_orderby"], FILTER_SANITIZE_STRING);
     getMemberNotification($_GET["membernoti_curpage"], $order_by);
 }
@@ -1743,9 +1778,40 @@ if (isset($_GET["membernoti_orderby"]) && isset($_GET["membernoti_curpage"])) {
 if (isset($_GET["member_noti_curpage"]) && is_numeric($_GET["member_noti_curpage"])) {
     $cur_page = $_GET["member_noti_curpage"];
     $memberID = $_SESSION["memberID"];
-    $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2)";
+    $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2 or booking_status = 'Waiting')";
     $href = "callback.php?member_noti_curpage=";
     displayPage($cur_page, $query, $href);
+}
+
+//Forgot Password
+
+function sendEmail($email) {
+
+    require 'connection.php';
+
+    $query = "select username,memberID,email,password from Members";
+    $result = mysqli_query($con, $query);
+    $value = 0;
+    while ($row = mysqli_fetch_array($result)) {
+        if ($email === $row['email']) {
+            $value = 1;
+            $code = md5($row["username"]);
+            $link = "http://bangmoddorm.backeyefinder.in.th/index.php?chose_page=resetPassword&memberID=" . $row["memberID"] . "&code=" . $code;
+            $msg = "Click here to reset your password : " . $link;
+            if (mail($email, "Forgot Password from Bangmoddorm", $msg)) {
+                echo 'Forgot Password<script>alert("Send Email Success")</script>';
+                break;
+            }
+        }
+    }
+    if ($value === 0) {
+        echo 'Forgot Password<script>alert("Send Email Failed or Your email has not been in the system.")</script>';
+    }
+}
+
+if (isset($_GET["forgot_email"])) {
+    $email = filter_var($_GET["forgot_email"], FILTER_SANITIZE_EMAIL);
+    sendEmail($email);
 }
 ?>
 

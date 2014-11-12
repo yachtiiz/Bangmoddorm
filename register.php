@@ -35,6 +35,7 @@ function insertIntoDatabase($checkPic) {
     $password = filter_var($_POST["password"], FILTER_SANITIZE_STRING);
     $firstname = filter_var($_POST["firstname"], FILTER_SANITIZE_STRING);
     $lastname = filter_var($_POST["lastname"], FILTER_SANITIZE_STRING);
+    $gender = filter_var($_POST["gender"], FILTER_SANITIZE_STRING);
     $idcard = filter_var($_POST["idcard"], FILTER_SANITIZE_STRING);
     $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
     $tel = filter_var($_POST["tel"], FILTER_SANITIZE_STRING);
@@ -44,10 +45,10 @@ function insertIntoDatabase($checkPic) {
     $province = filter_var($_POST["province"], FILTER_SANITIZE_STRING);
     $zipcode = filter_var($_POST["zipcode"], FILTER_SANITIZE_STRING);
     $country = filter_var($_POST["country"], FILTER_SANITIZE_STRING);
-    $memberURL = filter_var($_POST["memberURL"], FILTER_SANITIZE_STRING);
-    $displayname = filter_var($_POST["displayname"], FILTER_SANITIZE_STRING);
-    $facebook = filter_var($_POST["fbname"], FILTER_SANITIZE_STRING);
-    $about = filter_var($_POST["about"], FILTER_SANITIZE_STRING);
+//    $memberURL = filter_var($_POST["memberURL"], FILTER_SANITIZE_STRING);
+//    $displayname = filter_var($_POST["displayname"], FILTER_SANITIZE_STRING);
+//    $facebook = filter_var($_POST["fbname"], FILTER_SANITIZE_STRING);
+//    $about = filter_var($_POST["about"], FILTER_SANITIZE_STRING);
     if ($checkPic) {
         $pic_path = "images/picture_profile/user_" . $username;
     } else {
@@ -64,9 +65,9 @@ function insertIntoDatabase($checkPic) {
     $password_md5 = md5($password);
 
 
-    $query = "INSERT INTO `Members` (`username`, `password`, `firstName`, `lastName`, `idCard`, `email`, `tel`, `type`, `address`, `city`, `province`, `zipcode`, `country`, `regisDate`, `status`, `pic_path`, `memberUrl`, `displayName`, `facebook`, `about`)
+    $query = "INSERT INTO `Members` (`username`, `password`, `firstName`, `lastName`, `gender` , `idCard`, `email`, `tel`, `type`, `address`, `city`, `province`, `zipcode`, `country`, `regisDate`, `status`, `pic_path`)
 VALUES
-	('$username', '$password_md5', '$firstname', '$lastname', '$idcard', '$email', '$tel', '$type', '$address', '$city', '$province', '$zipcode', '$country', NOW(), 'Normal', '$pic_path', '$memberURL', '$displayname', '$facebook', '$about'); ";
+	('$username', '$password_md5', '$firstname', '$lastname', '$gender' , '$idcard', '$email', '$tel', '$type', '$address', '$city', '$province', '$zipcode', '$country', NOW(), 'Normal', '$pic_path'); ";
 
     if (!mysqli_query($con, $query)) {
         return false;
@@ -75,21 +76,24 @@ VALUES
     }
 }
 
-if (isset($_POST["confirm"])) {
-
-    if (checkUsername($_POST["username"])) {
-        $checkPic = false;
-        if (isset($_FILES["pic"])) {
-            upPicture("pic", $_POST["username"]);
-            $checkPic = true;
-        }
-        if (insertIntoDatabase($checkPic)) {
-            echo '<script>alert("Register Complete");window.location = "index.php";</script>';
-        } else {
-            echo '<script>alert("Register Failed")</script>';
-        }
+if (isset($_POST["username"])) {
+    if ($_POST["type"] === "defualt" || $_POST["gender"] === "default") {
+        echo '<script>alert("Please select type");window.location = "index.php?chose_page=register";</script>';
     } else {
-        echo '<script>alert("Already username")</script>';
+        if (checkUsername($_POST["username"])) {
+            $checkPic = false;
+            if (isset($_FILES["pic"])) {
+                upPicture("pic", $_POST["username"]);
+                $checkPic = true;
+            }
+            if (insertIntoDatabase($checkPic)) {
+                echo '<script>alert("Register Complete");window.location = "index.php";</script>';
+            } else {
+                echo '<script>alert("Register Failed")</script>';
+            }
+        } else {
+            echo '<script>alert("Already username")</script>';
+        }
     }
 }
 ?>
@@ -100,13 +104,20 @@ if (isset($_POST["confirm"])) {
 
     function function3() {
         type = $("#type").val();
-
+        sex = $("#gender").val();
         if (type === "default") {
             alert("Please Select Type");
             $("#type").focus().freeze();
         }
+        if (sex === "default") {
+            alert("Please Select Gender");
+            $("#gender").focus().freeze();
+        }
+        if (type !== "default" && sex !== "default") {
+            $("#form").submit();
+        }
 
-        $("#form").submit();
+
     }
 
 
@@ -160,21 +171,21 @@ if (isset($_POST["confirm"])) {
                     required: true,
                     checkSpecial: true
                 },
-                about: {
-                    required: true,
-                    checkSpecial: true
-                },
-                displayname: {
-                    required: true,
-                    checkSpecial: true
-                },
-                memberURL: {
-                    required: true,
-                    checkSpecial: true
-                },
-                fbname: {
-                    checkSpecial: true
-                }
+//                about: {
+//                    required: true,
+//                    checkSpecial: true
+//                },
+//                displayname: {
+//                    required: true,
+//                    checkSpecial: true
+//                },
+//                memberURL: {
+//                    required: true,
+//                    checkSpecial: true
+//                },
+//                fbname: {
+//                    checkSpecial: true
+//                }
 
             }
 
@@ -255,8 +266,11 @@ if (isset($_POST["confirm"])) {
     <div class="row">
         <div class="span9" style="margin-bottom:100px">
             <br />
-            <form id="form" action="" method="post" enctype="multipart/form-data">
+            <form id="form" action="" method="POST" enctype="multipart/form-data">
                 <div class="row">
+                    <div class="span9" >
+                        <legend style="text-align: center"><span>Register</span></legend>
+                    </div>
                     <div class="span9">
                         <legend><span>Your</span> Username And Password</legend>
                     </div>
@@ -270,7 +284,7 @@ if (isset($_POST["confirm"])) {
                     <div class="span3">
                         <select id="type" name="type" class="form-control">
                             <option value="default"/>Type
-                            <option selected value="Member"/>Member
+                            <option value="Member"/>Member
                             <option value="Owner"/>Owner
                         </select>
                     </div>
@@ -279,13 +293,7 @@ if (isset($_POST["confirm"])) {
                     <div class="span9">
                         <legend><span>Your</span> name</legend>
                     </div>
-                    <div class="span3">
-                        <select class="form-control">
-                            <option />Mr.
-                            <option />Mrs.
-                            <option />Miss.
-                        </select>
-                    </div>
+
 
                     <div class="span3">
                         <label>
@@ -297,6 +305,13 @@ if (isset($_POST["confirm"])) {
                         <label>
                             <input id="lastname" name="lastname" type="text" class="form-control" placeholder="Last Name" />
                         </label>
+                    </div>
+                    <div class="span3">
+                        <select id="gender" name="gender" class="form-control">
+                            <option value="default">Gender
+                            <option value="Male">Male
+                            <option value="Female">Female
+                        </select>
                     </div>
                 </div>
                 <br />
@@ -341,26 +356,26 @@ if (isset($_POST["confirm"])) {
 
                 </div>
                 <br />
-                <div class="row">
-                    <div class="span9">
-                        <legend><span>Your</span> Information</legend>
-                    </div>
-
-                    <div class="span3">
-                        <textarea id="about" name="about" class="form-control" rows="4" placeholder="About You"></textarea>
-                    </div>				
-
-                    <div class="span3">
-                        <input id="displayname" name="displayname" type="text" class="form-control" placeholder="Display Name"/>
-                        <br>
-                        <input id="fbname" name="fbname" type="text" class="form-control" placeholder="Your Facebook"/>
-                    </div>
-
-                    <div class="span3">
-                        <input id="memberURL" name="memberURL" type="text" class="form-control" placeholder="Your Member URL"/>
-                        <br>
-                    </div>	
-                </div>
+                <!--                <div class="row">
+                                    <div class="span9">
+                                        <legend><span>Your</span> Information</legend>
+                                    </div>
+                
+                                    <div class="span3">
+                                        <textarea id="about" name="about" class="form-control" rows="4" placeholder="About You"></textarea>
+                                    </div>				
+                
+                                    <div class="span3">
+                                        <input id="displayname" name="displayname" type="text" class="form-control" placeholder="Display Name"/>
+                                        <br>
+                                        <input id="memberURL" name="memberURL" type="text" class="form-control" placeholder="Your Member URL"/>
+                                    </div>
+                
+                                    <div class="span3">
+                                        <input id="fbname" name="fbname" type="text" class="form-control" placeholder="Your Facebook"/>
+                                        <br>
+                                    </div>	
+                                </div>-->
                 <div class="row">
                     <div class="span9">
                         <legend><span>Your</span> Picture</legend>
@@ -372,17 +387,17 @@ if (isset($_POST["confirm"])) {
                         <input id="pic" name="pic" type="file" class="form-control"><br>
                         <p id="response"></p>
                     </div>
-                    <div class="span6" style="margin-top:100px">
-                        <button id="confirm" type="submit" name="confirm" class="btn1 btn1-success pull-right" style="width: 40%">Submit</button>
+                    <div class="span6" style="margin-top:13%">
+                        <button id="confirm" type="button" name="confirm" onclick="function3()" class="btn1 btn1-success pull-right" style="width: 40%">Submit</button>
                     </div>
                 </div>
             </form>
         </div>
         <div class="span3">
             <br /><br />
-            <h3><span>Owner</span> Hint</h3>
+            <h3><span> Type </span>  Hint</h3>
             <p>
-                If you want to be a owner of Dormitory you can chose owner type and add dormitory to be owner but you need to send a real evidence.
+                Choose Member if you want to book a room. Choose Owner if you want to add your own dormitory into our web site but you need to send us your ownership document to be reviewed.
                 <br />
                 <br /><br />
             </p>

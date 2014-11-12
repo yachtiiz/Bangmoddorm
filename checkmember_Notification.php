@@ -69,44 +69,65 @@
                                     function getAllNotification() {
                                         require 'connection.php';
                                         $memberID = $_SESSION["memberID"];
-                                        $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2) order by date desc limit 0 , 8";
+                                        $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2 or booking_status = 'Waiting' or booking_status = 'Checking') order by date desc limit 0 , 8";
                                         $result = mysqli_query($con, $query);
                                         if (mysqli_num_rows($result) !== 0) {
                                             while ($row = mysqli_fetch_array($result)) {
-                                                $unread = "";
-                                                if ($row["member_noti"] == "1") {
-                                                    $unread = 'style="background-color:#f9f9f9"';
-                                                }
-                                                $color = "black";
+                                                if ($row["booking_status"] === "Waiting") {
+                                                    echo '<tr style="background-color:#f9f9f9">';
+                                                    echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
+                                                    echo '<td>' . $row["date"] . '</td>';
+                                                    echo '<td>' . $row["expire_date"] . '</td>';
+                                                    echo '<td>This booking is wating to confirm evidance</td>';
+                                                    echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-success">Click to confirm</a></td>';
+                                                    echo '</tr>';
+                                                } else if ($row["booking_status"] === "Checking") {
+                                                    echo '<tr style="background-color:#f9f9f9">';
+                                                    echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
+                                                    echo '<td>' . $row["date"] . '</td>';
+                                                    echo '<td>' . $row["expire_date"] . '</td>';
+                                                    echo '<td>This booking is wating owner to check evidance</td>';
+                                                    echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
+                                                    echo '</tr>';
+                                                } else {
+                                                    $unread = "";
+                                                    if ($row["member_noti"] == "1") {
+                                                        $unread = 'style="background-color:#f9f9f9"';
+                                                    }
+                                                    $color = "black";
 
-                                                switch ($row["booking_status"]) {
-                                                    case "Canceled":
-                                                        $color = "red";
-                                                        break;
-                                                    case "Reject":
-                                                        $color = "red";
-                                                        break;
-                                                    case "Checking":
-                                                        $color = "#0480be";
-                                                        break;
-                                                    case "Approve":
-                                                        $color = "#00cc33";
-                                                        break;
-                                                    case "Refund Needed":
-                                                        $color = "red";
-                                                        break;
-                                                }
-                                                echo '<tr ' . $unread . '>';
-                                                echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
-                                                echo '<td>' . $row["date"] . '</td>';
-                                                echo '<td>' . $row["expire_date"] . '</td>';
-                                                echo '<td>This Booking change status to <span style="color:' . $color . '">' . $row["booking_status"] . '</span></td>';
-                                                echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
-                                                echo '</tr>';
-                                                if ($row["member_noti"] == "1") {
-                                                    if (!readAble($row["bookingID"])) {
-                                                        echo '<script>alert("something error")<script>';
-                                                        break;
+                                                    switch ($row["booking_status"]) {
+                                                        case "Canceled":
+                                                            $color = "red";
+                                                            break;
+                                                        case "Reject":
+                                                            $color = "red";
+                                                            break;
+                                                        case "Checking":
+                                                            $color = "#0480be";
+                                                            break;
+                                                        case "Approve":
+                                                            $color = "#00cc33";
+                                                            break;
+                                                        case "Refund Needed":
+                                                            $color = "red";
+                                                            break;
+                                                        case "Already Refunded":
+                                                            $color = "#00cc33";
+                                                            break;
+                                                    }
+                                                    echo '<tr ' . $unread . '>';
+                                                    echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
+                                                    echo '<td>' . $row["date"] . '</td>';
+                                                    echo '<td>' . $row["expire_date"] . '</td>';
+                                                    echo '<td>This Booking change status to <span style="color:' . $color . '">' . $row["booking_status"] . '</span></td>';
+                                                    echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
+                                                    echo '</tr>';
+                                                    if ($row["member_noti"] == "1") {
+                                                        if (!readAble($row["bookingID"])) {
+                                                            echo '<script>alert("something error")<script>';
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -179,7 +200,7 @@
 
                                     $(".member_pagi li a").live("click", function() {
                                         event.preventDefault();
-                                        url = "callback.php?ownernoti_curpage=" + $(this).attr("value") + "&ownernoti_orderby=" + $("#noti_orderby").val() + $("#search_status").val() === "default" ? "" : ("&search_ownernoti=" + $("#search_status").val());
+                                        url = "callback.php?membernoti_curpage=" + $(this).attr("value") + "&membernoti_orderby=" + $("#sort_by").val();
                                         cur_page = $(this).attr("href");
                                         $(".member_pagi").load(cur_page);
                                         $("#noti_result").animate({
@@ -254,7 +275,7 @@
                                 <?php
                                 $cur_page = 1;
                                 $memberID = $_SESSION["memberID"];
-                                $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2)";
+                                $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or member_noti = 2 or booking_status = 'Waiting')";
                                 $href = "callback.php?member_noti_curpage=";
                                 displayPage($cur_page, $query, $href);
                                 ?>

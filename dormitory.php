@@ -6,9 +6,6 @@ $query = "select * from Dormitories where status = 'Showing'";
 
 $dorm_result = mysqli_query($con, $query);
 ?>
-<div class="row">
-
-    <div class="col-md-12">	
         <br />
         <legend><h1 style="text-align: center; text-shadow: 3px 3px #cccccc"><span style="text-shadow: 3px 3px #eee">Dormitory</span> MAP</h1></legend>
         <div class="col-md-12" style="padding: 0">
@@ -25,12 +22,12 @@ $dorm_result = mysqli_query($con, $query);
             $room_result = mysqli_query($con, $room_query);
             $room_row = mysqli_fetch_array($room_result);
             ?>
-            <div class="col-md-12 thumbnail" style="border:solid 1px black;height: 250px;padding:20px;padding-left:0px;background-color: #eee">        
-                <div class="col-md-6">
-                    <img class="img-rounded" src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" style="width:350px;height: 200px;" alt="...">
+            <div class="col-md-12 thumbnail" style=";border:solid 1px black;max-height: 100%;padding:2%;background-color: #eee">        
+                <div class="col-md-6" style="text-align: center">
+                    <img src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" style="width:90%;height: 30%;">
                 </div>
                 <div class="col-md-6">
-                    <legend><h3 style="margin-top:0px"><span><?php echo $dorm_row["dormName"] ?><span class="pull-right" style="color: gold">
+                    <legend><h3 style="margin-top:0%"><span><?php echo $dorm_row["dormName"] ?><span class="pull-right" style="color: gold">
                                     <?php
                                     for ($i = 1; $i <= $dorm_row["dormitory_rate"]; $i++) {
                                         echo '&#9733;';
@@ -53,13 +50,11 @@ $dorm_result = mysqli_query($con, $query);
                                                 
                                             </ul>-->
 
-                        <a style="margin-top:20px;" class="btn1 btn1-primary" href="index.php?chose_page=dormdetail&dormID=<?php echo $dorm_row["dormID"]; ?>">View Details</a>
+                        <a style="margin-top:20px;" class="btn1 btn1-primary" target="_blank" href="index.php?chose_page=dormdetail&dormID=<?php echo $dorm_row["dormID"]; ?>">View Details</a>
                     </p>
                 </div>       
             </div>
         <?php } ?>
-    </div>
-</div>
 <div class="row">
     <div class="span12 what_people_say">
         <div id="quotes">
@@ -82,31 +77,3 @@ $dorm_result = mysqli_query($con, $query);
 </div>
 
 </div>
-
-
-<!--            <div class="col-md-4" style="margin-top: 40px">
-                <legend><span><?php echo $dorm_row["dormName"] ?></span></legend>
-                <a href="book-start.html"><img style="width: 405px;height: 250px" src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" alt="" /></a>
-                <ul class="thumbnails hotel-options" style="margin-left:0px">
-                    <li class="no_margin_left" style="width:50px"><a class="btn btn-large btn-info" href="book-start.html"><img src="css/images/icons/Tv-black.png" alt="" width="24" /></a></li>
-                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/images/icons/Shower.png" alt="" width="24" /></a></li>
-                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/wifi3.png" alt="" width="24" /></a></li>
-                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/restaurant7.png" alt="" width="24" /></a></li>
-                    <li style="width:50px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/room4.png" alt="" width="24" /></a></li>
-                    <li style="width:50px;margin-left:0px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/room4.png" alt="" width="24" /></a></li>
-                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/bed6.png" alt="" width="24" /></a></li>
-                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/hotel4.png" alt="" width="24" /></a></li>
-                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/hotel24.png" alt="" width="24" /></a></li>
-                    <li style="width:50px;margin-top:5px"><a class="btn btn-large btn-info" href=""><img src="css/flat/png/laptop12.png" width="24" /></a></li>
-                </ul>
-                <br>
-                <p>
-
-                    DORMITORY TYPE : <?php echo $dorm_row["type"]; ?><br>
-                    DISTANCE FROM UNIVERSITY : <?php echo $dorm_row["disFromUni"]; ?><br>
-                    PRICE RATE : 2000 - 5000 BAHT/MONTH<br>
-                </p>
-                <br>
-                <a style="margin-left:70px;width: 50%" class="btn book-now2" href="index.php?chose_page=dormdetail&dormID=<?php echo $dorm_row["dormID"]; ?>">View Details</a>
-
-            </div>		-->

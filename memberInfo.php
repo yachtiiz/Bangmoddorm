@@ -4,60 +4,22 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
     require 'connection.php';
     $memberID = $_GET["memberID"];
     $query = "select * from Members where memberID = $memberID";
-
     $result = mysqli_query($con, $query);
     $row = mysqli_fetch_array($result);
+    
+    $query1 = "select count(memberID) as All_booking from Booking where memberID = $memberID";
+    $result1 = mysqli_query($con, $query1);
+    $row1 = mysqli_fetch_array($result1);
+    
+    $reject_query = "select count(memberID) as Reject_booking from Booking where memberID = $memberID and booking_status = 'Reject' ";
+    $reject_result = mysqli_query($con, $reject_query);
+    $reject_row = mysqli_fetch_array($reject_result);
+    
+    $comment_query = "select count(memberID) as All_comment from Comment where memberID = $memberID";
+    $comment_result = mysqli_query($con, $comment_query);
+    $comment_row = mysqli_fetch_array($comment_result);
     ?>
-    <!--        <div class="col-md-3" style="margin-left:0px">
-                <h4>Username <span class="pull-right">:</span></h4>
-                <h4>First name <span class="pull-right">: </span> </h4>
-                <h4>Last name <span class="pull-right">: </span> </h4>
-                <h4 style="margin-top: 10px">Identify Card Number <span class="pull-right">: </span> </h4>
-                <h4 style="margin-top: 15px">Email <span class="pull-right">: </span> </h4>
-                <h4 style="margin-top: 15px">Telephone <span class="pull-right">: </span> </h4>
-                <h4>Type <span class="pull-right">: </span> </h4>
-                <h4>Address <span class="pull-right">: </span> </h4>
-                <h4>City <span class="pull-right">: </span> </h4>
-                <h4>Province <span class="pull-right">: </span> </h4>
-                <h4>Zip Code <span class="pull-right">: </span> </h4>
-                <h4>Country <span class="pull-right">: </span> </h4>
-                <h4 style="margin-top: 10px">Register Date <span class="pull-right">: </span> </h4>
-                <h4>Last Access Time <span class="pull-right">: </span> </h4>
-                <h4>Status <span class="pull-right">: </span> </h4>
-                <h4>Member URL <span class="pull-right">: </span> </h4>
-                <h4>Display Name <span class="pull-right">: </span> </h4>
-                <h4 style="margin-top: 15px">Facebook <span class="pull-right">: </span> </h4>
-                <h4>About <span class="pull-right">: </span> </h4>
-            </div>
-            <div class="col-md-3" style="margin-left:0px">
-                <h4><span class="pull-right"><?php echo $row["username"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["firstName"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["lastName"]; ?></span></h4><br><br>
-                <h4><span class="pull-right"><?php echo $row["idCard"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["email"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["tel"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["type"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["address"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["city"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["province"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["zipcode"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["country"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["lastAccTime"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["regisDate"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["status"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["memberUrl"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["displayName"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["facebook"]; ?></span></h4><br>
-                <h4><span class="pull-right"><?php echo $row["about"]; ?></span></h4><br>
-            </div>
-
-
-            <div class="col-md-5" style="margin-left: 0px">
-                <h4>Total Booking : <span>30 Recipes</span></h4>
-                <h4>Total Reject Booking :<span> 20 Recipes</span></h4>
-                <h4>Total Comment : <span> 12 Comments</span></h4>
-
-            </div>-->
+    
     <div class="col-md-12" style="">
         <legend><h3 style="text-align: center"><span>Member </span>Information</h3></legend>
         <img src="<?php echo $row["pic_path"] ?>" class="img-thumbnail" style="width: 40%;height: 40%;margin-left: 30%;margin-bottom: 20px"><br>
@@ -216,7 +178,7 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
                             <h4><span>Total Booking : </span></h4>
                         </td>
                         <td>
-                            3 Booking
+                            <?php echo $row1["All_booking"]; ?> Booking
                         </td>
                     </tr>
                     <tr style=" border-bottom: #cccccc solid 1px"> 
@@ -224,7 +186,7 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
                             <h4><span>Total Reject Booking : </span></h4>
                         </td>
                         <td>
-                            1 Booking
+                            <?php echo $reject_row["Reject_booking"]; ?> Booking
                         </td>
                     </tr>
                     <tr style=" border-bottom: #cccccc solid 1px"> 
@@ -232,7 +194,7 @@ if (isset($_GET["memberID"]) && is_numeric($_GET["memberID"])) {
                             <h4><span>Total Comment : </span></h4>
                         </td>
                         <td>
-                            8 Comments
+                            <?php echo $comment_row["All_comment"]; ?> Comments
                         </td>
                     </tr>
                 </tbody>

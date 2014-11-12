@@ -92,7 +92,8 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                 $transfer_time = filter_var($_POST["transfer_time"], FILTER_SANITIZE_STRING);
                                                 $transfer_reference_id = filter_var($_POST["reference_id"], FILTER_SANITIZE_STRING);
                                                 $transfer_bank = filter_var($_POST["transfer_bank"], FILTER_SANITIZE_STRING);
-                                                $query = "update Booking  set owner_noti = 1 , booking_status='Checking' , slip = '$slipImage' , transfer_name = '$transfer_name' , transfer_time = '$transfer_time' , transfer_time = '$transfer_time' , transfer_referenceID = '$transfer_reference_id' , transfer_bank = '$transfer_bank' where bookingID =$bookingID";
+                                                $transfer_amount = filter_var($_POST["transfer_amount"], FILTER_SANITIZE_STRING);
+                                                $query = "update Booking  set owner_noti = 1 , booking_status='Checking' , slip = '$slipImage' , transfer_name = '$transfer_name' , transfer_time = '$transfer_time' , transfer_time = '$transfer_time' , transfer_referenceID = '$transfer_reference_id' , transfer_bank = '$transfer_bank' , transfer_amount = $transfer_amount where bookingID =$bookingID";
                                                 if (mysqli_query($con, $query)) {
                                                     echo '<script>alert("Confirm Evidence Complete")</script>';
                                                     echo '<script>window.location = "index.php?chose_page=membookdetail&bookingID=' . $bookingID . '"</script>';
@@ -138,6 +139,11 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                     <span class="input-group-addon">Transfer Time <span style="color:red">*</span></span>
                                                     <input id="transfer_time" class="form-control" type="datetime-local" name="transfer_time" placeholder="YYYY-MM-DD" required>
                                                 </div>
+                                                <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
+                                                    <span class="input-group-addon">Amount <span style="color:red">*</span></span>
+                                                    <input id="transfer_amount" class="form-control" type="number" name="transfer_amount" required>
+                                                    <span class="input-group-addon">Baht</span>
+                                                </div>
 
                                                 <!--                                                <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
                                                                                                     <span class="input-group-addon">Your Bank Account ID <span style="color:red">*</span></span>
@@ -161,14 +167,16 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                             <h4 style="margin-left:20px">Transfer Name :</h4>
                                             <h4 style="margin-left:20px">Transfer Time :</h4>
                                             <h4 style="margin-left:20px">Transfer Bank :</h4>
+                                            <h4 style="margin-left:20px">Amount :</h4>
                                         </div>
                                         <div class="col-md-7" style="margin-top: 30px">
                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_referenceID"] !== "" ? $book_row["transfer_referenceID"] : " Empty Data" ?></h4>
                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_name"] ?></h4>
                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_time"] ?></h4>
                                             <h4 style="margin-left: 20px"><?php echo $book_row["transfer_bank"] ?></h4>
+                                            <h4 style="margin-left: 20px;color:#33cc00"><?php echo number_format($book_row["transfer_amount"]) ?> Baht</h4>
                                         </div>
-                                        <?php if ($book_row["booking_status"] === "Refund Needed") { ?>
+                                        <?php if ($book_row["booking_status"] === "Refund Needed" || $book_row["booking_status"] === "Already Refunded") { ?>
                                             <div class="col-md-12" style='margin-top:4%'>
                                                 <form action='' method='post'>
                                                     <?php if ($book_row["bank_acc_id"] === NULL) { ?>
@@ -255,6 +263,9 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                         break;
                                     case "Refund Needed":
                                         $color = "red";
+                                        break;
+                                    case "Already Refunded":
+                                        $color = "#00cc33";
                                         break;
                                 }
                                 ?>

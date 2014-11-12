@@ -91,9 +91,12 @@ switch ($page) {
     case "setfloor":
         require_once("setFloor.php");
         break;
+    case "resetPassword":
+        require_once("reset_password.php");
+        break;
     
     default:
-        require_once("main.php");
+        require_once("dormitory.php");
         break;
 }
 /*

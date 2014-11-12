@@ -1,6 +1,20 @@
 
 <?php
 
+function checkBooking($memberID) {
+
+    require 'connection.php';
+
+    $query = "select * from Booking where memberID = $memberID and  (booking_status = 'Waiting' or booking_status = 'Checking')";
+    $result = mysqli_query($con, $query);
+    $row = mysqli_fetch_array($result);
+    if ($row !== NULL) {
+        return 'Already Booking (Booking ID = ' . $row["bookingID"] . ')';
+    } else {
+        return 'PASS';
+    }
+}
+
 function get_room_per_floor($roomID, $dormID) {
 
     require 'connection.php';
@@ -63,12 +77,12 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             <br>
             <div class="row">
                 <div class="span12">
-                    <img  class="img-thumbnail" style="width:100%;height: 80%" src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" alt=""/><br><br>
+                    <img  class="img-thumbnail" style="width:100%;max-height:100%" src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" alt=""/><br><br>
                     <legend><h1><span>Dormitory </span> Picture </h1></legend>
                 </div>
                 <?php while ($dorm_pic_row = mysqli_fetch_array($pic_dorm_result)) { ?>
                     <div class="span3">
-                        <img style="width: 100%;height: 30%;margin-top: 10%"class="img-thumbnail" src="images/dormitory_picture/<?php echo $dorm_pic_row["dormPicPath"] ?>" alt="" />
+                        <img style="width: 100%;max-height: 150px;margin-top: 10%"class="img-thumbnail" src="images/dormitory_picture/<?php echo $dorm_pic_row["dormPicPath"] ?>" alt=""  onmouseover="showtrail('images/dormitory_picture/<?php echo $dorm_pic_row["dormPicPath"] ?>', '',670,500)" onmouseout="hidetrail()"/>
                     </div>		
                 <?php } ?>
                 <div class="span12">
@@ -208,7 +222,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             <tr style="">
                 <td>
                     <h4 style="margin-left:10%"><span style="color:green" class="glyphicon glyphicon-ok-circle"></span>&nbsp; Water Price <small>&nbsp;&nbsp; <?php echo $dorm_row["water_price"] ?>Baht per unit</small></h4>
-                    
+
                 </td>
                 <td>
                     <h4 style="margin-left:10%"><span style="color:green" class="glyphicon glyphicon-ok-circle"></span>&nbsp; Electrical Charge <small>&nbsp;&nbsp; <?php echo $dorm_row["elec_price"] ?> Baht per unit</small></h4> 
@@ -217,7 +231,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             <tr style="">
                 <td>
                     <h4 style="margin-left:10%"><?php echo $fac_dorm_row["wifi"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; WIFI &nbsp;&nbsp;<small> <?php echo $fac_dorm_row["wifiDetails"] ?></small> </h4>
-                    
+
                 </td>
                 <td>
                     <h4 style="margin-left:10%"> <?php echo $fac_dorm_row["lan"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; LAN &nbsp;&nbsp;<small> <?php echo $fac_dorm_row["lanDetails"] ?></small></h4> 
@@ -242,7 +256,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             <tr>
                 <td>
                     <h4 style="margin-left:10%"> <?php echo $fac_dorm_row["fitness"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; FITNESS &nbsp;&nbsp;<small> <?php echo $fac_dorm_row["fitnessDetails"] ?></small></h4>
-                    
+
                 </td>
                 <td>
                     <h4 style="margin-left:10%"> <?php echo $fac_dorm_row["pool"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; POOL &nbsp;&nbsp;<small> <?php echo $fac_dorm_row["poolDetails"] ?></small></h4> 
@@ -277,11 +291,15 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
         <br>
     </div>
     
-    <?php if($dorm_row["dorm_plan_pictures"] !== NULL) { ?>
-    <div class="span12" style="margin-left:0%">
-        <legend><h1><span>Dormitory</span> Plan Picture</h1></legend>
-        <img  class="img-thumbnail" style="width:100%;height: 80%" src="images/dormitory_picture/<?php echo $dorm_row["dorm_plan_pictures"]; ?>" alt=""/><br><br>
-    </div>
+    
+    <div style="display: none; position: absolute; z-index: 110; left: 400px; top: 100px; width: 15px; height: 15px" id="preview_div"></div>
+
+
+    <?php if ($dorm_row["dorm_plan_pictures"] !== NULL) { ?>
+        <div class="span12" style="margin-left:0%">
+            <legend><h1><span>Dormitory</span> Plan Picture</h1></legend>
+            <img class="img-thumbnail" style="width:100%;max-height: 80%" src="images/dormitory_picture/<?php echo $dorm_row["dorm_plan_pictures"]; ?>" alt=""/><br><br>
+        </div>
     <?php } ?>
 
     <div class="span12" style="margin-left:0%;">
@@ -293,8 +311,10 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             <div class="col-md-12" id="<?php echo $dorm_room_row["roomID"] ?>" style="border:solid 1px #cccccc;margin-bottom: 5%">
                 <legend><h3 style="text-align: center"><span><?php echo $dorm_room_row["roomType"] ?> Room</span></h3></legend>
                 <div class="span5">
-                    <img style="width: 100%;height: 45%" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>" class="img-thumbnail"/>
+                    <img style="width: 100%;max-height: 45%" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>" class="img-thumbnail"/>
                 </div>
+
+
                 <div class="span6">
 
                     <?php
@@ -304,8 +324,8 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                     while ($room_pic_row = mysqli_fetch_array($room_pic_result)) {
                         ?>
                         <div class="col-md-4">
-                            <img class="img-thumbnail" style="width:100%;height: 20%;margin-bottom:10%"src="images/room_pictures/<?php echo $room_pic_row["roomPicPath"] ?>"/>
-                        </div>                                               
+                            <img class="img-thumbnail" style="width:100%;max-height: 100%;margin-bottom:10%"src="images/room_pictures/<?php echo $room_pic_row["roomPicPath"] ?>" onmouseover="showtrail('images/room_pictures/<?php echo $room_pic_row["roomPicPath"] ?>', '',670,500)" onmouseout="hidetrail()"/>
+                        </div>
                     <?php } ?>
                 </div>
 
@@ -418,7 +438,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                     <span style="color: green">Total Booking Price : </span>
                                 </td>
                                 <td>
-        <span style="color: green"><?php echo number_format($dorm_room_row["price"] * $dorm_room_row["roomDeposit"] + $dorm_room_row["price"]); ?> Baht</span>
+                                    <span style="color: green"><?php echo number_format($dorm_room_row["price"] * $dorm_room_row["roomDeposit"] + $dorm_room_row["price"]); ?> Baht</span>
                                 </td>
                             </tr>
                     </table>
@@ -434,7 +454,25 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                             <tr>
                                 <td colspan="3" style="text-align: center">
                                     <?php if (isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member" && $_SESSION["status"] !== "Blacklist") { ?>
-                                        <button style="width:40%" class="btn1 btn1-success" type="submit">Booking</button>
+                                        <?php
+                                        $return_value = checkBooking($_SESSION["memberID"]);
+                                        if ($return_value === "PASS") {
+                                            ?>
+                                            <button style="width:40%" class="btn1 btn1-success" type="submit">Booking</button>
+                                        <?php } else { ?>
+                                            <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" style="width:40%" class="btn1 btn1-success" type="button">Booking</button>
+                                            <script>
+
+                                                $(function() {
+
+                                                    $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
+                                                        alert("<?php echo $return_value ?>");
+                                                        window.location = "index.php?chose_page=membernotification";
+                                                    });
+                                                });
+
+                                            </script>
+                                        <?php } ?>
                                     <?php } else if ($_SESSION["auth"] && $_SESSION["auth"] === true && $_SESSION["type"] === "Owner") { ?>
                                         <button id="booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>" type="button" class="btn1 btn1-success"style="width: 40% ">Booking</button>
                                         <script>
@@ -442,7 +480,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                             $(function() {
 
                                                 $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
-                                                    alert("Only Member can be booking.");
+                                                    alert("Only Member can book the room.");
                                                 });
 
 
@@ -457,7 +495,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                             $(function() {
 
                                                 $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
-                                                    alert("Only Member can be booking.");
+                                                    alert("Only Member can book the room.");
                                                 });
 
 
@@ -487,7 +525,8 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                                             $(function() {
 
                                                 $("#booking_not_sign_in<?php echo $dorm_room_row["roomID"] ?>").on("click", function() {
-                                                    alert("Please sign in before booking.");
+                                                    alert("Please sign in before booking or register.");
+                                                    window.location = "index.php?chose_page=register";
                                                 });
 
 
@@ -568,7 +607,10 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         }
 
                         echo '<tr>';
-                        echo '<td style="width:30%">';
+                        echo '<td style="width:15%">';
+                        echo '<img src="'.$row["pic_path"].'" class="img-rounded" style="width:100%;height:15%">';
+                        echo '</td>';
+                        echo '<td style="width:25%">';
                         echo '<h3 style="margin-top:0%">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
                         echo '<p class="pull-left">' . $date . '<br>Give Rate :<span class="pull-right" style="color:gold">' . $star . '</span></p>';
                         echo '';
@@ -589,7 +631,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             </tbody>
             <tbody>
                 <tr style="height: 2%">
-                    <td colspan="2">
+                    <td colspan="3">
                         <ul id="page_comment" class="comment_page pagination pull-right">
                             <?php
 

@@ -103,7 +103,7 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
                 if (mysqli_query($con, $query)) {
                     if (reduce_room($matchingID)) {
                         echo '<script>alert("Booking Success (Deadline : ' . $expire_date . ')");</script>';
-                        echo '<script>window.location = "index.php"</script>';
+                        echo '<script>window.location = "index.php?chose_page=membernotification"</script>';
                     } else {
                         echo '<script>alert("Booking Failed");</script>';
                         echo '<script>window.location = "index.php"</script>';
@@ -114,7 +114,7 @@ if (isset($_POST["dormID"]) && isset($_POST["roomID"]) && is_numeric($_POST["dor
                 }
             } else {
                 echo '<script>alert("This Room is Unavailable");</script>';
-                echo '<script>window.location = "index.php"</script>';
+                echo '<script>window.location = "index.php?chose_page=dormitory"</script>';
             }
         } else {
             echo '<script>alert("' . $msg . '");</script>';

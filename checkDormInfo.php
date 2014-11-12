@@ -33,7 +33,7 @@ function displayPage($cur_page, $query, $href) {
 
 require 'connection.php';
 
-$query = "select dormID,dormName,firstName,lastName,d.type,d.status from Dormitories d join Members m where d.memberID = m.memberID order by dormID desc limit 0,8";
+$query = "select dormID,dormName,firstName,lastName,d.type,d.status from Dormitories d join Members m where d.memberID = m.memberID order by dormID limit 0,8";
 $result = mysqli_query($con, $query);
 ?>
 <script>
@@ -109,7 +109,7 @@ $result = mysqli_query($con, $query);
                             <select id="sort_by" class="form-control pull-right" style="width:20%">
                                 <option id="sort_dormID" value="dormID">Sort By Dormitory ID</option>
                                 <option value="type">Sort By Dormitory Type</option>
-                                <option value="status">Sort By Dormitory Status</option>
+                                <option value="status+desc">Sort By Dormitory Status</option>
                             </select>
 
                         </div>
@@ -120,14 +120,14 @@ $result = mysqli_query($con, $query);
                                 <th style="width:170px">Dormitory Name</th>
                                 <th style="width:250px">Owner Name</th>
                                 <th style="width:170px">Dormitory Type</th>
-                                <th >Status</th>
+                                <th>Status</th>
                                 <th></th>
                                 <tbody id="show_dorm_info">
                                     <?php
                                     while ($row = mysqli_fetch_array($result)) {
 
                                         $color = "red";
-                                        if ($row["status"] === "Active") {
+                                        if ($row["status"] === "Showing") {
                                             $color = "#00cc33";
                                         }
                                         ?>
@@ -137,9 +137,16 @@ $result = mysqli_query($con, $query);
                                             <td><?php echo $row["firstName"] . " " . $row["lastName"]; ?></td>
                                             <td><?php echo $row["type"]; ?></td>
                                             <td style="color:<?php echo $color ?>"><?php echo $row["status"]; ?></td>
-                                            <td><a href="index.php?chose_page=checkDormDetail&dormID=<?php echo $row["dormID"] ?>"><button type="button" class="btn1 btn1-primary pull-right " style="width:100%">View Detail</button></a></td>
+                                            <td><a href="index.php?chose_page=checkDormDetail&dormID=<?php echo $row["dormID"] ?>"><button type="button" class="btn1 btn1-primary pull-right" style="width:100%">View Detail</button></a></td>
                                         </tr>
                                         <?php
+                                    }
+                                    if (mysqli_num_rows($result) !== 0 && mysqli_num_rows($result) !== 8) {
+                                        for ($i = mysqli_num_rows($result); $i < 8; $i++) {
+                                            echo '<tr style="height:47px">';
+                                            echo '<td style="text-align:center" colspan="6"></td>';
+                                            echo '</tr>';
+                                        }
                                     }
                                     ?>
                                 </tbody>

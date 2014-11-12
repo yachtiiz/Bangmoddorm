@@ -185,7 +185,7 @@ function getAllMember($page, $order_by) {
                             <ul id="show_member_page" class="check_mem pagination pull-right" style="margin-top: 0px;height: 34px">
                                 <?php
                                 $href = "callback.php?show_member_page=";
-                                displayPage(1, "select * from members", $href);
+                                displayPage(1, "select * from Members", $href);
                                 ?>
                             </ul>
                         </div>

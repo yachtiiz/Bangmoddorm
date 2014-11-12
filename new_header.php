@@ -29,6 +29,7 @@ function getUserType() {
         <script type="text/javascript" src="js/form_register_validate.js"></script>
         <script src="js/jquery.quicksand.js" type="text/javascript"></script>
         <script type="text/javascript" src="js/global.js"></script>
+        <script src="js/mouseover_popup.js" language="JavaScript" type="text/javascript"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
@@ -40,6 +41,7 @@ function getUserType() {
         <link rel="stylesheet" href="css/nivo-slider.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/socialcount-with-icons.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/flat/flaticon.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="css/mouse_popupcss.css" type="text/css">
 
 
 
@@ -66,20 +68,21 @@ function getUserType() {
                 <div class="container">
                     <div class="nav-collapse">
 
-                        <ul class="nav nav-pills" style="padding-left: 0px;padding-right:100px;width:100%;height: 10%;">
+                        <ul class="nav nav-pills" style="padding-left: 5%;padding-right:7%;width:100%;height: 10%;">
                             <li style="margin-left: -3%;"><img src="images/logo3.png" style="width: 70% ; margin-top: -9%"></li>
-                            <li style="margin-top: 1%;margin-left: 2%"><a href="index.php"><h5>Home</h5></a></li>
-                            <li style="margin-top: 1%;"><a href="index.php?chose_page=dormitory"><h5>Dormitory</h5></a></li>
+                            <li style="margin-top: 1%;margin-left: -2%"><a href="index.php"><h5>Home</h5></a></li>
+                            <li style="margin-top: 1%;"><a href="index.php?chose_page=main"><h5>Search Dormitory</h5></a></li>
                             <!--<li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>-->
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){      ?>
-                            <?php if (!isset($_SESSION["auth"])) { ?><li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >Register</h5></a></li> <?php } ?>
+                            <li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >How To Reserve</h5></a></li>
+                            <?php// if (!isset($_SESSION["auth"])) { ?><!--<li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >Register</h5></a></li>--> <?php //} ?>
                             <?php //}     ?>
-<!--                            <li style="margin-top: 1%;"><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>-->
+                            <!--                            <li style="margin-top: 1%;"><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>-->
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){      ?>
                             <!--<li class=""><a href="index.php?chose_page=membersystem"><h5 >Member System</h5></a></li>-->
                             <?php //}     ?>
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Admin"){  ?>
-<!--                            <li style="margin-top: 1%;"><a href="index.php?chose_page=adminsystem"><h5 >Admin System</h5></a></li>-->
+                            <!--                            <li style="margin-top: 1%;"><a href="index.php?chose_page=adminsystem"><h5 >Admin System</h5></a></li>-->
                             <?php //}     ?>
                             <!--                                    <li class=""><button id="update_booking" class="btn btn-primary">UpdateBooking</button></li>-->
                             <?php
@@ -90,19 +93,20 @@ function getUserType() {
                                     function getNotification() {
                                         require 'connection.php';
                                         $memberID = $_SESSION["memberID"];
-                                        $query = "select * from Booking where memberID = $memberID and member_noti = 1";
+                                        $query = "select * from Booking where memberID = $memberID and (member_noti = 1 or booking_status = 'Waiting')";
                                         $result = mysqli_query($con, $query);
                                         $noti = mysqli_num_rows($result);
                                         return $noti;
                                     }
                                     ?>
-                                    <li class="pull-right" style="margin-top: 1%;">
+                                    <li class="pull-right" style="margin-top: 1.7%;">
                                         <div class="dropdown dropdownuser">
-                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span><?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
-                                            <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            
+                                            <h5 style="color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
+                                            <ul style="width: 100%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Member</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-<!--                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getNotification() ?></span></a></li>-->
+        <!--                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getNotification()   ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkBookingHis">Check Booking History</a></li>
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
@@ -123,13 +127,13 @@ function getUserType() {
                                         return $noti;
                                     }
                                     ?>
-                                    <li class="pull-right" style="margin-top: 1%;">
+                                    <li class="pull-right" style="margin-top: 1.7%;">
                                         <div class="dropdown dropdownuser">
-                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php  } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
-                                            <ul style="width: 200px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <h5 style="color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-star" style="margin-right: 0px"></span><?php if (getOwnerNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
+                                            <ul style="width: 100%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Owner</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-<!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getOwnerNotification() ?></span></a></li>-->
+        <!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getOwnerNotification()   ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkDormBooking">Check All Booking</a></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
@@ -155,13 +159,13 @@ function getUserType() {
                                         return $noti;
                                     }
                                     ?>
-                                    <li class="pull-right" style="margin-top: 1%;">
+                                    <li class="pull-right" style="margin-top: 1.7%;">
                                         <div class="dropdown dropdownuser">
-                                            <h5 style="margin-top:14px;color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php if (getAdminNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
-                                            <ul style="width: 230px;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <h5 style="color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-cog" style="margin-right: 0px"></span><?php if (getAdminNotification() > 0) { ?><span class="glyphicon glyphicon-exclamation-sign" ></span> <?php } ?> <?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
+                                            <ul style="width: 180%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Admin</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-<!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span></a></li>-->
+        <!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=adminsystem">Administrator Page</a></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkRequestDorm">Check Request Dormitory</a></li>
@@ -172,11 +176,12 @@ function getUserType() {
                                             </ul>
                                         </div>
                                     </li>
-                                    <!--<li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=checkRequestDorm"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span> </h5></a></li>-->
+                                    <li style="margin-top: 1%;" class='pull-right'><a href="index.php?chose_page=checkRequestDorm"><h5>Notification &nbsp;&nbsp;<span class="badge" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php echo getAdminNotification() ?></span> </h5></a></li>
                                 <?php } ?>
 
                             <?php } else {
                                 ?>
+                                <li style="margin-top: 1%;" class="pull-right"><a href="index.php?chose_page=register"><h5 style="color:#b81007;" >Register</h5></a></li>
                                 <li style="margin-top: 1%;" class="pull-right"><a href="" data-toggle="modal" data-target="#LoginModal"><h5 style="color:#b81007;"> Sign In </h5></a>
                                     <div class="modal fade" id="LoginModal">
                                         <div class="modal-dialog">
@@ -201,6 +206,26 @@ function getUserType() {
                                                         <button id="submit" type="submit" style='width:20%;margin-left:5%; margin-top: 3%'class="btn1 btn1-success">Sign In</button>
                                                         <a href="index.php?chose_page=register"><button type="button" style='width:20%;margin-left:20px; margin-top: 3%' class="btn1 btn1-warning">Register</button></a>
                                                         <br>
+                                                        <button type="button" data-toggle="modal" data-target="#ForgetPasswordModal"  style='width:45%;margin-left:5%; margin-top: 2%'class="btn1 btn1-danger">Forgot Password</button>
+                                                    </form>
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+                                    <div class="modal fade" id="ForgetPasswordModal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="height: 50px">
+                                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                                </div>
+                                                <div class="modal-body" style="height: 44%">
+                                                    <form id="signin_form" action="callback.php" method="post">
+                                                        <h4 style="text-align:center"><span>Please input your email to send password <br> ( Email must be match from your username profile.)</span></h4>
+                                                        <div class="input-group" style="width: 70%;margin-left: auto;margin-right: auto;margin-bottom: 10px;margin-top:30px">
+                                                            <span class="input-group-addon">Email</span>
+                                                            <input id="forgotPass_value" name="email_forgot" type="email" class="form-control" required>
+                                                        </div>
+                                                        <button id="forgotPass" type="button" style='width:45%;margin-left:5%; margin-top: 2%'class="btn1 btn1-danger">Send Email</button>
                                                     </form>
                                                 </div>
                                             </div><!-- /.modal-content -->
@@ -216,9 +241,10 @@ function getUserType() {
                 </div>            
             </div><!-- /navbar -->       
         </div>
-        <hr style="margin: 0px;margin-bottom: 20px;border:solid 1px #cccccc">
+        <hr style="margin: 0%;margin-bottom: 0%;border:solid 1px #cccccc">
         <div class="container-fluid">
             <script>
+
                 $(function() {
                     $("#signin_form").submit(function() {
                         /* Input Data for Login with AJAX */
@@ -262,6 +288,14 @@ function getUserType() {
                     $("#update_booking").load("callback.php?updateBooking=1");
                 });
 
-
+                $(document).on("click", "#forgotPass", function() {
+                    if ($("#forgotPass_value").val() === "") {
+                        alert("Please Enter your email");
+                    }else{
+                        var email = $("#forgotPass_value").val();
+                        $("#forgotPass").load("callback.php?forgot_email=" + email);
+                    }
+                });
 
             </script>
+

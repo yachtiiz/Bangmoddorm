@@ -18,6 +18,8 @@
                                 <option value="Approve">Approve</option>
                                 <option value="Checking">Checking</option>
                                 <option value="Canceled">Canceled</option>
+                                <option value="Refund+Needed">Refund Needed</option>
+                                <option value="Already+Refunded">Already Refunded</option>
                             </select>
                         </div>
                         <br><br><br><br><br><br>
@@ -117,6 +119,9 @@
                                                     case "Refund Needed":
                                                         $color = "red";
                                                         break;
+                                                    case "Already Refunded":
+                                                        $color = "#00cc33";
+                                                        break;
                                                 }
                                                 echo '<tr ' . $unread . '>';
                                                 echo '<td style="text-align: center">' . $row["bookingID"] . '</td>';
@@ -124,7 +129,7 @@
                                                 echo '<td>' . $row["dormName"] . '</td>';
                                                 echo '<td style="color:' . $color . '">' . $row["booking_status"] . '</td>';
                                                 echo '<td>' . $row["dormTel"] . '</td>';
-                                                echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="' . $row["bank_name"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
+                                                echo '<td><button type="button" style="width:130px" class="viewdetail btn1 btn1-primary" data-bookID="' . $row["bookingID"] . '" data-name="' . $row["firstName"] . " " . $row["lastName"] . '" data-date="' . $row["date"] . '" data-expiredate="' . $row["expire_date"] . '" data-status="' . $row["booking_status"] . '" data-dormname="' . $row["dormName"] . '" data-room="' . $row["roomType"] . '" data-slip="' . $row["slip"] . '" data-totalprice="' . number_format($row["totalPrice"]) . '" data-transfername="' . $row["transfer_name"] . '" data-transferbank="' . $row["transfer_bank"] . '" data-floor="' . $row["floor_no"] . " " . getTHNUMBER($row["floor_no"]) . '" data-bankacc="' . $row["bank_acc_id"] . '" data-bankname="' . $row["bank_name"] . '" data-transferrefID="' . $row["transfer_referenceID"] . '" data-transfertime="' . $row["transfer_time"] . '" data-transferamount="'. number_format($row["transfer_amount"]) .'" data-toggle="modal" data-target=".bs-example-modal-lg">View Detail</button></td>';
                                                 echo '</tr>';
                                                 if ($row["owner_noti"] == "1") {
                                                     if (!readAble($row["bookingID"])) {
@@ -164,6 +169,7 @@
 //                                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
                                         document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
                                         document.getElementById("refundbutton").setAttribute("value", $(this).data('bookid'));
+                                        document.getElementById("refundedbutton").setAttribute("value", $(this).data('bookid'));
                                         $(".modal-body-booking #name").html($(this).data('name'));
                                         $(".modal-body-booking #date").html($(this).data('date'));
                                         $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -174,20 +180,48 @@
                                         }
                                         if ($(this).data('status') === "Approve") {
                                             document.getElementById("status").setAttribute("style", "color:#00cc33");
+                                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                                         }
                                         if ($(this).data('status') === "Checking") {
                                             document.getElementById("status").setAttribute("style", "color:#0480be");
+                                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                                         }
                                         if ($(this).data('status') === "Canceled") {
                                             document.getElementById("status").setAttribute("style", "color:red");
+                                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                                         }
                                         if ($(this).data('status') === "Reject") {
                                             document.getElementById("status").setAttribute("style", "color:red");
+                                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                                         }
                                         if ($(this).data('status') === "Waiting") {
                                             document.getElementById("status").setAttribute("style", "color:black");
+                                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
+                                        }
+                                        if ($(this).data('status') === "Refund Needed") {
+                                            document.getElementById("status").setAttribute("style", "color:red");
+                                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:block");
+                                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:block");
+                                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:block");
+                                        }
+                                        if ($(this).data('status') === "Already Refunded") {
+                                            document.getElementById("status").setAttribute("style", "color:red");
+                                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:block");
+                                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:block");
+                                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                                         }
                                         $(".modal-body-booking #status").html($(this).data('status'));
+                                        $(".modal-body-booking #transferamount").html($(this).data('transferamount') + " Baht");
                                         $(".modal-body-booking #dormname").html($(this).data('dormname'));
                                         $(".modal-body-booking #room").html($(this).data('room'));
                                         $(".modal-body-booking #floor").html($(this).data('floor'));
@@ -262,13 +296,27 @@
                                                 <div class="modal-body-booking" style="background-color: white;padding:30px">
                                                     <div class="row">
                                                         <div class="col-md-12">
-                                                            <legend style="font-style: italic;text-align: right">Booking Detail</legend>
+                                                            <legend style="font-style: italic;text-align: right">Change Status</legend>
                                                         </div>
                                                         <div class="col-md-4" style="text-align: center;margin-bottom: 30px;margin-left: 60px">
                                                             <h5 style="text-align: center">Slip Image</h5>
                                                             <img id="slip" style="width: 340px;height: 370px;" src="images/picture_evidence/evidance_9_LNERU" class="img-thumbnail">
                                                         </div>
                                                         <div class="col-md-7" style="margin-top: 0px">
+                                                            <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%" data-toggle="tooltip" data-placement="bottom" title="Correct Evidence or Real transfer money" type="button">Approve</button>
+                                                            <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%" data-toggle="tooltip" data-placement="bottom" title="Fault Evidence">Cancel</button>
+                                                            <button id="refundbutton" class="btn1 btn1-danger" style="width:30%" data-toggle="tooltip" data-placement="bottom" title="Have a problem ex.Full Room , Money Transfer Problem.This case owner must transfer money back to member.">Refund Needed</button>
+                                                            <br><br>
+                                                            <legend style="font-style: italic;text-align: right">Money Transfer Evidence</legend>
+                                                            <h5 style="text-align: left">Reference ID : <span class="pull-right" id="transferrefID">Empty Data</span></h5>
+                                                            <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername">นาย ยอช เอง</span></h5>
+                                                            <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
+                                                            <h5 style="text-align: left">Transfer Bank : <span class="pull-right" id="transferbank">2014-09-04T15:33</span></h5>
+                                                            <h5 style="text-align: left">Transfer Amount : <span class="pull-right" id="transferamount">2014-09-04T15:33</span></h5>
+                                                            <h5 id="refund_cusbank" style="text-align: left;display:none">Customer Bank Account ID : <span class="pull-right" id="bankacc_id">2014-09-04T15:33</span></h5>
+                                                            <h5 id="refund_bankname" style="text-align: left;display:none">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
+                                                            <button id="refundedbutton" class="btn1 btn1-success pull-right" style="width:30%;display:none" data-toggle="tooltip" data-placement="bottom" title="Already transfer money back to member." type="button">Already Refunded</button>
+                                                            <legend style="font-style: italic;text-align: right">Booking Details</legend>
                                                             <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right">14</span></h5>
                                                             <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>
                                                             <h5 style="text-align: left">Dormitory Name :<span id="dormname" class="pull-right">Myplace 2</span></h5>
@@ -278,19 +326,8 @@
                                                             <h5 style="text-align: left">Booking Date :<span id="date" class="pull-right">2014-09-08 22:50:43</span></h5>
                                                             <h5 style="text-align: left">Booking Date Expire :<span id="expire_date" class="pull-right">2014-09-08 22:50:43</span></h5>
                                                             <h5 style="text-align: left;color: #33cc00">Total Price :<span id="totalprice" class="pull-right" style="color: #33cc00">6000 Baht</span></h5>
-                                                            <legend style="font-style: italic;text-align: right">Money Transfer Evidence</legend>
-                                                            <h5 style="text-align: left">Reference ID : <span class="pull-right" id="transferrefID">Empty Data</span></h5>
-                                                            <h5 style="text-align: left">Transfer Name : <span class="pull-right" id="transfername">นาย ยอช เอง</span></h5>
-                                                            <h5 style="text-align: left">Transfer Time : <span class="pull-right" id="transfertime">2014-09-04T15:33</span></h5>
-                                                            <h5 style="text-align: left">Transfer Bank : <span class="pull-right" id="transferbank">2014-09-04T15:33</span></h5>
-                                                            <h5 style="text-align: left">Customer Bank Account ID : <span class="pull-right" id="bankacc_id">2014-09-04T15:33</span></h5>
-                                                            <h5 style="text-align: left">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
-                                                            <br>
-                                                            <legend style="font-style: italic;text-align: left">Change Status</legend>
-                                                            <button id="approvebutton" class="btn1 btn1-success" style="width:30%;margin-left:2%" data-toggle="tooltip" data-placement="bottom" title="Correct Evidence or Real transfer money" type="button">Approve</button>
-                                                            <button id="canceledbutton" class="btn1 btn1-warning" style="width:35%" data-toggle="tooltip" data-placement="bottom" title="Fault Evidence or money not come">Canceled</button>
-                                                            <button id="refundbutton" class="btn1 btn1-danger" style="width:30%" data-toggle="tooltip" data-placement="bottom" title="Have a problem ex.Full Room , Money Transfer Problem">Refund Needed</button>
-                                                            <br><br>
+
+                                                            <br>                                                            
                                                             <!--                                                                <legend style="font-style: italic;text-align: left">Have a problem ex.Full Room , Money Transfer Problem </legend>
                                                                                                                             <button id="refundbutton" class="btn1 btn1-danger" style="width:60%;margin-left:20%;">Refund Needed</button>
                                                                                                                             <br><br>-->
@@ -309,6 +346,7 @@
                                                         $('#approvebutton').tooltip('hide');
                                                         $('#canceledbutton').tooltip('hide');
                                                         $('#refundbutton').tooltip('hide');
+                                                        $('#refundedbutton').tooltip('hide');
 
                                                         $("#linkbutton").on("click", function() {
                                                             window.location = "index.php?chose_page=checkDormBooking&memberID=<?php echo $_SESSION["memberID"]; ?>";
@@ -354,15 +392,28 @@
                                                                 event.preventDefault();
                                                             }
                                                         });
+                                                        $("#refundedbutton").on("click", function() {
+                                                            if (confirm("Already transfer money back to member ?")) {
+                                                                change_url = "callback.php?change_booking_status=Already+Refunded&change_booking_id=" + $(this).val();
+                                                                $("#refundedbutton").load(change_url);
+                                                                event.preventDefault();
+                                                                window.location = "index.php?chose_page=ownernotification";
+                                                            } else {
+                                                                event.preventDefault();
+                                                            }
+                                                        });
 
 
 
                                                         $("#search_status").on("change", function() {
                                                             url = "callback.php?ownernoti_curpage=1&ownernoti_orderby=&search_ownernoti=" + $(this).val();
+                                                            page_url = "callback.php?owner_noti_curpage=1&search_ownernoti=" + $(this).val();
                                                             if ($(this).val() === "default") {
                                                                 url = "callback.php?ownernoti_curpage=1" + "&ownernoti_orderby=" + $("#noti_orderby").val();
+                                                                page_url = "callback.php?owner_noti_curpage=1";
                                                             }
-                                                            $(".owner_pagi").load("callback.php?owner_noti_curpage=1");
+                                                            
+                                                            $(".owner_pagi").load(page_url);
                                                             $("#noti_result").animate({
                                                                 opacity: 0
                                                             }, 100, function() {
@@ -393,7 +444,7 @@
 
                                                         $(".owner_pagi li a").live("click", function() {
                                                             event.preventDefault();
-                                                            url = "callback.php?ownernoti_curpage=" + $(this).attr("value") + "&ownernoti_orderby=" + $("#noti_orderby").val() + $("#search_status").val() === "default" ? "" : ("&search_ownernoti=" + $("#search_status").val());
+                                                            url = "callback.php?ownernoti_curpage=" + $(this).attr("value") + "&ownernoti_orderby=" + $("#noti_orderby").val() + ($("#search_status").val() === "default" ? "" : ("&search_ownernoti=" + $("#search_status").val()));
                                                             cur_page = $(this).attr("href");
                                                             $(".owner_pagi").load(cur_page);
                                                             $("#noti_result").animate({

@@ -10,7 +10,11 @@ function getRequest($page, $order_by) {
 
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_array($result)) {
-        echo '<tr>';
+        $unread = "";
+        if ($row["noti_status"] == "0") {
+            $unread = 'style="background-color:#f9f9f9"';
+        }
+        echo '<tr '. $unread .'>';
         echo '<td style="text-align:center">' . $row["confirmID"] . '</td>';
         echo '<td style="text-align:center">' . $row["memberID"] . '</td>';
         echo '<td>' . $row["dormName"] . '</td>';
@@ -25,6 +29,9 @@ function getRequest($page, $order_by) {
         }
         echo '<td><a href="index.php?chose_page=checkRequestDetail&confirmID=' . $row["confirmID"] . '"><button type="button" class="btn1 btn1-primary" style="width:100%">View Detail</button></a></td>';
         echo '</tr>';
+        if(!readAble($row["confirmID"])){
+            return '<script> alert("Something Error") </script>';
+        }
     }
     if (mysqli_num_rows($result) !== 10) {
         for ($i = mysqli_num_rows($result); $i < 8; $i++) {
@@ -67,6 +74,17 @@ function displayPage($cur_page) {
         echo '<li ' . $class . '><a value=' . $i . ' href="callback.php?request_dormpage=' . $i . '">' . $i . '</a></li>';
     }
     echo '<li><a value=' . $next_page . ' href="callback.php?request_dormpage=' . $next_page . '">&raquo;</a></li>';
+}
+
+function readAble($confirmID) {
+
+    require 'connection.php';
+    $query = "update ConfirmationDorm set noti_status = 2 where confirmID = $confirmID";
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 ?>
 
@@ -209,7 +227,7 @@ function displayPage($cur_page) {
 
 
                         <div class="span12">
-                            <table class="table table-striped table-hover" style="margin-top: 30px;border-left: solid 1px #ddd;border-right: solid 1px #ddd;border-bottom: solid 1px #ddd;border-top: solid 1px #ddd;background-color: white">
+                            <table class="table table-hover" style="margin-top: 30px;border-left: solid 1px #ddd;border-right: solid 1px #ddd;border-bottom: solid 1px #ddd;border-top: solid 1px #ddd;background-color: white">
                                 <thead>
                                 <th>Confirm ID</th>
                                 <th>Member ID</th>
