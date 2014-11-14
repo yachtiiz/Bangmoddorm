@@ -94,6 +94,12 @@ switch ($page) {
     case "resetPassword":
         require_once("reset_password.php");
         break;
+    case "howto":
+        require_once ("howto.php");
+        break;
+    case "refund":
+        require_once ("refund.php");
+        break;
     
     default:
         require_once("dormitory.php");

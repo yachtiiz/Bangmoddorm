@@ -175,7 +175,7 @@
                             </div>                                
                             <div class="span3">
                                 <label>Username
-                                    <input type="text" name="username" class="form-control" value="<?php echo $row["username"] ?>"/>
+                                    <input type="text" name="username" class="form-control" value="<?php echo $row["username"] ?>" disabled=""/>
                                 </label>
                             </div>
                             <div class="span3">
@@ -287,32 +287,6 @@
                                     <input name="country" type="text" class="form-control" value="<?php echo $row["country"] ?>"
                                 </label>
                             </div>
-                            <div class="span12">
-                                <legend><span>Your</span> Information</legend>
-                            </div>
-
-                            <div class="span3" style="margin-left:10%">
-                                <label>About
-                                    <textarea name="about" class="form-control" rows="3"><?php echo $row["about"] ?></textarea>
-                                </label>
-                            </div>				
-                            <div class="span3">
-                                <label>Display Name
-                                    <input name="displayname" type="text" class="form-control" value="<?php echo $row["displayName"] ?>" />
-                                </label>
-<!--                                <label>Facebook
-                                    <input name="facebook" type="text" class="form-control" value="<?php echo $row["facebook"] ?>" />
-                                </label>-->
-                            </div>
-
-                            <div class="span3">
-<!--                                <label>Member URL
-                                    <input name="memberurl" type="text" class="form-control" value="<?php echo $row["memberUrl"] ?>" />
-                                </label>-->
-                                <label>Facebook
-                                    <input name="facebook" type="text" class="form-control" value="<?php echo $row["facebook"] ?>" />
-                                </label>
-                            </div>	
                         </div><br><br>
                         <div class="row">
                             <div class="span10" style="margin-left:10%">

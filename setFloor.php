@@ -265,3 +265,49 @@
             <?php } ?>
 
         </table>
+
+<script>
+
+    function initialize() {
+        var center = new google.maps.LatLng(13.652420, 100.493904)
+        var mapOptions = {
+            zoom: 16,
+            center: center
+        };
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+<?php while ($lat_row = mysqli_fetch_array($latlong_result)) { ?>
+            var dorm_id_<?php echo $lat_row["dormID"] ?>_map = new google.maps.LatLng(<?php echo $lat_row["latitude"] ?>, <?php echo $lat_row["longtitude"] ?>);
+            var contentString_dormid_<?php echo $lat_row["dormID"] ?> = '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    '</div>' +
+                    '<h1 id="firstHeading" class="firstHeading"><?php echo $lat_row["dormName"] ?></h1>' +
+                    '<div id="bodyContent">' +
+                    '<p><b>DORMITORY TYPE : </b> <?php echo $lat_row["dormType"] ?> <br>' +
+                    '<b>DISTANCE FROM UNIVERSITY : </b> <?php echo $lat_row["disFromUni"] ?> <br>' +
+                    '<a href="index.php?chose_page=dormdetail&dormID=<?php echo $dorm_row["dormID"]; ?>"><button class="btn1 btn1-primary" type="button">View Detail</button></a> ' +
+                    '</div>' +
+                    '</div>';
+
+            var infowindow_dormid_<?php echo $lat_row["dormID"] ?> = new google.maps.InfoWindow({
+                content: contentString_dormid_<?php echo $lat_row["dormID"] ?>;
+            });
+
+            var marker_dormid_<?php echo $lat_row["dormID"] ?> = new google.maps.Marker({
+                position: dorm_id_<?php echo $lat_row["dormID"] ?>_map,
+                map: map,
+                title: '<?php echo $lat_row["dormName"] ?>'
+            });
+
+            google.maps.event.addListener(marker_dormid_<?php echo $lat_row["dormID"] ?>, 'click', function() {
+                infowindow_dormid_<?php echo $lat_row["dormID"] ?>.open(map, marker_dormid_<?php echo $lat_row["dormID"] ?>);
+            });
+
+<?php } ?>
+    }
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+</script>

@@ -1,4 +1,3 @@
-<div class="span12">	
     <div class="row">
         <div class="span9">
             <form class="form-horizontal">
@@ -314,7 +313,7 @@
                                                             <h5 style="text-align: left">Transfer Bank : <span class="pull-right" id="transferbank">2014-09-04T15:33</span></h5>
                                                             <h5 style="text-align: left">Transfer Amount : <span class="pull-right" id="transferamount">2014-09-04T15:33</span></h5>
                                                             <h5 id="refund_cusbank" style="text-align: left;display:none">Customer Bank Account ID : <span class="pull-right" id="bankacc_id">2014-09-04T15:33</span></h5>
-                                                            <h5 id="refund_bankname" style="text-align: left;display:none">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
+                                                            <h5 id="refund_bankname" style="text-align: left;display:none">Customer Bank : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
                                                             <button id="refundedbutton" class="btn1 btn1-success pull-right" style="width:30%;display:none" data-toggle="tooltip" data-placement="bottom" title="Already transfer money back to member." type="button">Already Refunded</button>
                                                             <legend style="font-style: italic;text-align: right">Booking Details</legend>
                                                             <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right">14</span></h5>
@@ -445,7 +444,7 @@
                                                         $(".owner_pagi li a").live("click", function() {
                                                             event.preventDefault();
                                                             url = "callback.php?ownernoti_curpage=" + $(this).attr("value") + "&ownernoti_orderby=" + $("#noti_orderby").val() + ($("#search_status").val() === "default" ? "" : ("&search_ownernoti=" + $("#search_status").val()));
-                                                            cur_page = $(this).attr("href");
+                                                            cur_page = $(this).attr("href") + ($("#search_status").val() === "default" ? "" : ("&search_ownernoti=" + $("#search_status").val()));
                                                             $(".owner_pagi").load(cur_page);
                                                             $("#noti_result").animate({
                                                                 opacity: 0

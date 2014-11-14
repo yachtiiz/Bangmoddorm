@@ -296,6 +296,16 @@ $(function() {
         }
         return false;
     });
+    $("#refundedbutton").on("click", function() {
+        if (confirm("Already transfer money back to member ?")) {
+            change_url = "callback.php?change_booking_status=Already+Refunded&change_booking_id=" + $(this).val();
+            $("#ajaxscript").load(change_url);
+            document.getElementById("status").setAttribute("style", "color:#00cc33");
+            $(".modal-body-booking #status").html("Already Refunded");
+            $("#show_result").load(current_url);
+        }
+
+    });
 
     $("#close_modal").on("click", function() {
         $("#show_result").load(current_url);

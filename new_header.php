@@ -30,6 +30,7 @@ function getUserType() {
         <script src="js/jquery.quicksand.js" type="text/javascript"></script>
         <script type="text/javascript" src="js/global.js"></script>
         <script src="js/mouseover_popup.js" language="JavaScript" type="text/javascript"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 
         <!-- CSS -->
         <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
@@ -74,8 +75,8 @@ function getUserType() {
                             <li style="margin-top: 1%;"><a href="index.php?chose_page=main"><h5>Search Dormitory</h5></a></li>
                             <!--<li class=""><a href="index.php?chose_page=ownersystem"><h5 >Owner</h5></a></li>-->
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === false){      ?>
-                            <li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >How To Reserve</h5></a></li>
-                            <?php// if (!isset($_SESSION["auth"])) { ?><!--<li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >Register</h5></a></li>--> <?php //} ?>
+                            <li style="margin-top: 1%;"><a href="index.php?chose_page=howto"><h5 >How To Reserve</h5></a></li>
+                            <?php // if (!isset($_SESSION["auth"])) { ?><!--<li style="margin-top: 1%;"><a href="index.php?chose_page=register"><h5 >Register</h5></a></li>--> <?php //} ?>
                             <?php //}     ?>
                             <!--                            <li style="margin-top: 1%;"><a href="index.php?chose_page=advancesearch"><h5 >Advance Search</h5></a></li>-->
                             <?php //if(isset($_SESSION["auth"]) && $_SESSION["auth"] === true && $_SESSION["type"] === "Member"){      ?>
@@ -101,12 +102,12 @@ function getUserType() {
                                     ?>
                                     <li class="pull-right" style="margin-top: 1.7%;">
                                         <div class="dropdown dropdownuser">
-                                            
+
                                             <h5 style="color:#b81007;cursor: pointer" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user" style="margin-right: 0px"></span><?php echo $_SESSION["firstname"] . " " . $_SESSION["lastname"] ?> <span class="caret" style="color:#b81007;border-top: 4px solid #b81007"></span></h5>
                                             <ul style="width: 100%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Member</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-        <!--                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getNotification()   ?></span></a></li>-->
+        <!--                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getNotification()    ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkBookingHis">Check Booking History</a></li>
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
@@ -133,7 +134,7 @@ function getUserType() {
                                             <ul style="width: 100%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Owner</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-        <!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getOwnerNotification()   ?></span></a></li>-->
+        <!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getOwnerNotification()    ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkDormBooking">Check All Booking</a></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
@@ -266,7 +267,7 @@ function getUserType() {
                                         $("#show_error").html("<p style='color:green'>Sign in success !</p>");
                                         var timer = setTimeout(function() {
                                             clearTimeout(timer);
-                                            window.location = "index.php";
+                                            window.location = location.href;
                                         }, 1000);
                                     }
                                 });
@@ -291,7 +292,7 @@ function getUserType() {
                 $(document).on("click", "#forgotPass", function() {
                     if ($("#forgotPass_value").val() === "") {
                         alert("Please Enter your email");
-                    }else{
+                    } else {
                         var email = $("#forgotPass_value").val();
                         $("#forgotPass").load("callback.php?forgot_email=" + email);
                     }

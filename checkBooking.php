@@ -138,6 +138,7 @@
 //                            document.getElementById("rejectbutton").setAttribute("value", $(this).data('bookid'));
                         document.getElementById("canceledbutton").setAttribute("value", $(this).data('bookid'));
                         document.getElementById("refundbutton").setAttribute("value", $(this).data('bookid'));
+                        document.getElementById("refundedbutton").setAttribute("value", $(this).data('bookid'));
                         $(".modal-body-booking #name").html($(this).data('name'));
                         $(".modal-body-booking #date").html($(this).data('date'));
                         $(".modal-body-booking #expire_date").html($(this).data('expiredate'));
@@ -150,31 +151,43 @@
                             document.getElementById("status").setAttribute("style", "color:#00cc33");
                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                         }
                         if ($(this).data('status') === "Checking") {
                             document.getElementById("status").setAttribute("style", "color:#0480be");
                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                         }
                         if ($(this).data('status') === "Canceled") {
                             document.getElementById("status").setAttribute("style", "color:red");
                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                         }
                         if ($(this).data('status') === "Reject") {
                             document.getElementById("status").setAttribute("style", "color:red");
                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                         }
                         if ($(this).data('status') === "Waiting") {
                             document.getElementById("status").setAttribute("style", "color:black");
                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:none");
                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:none");
+                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                         }
                         if ($(this).data('status') === "Refund Needed") {
                             document.getElementById("status").setAttribute("style", "color:red");
                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:block");
                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:block");
+                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:block");
+                        }
+                        if ($(this).data('status') === "Already Refunded") {
+                            document.getElementById("status").setAttribute("style", "color:red");
+                            document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:block");
+                            document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:block");
+                            document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                         }
                         $(".modal-body-booking #status").html($(this).data('status'));
                         $(".modal-body-booking #transferamount").html($(this).data('transferamount') + " Baht");
@@ -238,11 +251,11 @@
                                 $("#show_result").load(url);
                             }
                         });
-
+                        
                         $('#approvebutton').tooltip('hide');
                         $('#canceledbutton').tooltip('hide');
                         $('#refundbutton').tooltip('hide');
-
+                        $('#refundedbutton').tooltip('hide');
                     });
 
                 </script>
@@ -275,7 +288,8 @@
                                             <h5 style="text-align: left">Transfer Bank : <span class="pull-right" id="transferbank">2014-09-04T15:33</span></h5>
                                             <h5 style="text-align: left">Transfer Amount : <span class="pull-right" id="transferamount">2014-09-04T15:33</span></h5>
                                             <h5 id="refund_cusbank" style="text-align: left;display:none">Customer Bank Account ID : <span class="pull-right" id="bankacc_id">2014-09-04T15:33</span></h5>
-                                            <h5 id="refund_bankname" style="text-align: left;display:none">Customer Bank Name : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
+                                            <h5 id="refund_bankname" style="text-align: left;display:none">Customer Bank : <span class="pull-right" id="bankname">2014-09-04T15:33</span></h5>
+                                            <button id="refundedbutton" class="btn1 btn1-success pull-right" style="width:30%;display:none" data-toggle="tooltip" data-placement="bottom" title="Already transfer money back to member." type="button">Already Refunded</button>
                                             <legend style="font-style: italic;text-align: right">Booking Details</legend>
                                             <h5 style="text-align: left">Booking ID : <span id="bookID" class="pull-right">14</span></h5>
                                             <h5 style="text-align: left">Customer Name : <span id="name" class="pull-right">Ajchariya Arunaramwong</span></h5>

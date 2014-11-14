@@ -123,7 +123,7 @@
                                                     echo '<td>This Booking change status to <span style="color:' . $color . '">' . $row["booking_status"] . '</span></td>';
                                                     echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
                                                     echo '</tr>';
-                                                    if ($row["member_noti"] == "1") {
+                                                    if ($row["member_noti"] === "1") {
                                                         if (!readAble($row["bookingID"])) {
                                                             echo '<script>alert("something error")<script>';
                                                             break;

@@ -343,7 +343,7 @@ if (isset($_POST["username"])) {
 
                     <div class="span3">
 
-                        <input id="province" name="province" type="text" class="form-control" placeholder="State/Province"/>
+                        <input id="province" name="province" type="text" class="form-control" placeholder="State"/>
                         <br>
                         <input id="zipcode" name="zipcode" type="text" class="form-control" placeholder="Zip Code"/>
                     </div>

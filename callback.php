@@ -34,6 +34,7 @@ function login($login, $password) {
         $lastname = $row["lastName"];
         $type = $row["type"];
         $status = $row["status"];
+        $picpath = $row["pic_path"];
     } else {
         $canLogin = false;
     }
@@ -47,6 +48,7 @@ function login($login, $password) {
         $_SESSION["lastname"] = $lastname;
         $_SESSION["type"] = $type;
         $_SESSION["status"] = $status;
+        $_SESSION["pic_path"] = $picpath;
         return true;
     } else {
         return false;
@@ -1350,6 +1352,17 @@ if (isset($_GET["removeblacklist"]) && is_numeric($_GET["removeblacklist"])) {
 }
 
 //Get Owner Notification
+function readAble($bookingID) {
+
+    require 'connection.php';
+    $query = "update Booking set owner_noti = 2 where bookingID = $bookingID";
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function getAllNotification($cur_page, $order_by, $status_value) {
     require 'connection.php';
     if ($order_by === "date") {
@@ -1442,11 +1455,12 @@ if (isset($_GET["owner_noti_curpage"]) && is_numeric($_GET["owner_noti_curpage"]
     $cur_page = $_GET["owner_noti_curpage"];
     $memberID = $_SESSION["memberID"];
     $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and (owner_noti = 1 or owner_noti = 2) ";
+    $href = "callback.php?owner_noti_curpage=";
     if (isset($_GET["search_ownernoti"])) {
         $status = $_GET["search_ownernoti"];
         $query = "select *,m.tel as dormTel from Booking b join Rooms r join Members m join Dormitories d join Floor f join RoomPerFloor rpf where b.memberID = m.memberID and  d.dormID = f.dormID and f.floorID = rpf.floorID and b.matchingID = rpf.matchingID and rpf.roomID = b.roomID and b.roomID = r.roomID and d.memberID = $memberID and b.booking_status = '$status' and (owner_noti = 1 or owner_noti = 2)";
     }
-    $href = "callback.php?owner_noti_curpage=";
+    
     displayPage($cur_page, $query, $href);
 }
 
@@ -1504,12 +1518,15 @@ function getComment($dormID, $page) {
         }
 
         echo '<tr>';
-        echo '<td style="width:300px">';
-        echo '<h3 style="margin-top:0px">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
+        echo '<td style="width:20%;height:15%">';
+        echo '<img src="' . $row["pic_path"] . '" class="img-rounded"';
+        echo '</td>';
+        echo '<td style="width:250px;height:15%">';
+        echo '<h3 style="margin-top:0%">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
         echo '<p class="pull-left">' . $date . '<br>Give Rate :<span class="pull-right" style="color:gold">' . $star . '</span></p>';
         echo '';
         echo '</td>';
-        echo '<td style="padding-top:5px"><h4><span>' . $row["detail"] . '</span></h4></td>';
+        echo '<td style="padding-top:1%"><h4><span>' . $row["detail"] . '</span></h4></td>';
         echo '</tr>';
     }
 
@@ -1690,6 +1707,17 @@ if (isset($_GET["bank_show_status"]) && isset($_GET["bank_id"])) {
 }
 
 //Member Notification
+function member_readAble($bookingID) {
+
+    require 'connection.php';
+    $query = "update Booking set member_noti = 2 where bookingID = $bookingID";
+    if (mysqli_query($con, $query)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 function getMemberNotification($page, $order_by) {
     require 'connection.php';
@@ -1742,7 +1770,7 @@ function getMemberNotification($page, $order_by) {
                 echo '<td><a href="index.php?chose_page=membookdetail&bookingID=' . $row["bookingID"] . '" style="width:100%" class="btn1 btn1-primary">View Detail</a></td>';
                 echo '</tr>';
                 if ($row["member_noti"] == "1") {
-                    if (!readAble($row["bookingID"])) {
+                    if (!member_readAble($row["bookingID"])) {
                         echo '<script>alert("something error")<script>';
                         break;
                     }

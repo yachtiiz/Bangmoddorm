@@ -607,10 +607,10 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
                         }
 
                         echo '<tr>';
-                        echo '<td style="width:15%">';
-                        echo '<img src="'.$row["pic_path"].'" class="img-rounded" style="width:100%;height:15%">';
+                        echo '<td style="width:20%;height:15%">';
+                        echo '<img src="'.$row["pic_path"].'" class="img-rounded"';
                         echo '</td>';
-                        echo '<td style="width:25%">';
+                        echo '<td style="width:250px;height:15%">';
                         echo '<h3 style="margin-top:0%">' . $row["firstName"] . " " . substr($row["lastName"], 0, 1) . '.' . '</h3>';
                         echo '<p class="pull-left">' . $date . '<br>Give Rate :<span class="pull-right" style="color:gold">' . $star . '</span></p>';
                         echo '';
@@ -621,7 +621,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
 
                     if (mysqli_num_rows($result) === 0) {
                         echo '<tr>';
-                        echo '<td colspan="2" style="height:12%"><h3 style="text-align:center"> No Comment Yet</h3></td>';
+                        echo '<td colspan="3" style="height:12%"><h3 style="text-align:center"> No Comment Yet</h3></td>';
                         echo '</tr>';
                     }
                 }
@@ -676,8 +676,8 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             </tbody>
             <?php if (isset($_SESSION["auth"]) && $_SESSION["type"] === "Member" && $_SESSION["status"] !== "Blacklist") { ?>
                 <tr>
-                    <td style="width:30%"><h3><?php echo $_SESSION["firstname"] . " " . substr($_SESSION["lastname"], 0, 1) . '.'; ?> </h3></td>
-                    <td>
+                    <td style="width:20%;height:15%"><img src="<?php echo $_SESSION["pic_path"]; ?>" class="img-rounded" ><h3><?php echo $_SESSION["firstname"] . " " . substr($_SESSION["lastname"], 0, 1) . '.'; ?> </h3></td>
+                    <td colspan="2"> 
                         <textarea style="margin-bottom:2%" id="comment_value" rows="5" class="span8 from-control" required style="margin-bottom: 20px"></textarea>
                         <select id="comment_rate" class="form-control" style="width:30%;margin-top:0px;display:inline">
                             <option id="rate_default" value="default">Give Dormitory Rate</option>
