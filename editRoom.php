@@ -291,7 +291,7 @@ if (isset($_GET["dormName"]) && isset($_GET["dormID"])) {
                     <form id="form" action="" method="post" class="form-horizontal" enctype="multipart/form-data">
                         <fieldset>
 
-                            <h1>Add Your Room Type<br /><small>You can add your room type and fill the information.
+                            <h1>Edit Your Room <br /><small>You can edit your room type and fill the information.
                                 </small></h1><br />
                             <div class="row">
 

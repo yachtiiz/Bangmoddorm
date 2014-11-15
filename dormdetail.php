@@ -221,7 +221,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
         <table class="table table-striped table-hover" style="border:solid 1px #cccccc">
             <tr style="">
                 <td>
-                    <h4 style="margin-left:10%"><span style="color:green" class="glyphicon glyphicon-ok-circle"></span>&nbsp; Water Price <small>&nbsp;&nbsp; <?php echo $dorm_row["water_price"] ?>Baht per unit</small></h4>
+                    <h4 style="margin-left:10%"><span style="color:green" class="glyphicon glyphicon-ok-circle"></span>&nbsp; Water Price <small>&nbsp;&nbsp; <?php echo $dorm_row["water_price"] ?> Baht per unit</small></h4>
 
                 </td>
                 <td>
@@ -280,7 +280,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             </tr>
             <tr>
                 <td>
-                    <h4 style="margin-left:10%"> <?php echo $fac_dorm_row["cctv"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; CCTV &nbsp;&nbsp;<small> <?php echo $fac_dorm_row["cctvDetails"] ?></small></h4>
+                    <h4 style="margin-left:10%;"> <?php echo $fac_dorm_row["cctv"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; CCTV &nbsp;&nbsp;<small> <?php echo $fac_dorm_row["cctvDetails"] ?></small></h4>
                 </td>
                 <td>
                     <h4 style="margin-left:10%"> <?php echo $fac_dorm_row["parking"] === "0" ? '<span style="color:red" class="glyphicon glyphicon-remove-circle"></span>' : '<span style="color:green" class="glyphicon glyphicon-ok-circle"></span>' ?>&nbsp; PARKING &nbsp;&nbsp;<small> <?php echo $fac_dorm_row["parkingDetails"] ?></small></h4>
@@ -311,7 +311,7 @@ if (isset($_GET["dormID"]) && is_numeric($_GET["dormID"])) {
             <div class="col-md-12" id="<?php echo $dorm_room_row["roomID"] ?>" style="border:solid 1px #cccccc;margin-bottom: 5%">
                 <legend><h3 style="text-align: center"><span><?php echo $dorm_room_row["roomType"] ?> Room</span></h3></legend>
                 <div class="span5">
-                    <img style="width: 100%;max-height: 45%" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>" class="img-thumbnail"/>
+                    <img style="width: 100%;max-height: 45%" src="images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>" class="img-thumbnail" onmouseover="showtrail('images/room_pictures/<?php echo $dorm_room_row["main_pic"]; ?>', '',670,500)" onmouseout="hidetrail()"/>
                 </div>
 
 

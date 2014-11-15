@@ -147,6 +147,7 @@
             $result = mysqli_query($con, $query);
             ?>
             <div class="col-md-12">
+                <br>
                 <?php if (mysqli_num_rows($result) !== 0) { ?>
                     <legend style=" text-align: center"><span>Edit Your</span> Dormitory</legend>
                 <?php } ?>

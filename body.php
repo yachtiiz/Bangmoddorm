@@ -100,6 +100,9 @@ switch ($page) {
     case "refund":
         require_once ("refund.php");
         break;
+    case "ownermanual":
+        require_once ("owner_manual.php");
+        break;
     
     default:
         require_once("dormitory.php");

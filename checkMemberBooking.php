@@ -174,7 +174,10 @@
                                                     $color = "#00cc33";
                                                     break;
                                                 case "Refund Needed":
-                                                    $color = "red";
+                                                    $color = "#ffcc33";
+                                                    break;
+                                                case "Already Refunded":
+                                                    $color = "#00cc33";
                                                     break;
                                             }
                                             ?>

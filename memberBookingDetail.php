@@ -143,7 +143,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                                     <input id="transfer_name" class="form-control" type="text" name="transfer_name" value='' placeholder="Or Your Transfer name" required>
                                                 </div>
                                                 <div class="input-group" style="width: 70%;margin-top:10px;margin-left:100px">
-                                                    <span class="input-group-addon">To Dormitory Bank Account <span style="color:red">*</span></span>
+                                                    <span class="input-group-addon">To Dormitory Bank <span style="color:red">*</span></span>
                                                     <select name="transfer_bank" class="form-control">
                                                         <?php while ($bank_select_row = mysqli_fetch_array($bank_result_selected)) { ?>
                                                             <option value="<?php echo $bank_select_row["bankName"] ?>"><?php echo $bank_select_row["bankName"] ?></option>
@@ -340,7 +340,7 @@ if (isset($_GET["bookingID"]) && is_numeric($_GET["bookingID"])) {
                                             $color = "#00cc33";
                                             break;
                                         case "Refund Needed":
-                                            $color = "red";
+                                            $color = "#ffcc33";
                                             break;
                                         case "Already Refunded":
                                             $color = "#00cc33";

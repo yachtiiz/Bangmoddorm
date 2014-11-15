@@ -116,7 +116,7 @@
                                                         $color = "#00cc33";
                                                         break;
                                                     case "Refund Needed":
-                                                        $color = "red";
+                                                        $color = "#ffcc33";
                                                         break;
                                                     case "Already Refunded":
                                                         $color = "#00cc33";
@@ -208,13 +208,13 @@
                                             document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");
                                         }
                                         if ($(this).data('status') === "Refund Needed") {
-                                            document.getElementById("status").setAttribute("style", "color:red");
+                                            document.getElementById("status").setAttribute("style", "color:#ffcc33");
                                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:block");
                                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:block");
                                             document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:block");
                                         }
                                         if ($(this).data('status') === "Already Refunded") {
-                                            document.getElementById("status").setAttribute("style", "color:red");
+                                            document.getElementById("status").setAttribute("style", "color:#00cc33");
                                             document.getElementById("refund_cusbank").setAttribute("style", "text-align: left;display:block");
                                             document.getElementById("refund_bankname").setAttribute("style", "text-align: left;display:block");
                                             document.getElementById("refundedbutton").setAttribute("style", "width:30%;display:none");

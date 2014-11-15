@@ -107,7 +107,7 @@ function getUserType() {
                                             <ul style="width: 100%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Member</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-        <!--                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getNotification()    ?></span></a></li>-->
+        <!--                                                <li><a href="index.php?chose_page=membernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getNotification()     ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkBookingHis">Check Booking History</a></li>
                                                 <li role="presentation" style="margin-bottom: 10px;cursor: pointer"><a id="logout_button">Sign out </a></li>
@@ -134,8 +134,9 @@ function getUserType() {
                                             <ul style="width: 100%;" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                                 <li><h5>Owner</h5></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
-        <!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getOwnerNotification()    ?></span></a></li>-->
+        <!--                                                <li><a href="index.php?chose_page=ownernotification">Notification <span class="badge pull-right" style="background-color: #990000;padding-top:3px;padding-bottom: 3px"><?php //echo getOwnerNotification()     ?></span></a></li>-->
                                                 <li role="presentation"><a href="index.php?chose_page=myprofile">My Profile</a></li>
+                                                <li role="presentation"><a href="index.php?chose_page=ownermanual">Owner Manual</a></li>
                                                 <li role="presentation"><a href="index.php?chose_page=checkDormBooking">Check All Booking</a></li>
                                                 <li role="presentation" class="divider" style="border-bottom: solid 1px #cccccc"></li>
                                                 <li role="presentation"><a href="index.php?chose_page=adddormitory">Add Dormitory</a></li>

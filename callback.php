@@ -314,7 +314,7 @@ function showDormBook($dormID) {
                 $color = "#00cc33";
                 break;
             case "Refund Needed":
-                $color = "red";
+                $color = "#ffcc33";
                 break;
             case "Already Refunded":
                 $color = "#00cc33";
@@ -409,7 +409,7 @@ function getBookingDorm($page, $order_by, $dormID) {
                 $color = "#00cc33";
                 break;
             case "Refund Needed":
-                $color = "red";
+                $color = "#ffcc33";
                 break;
             case "Already Refunded":
                 $color = "#00cc33";
@@ -664,7 +664,7 @@ function searchingBook($query) {
                     $color = "#00cc33";
                     break;
                 case "Refund Needed":
-                    $color = "red";
+                    $color = "#ffcc33";
                     break;
                 case "Already Refunded":
                     $color = "#00cc33";
@@ -787,7 +787,7 @@ function getMembook($member_id, $page) {
                     $color = "#00cc33";
                     break;
                 case "Refund Needed":
-                    $color = "red";
+                    $color = "#ffcc33";
                     break;
                 case "Already Refunded":
                     $color = "#00cc33";
@@ -925,7 +925,7 @@ function searchingMemberBook($query) {
                     $color = "#00cc33";
                     break;
                 case "Refund Needed":
-                    $color = "red";
+                    $color = "#ffcc33";
                     break;
                 case "Already Refunded":
                     $color = "#00cc33";
@@ -1401,7 +1401,7 @@ function getAllNotification($cur_page, $order_by, $status_value) {
                     $color = "#00cc33";
                     break;
                 case "Refund Needed":
-                    $color = "red";
+                    $color = "#ffcc33";
                     break;
                 case "Already Refunded":
                     $color = "#00cc33";
@@ -1639,9 +1639,9 @@ function filter_dorm($type, $disFromUni, $start_price, $end_price, $rate, $road)
             } for ($i = $row["dormitory_rate"]; $i < 5; $i++) {
                 $star = $star . '&#9734;';
             }
-            echo '<div class = "thumbnail" style = "border:solid 1px black;height: 250px;padding:20px;padding-left:0px;background-color: #eee">';
+            echo '<div class = "thumbnail" style = "border:solid 1px black;max-height: 100%;padding:2%;background-color: #eee">';
             echo '<div class = "col-md-6">';
-            echo '<img class = "img-rounded" src = "images/dormitory_picture/' . $row["dorm_pictures"] . '" style = "width:350px;height: 200px;" alt = "...">';
+            echo '<img class = "img-rounded" src = "images/dormitory_picture/' . $row["dorm_pictures"] . '" style="width:90%;height: 30%;" alt = "...">';
             echo '</div>';
             echo '<div class = "col-md-6">';
             echo '<legend><h3 style = "margin-top:0px"><span>' . $row["dormName"] . '<span class = "pull-right" style = "color: gold">' . $star . '</span></span></h2></legend>';
@@ -1756,7 +1756,7 @@ function getMemberNotification($page, $order_by) {
                         $color = "#00cc33";
                         break;
                     case "Refund Needed":
-                        $color = "red";
+                        $color = "#ffcc33";
                         break;
                     case "Already Refunded":
                         $color = "#00cc33";

@@ -73,7 +73,7 @@ while ($dorm_row = mysqli_fetch_array($dorm_result)) {
     $room_result = mysqli_query($con, $room_query);
     $room_row = mysqli_fetch_array($room_result);
     ?>
-    <div class="col-md-12 thumbnail" style=";border:solid 1px black;max-height: 100%;padding:2%;background-color: #eee">        
+    <div class="col-md-12 thumbnail" style="border:solid 1px black;max-height: 100%;padding:2%;background-color: #eee">        
         <div class="col-md-6" style="text-align: center">
             <img src="images/dormitory_picture/<?php echo $dorm_row["dorm_pictures"]; ?>" style="width:90%;height: 30%;">
         </div>
