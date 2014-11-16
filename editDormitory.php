@@ -39,12 +39,10 @@
                     number: true
                 },
                 latitude: {
-                    required: true,
-                    checkSpecial: true,
+                    checkSpecial: true
                 },
                 longitude: {
-                    required: true,
-                    checkSpecial: true,
+                    checkSpecial: true
                 },
                 displayname: {
                     required: true,

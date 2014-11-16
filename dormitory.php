@@ -35,7 +35,7 @@ $latlong_result = mysqli_query($con, $latlong_query);
         var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 <?php while($lat_row = mysqli_fetch_array($latlong_result)) {;
  ?>
-
+            <?php if($lat_row["latitude"] !== "" && $lat_row["longtitude"] !== ""){ ?>
             var dormID_<?php echo $lat_row["dormID"]?> = new google.maps.LatLng(<?php echo $lat_row["latitude"] ?>, <?php echo $lat_row["longtitude"] ?>);
 
 
@@ -50,7 +50,7 @@ $latlong_result = mysqli_query($con, $latlong_query);
             google.maps.event.addListener(marker<?php echo $lat_row["dormID"]?>, 'click', function() {
                 infowindow<?php echo $lat_row["dormID"]?>.open(map, marker<?php echo $lat_row["dormID"]?>);
             });
-
+            <?php } ?>
 <?php } ?>
     }
 
