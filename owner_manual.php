@@ -42,11 +42,11 @@
         </div>
         <div class="span3">
             <br /><br />
-            <h3><span> Refund</span> Needed</h3>
+            <h3><span> Manage</span> Status</h3>
             <p>
-                If you have a problem with Refund Needed status
+                If you have a problem with Status
                 <br/>
-                <a href="index.php?chose_page=refund">Click Here</a>
+                <a href="index.php?chose_page=owner_refund">Click Here</a>
                 <br />
                 <br /><br />
             </p>
